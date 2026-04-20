@@ -715,7 +715,7 @@ header.main-header .header-sticky.active{
 
 .hero{
 	position: relative;
-	background: var(--primary-color) url('../images/hero-bg.jpg') no-repeat;
+	background: var(--primary-color) url('../images/uploads/altar.jpeg') no-repeat;
 	background-position: center center;
 	background-size: cover;
 	min-height: 100vh;
