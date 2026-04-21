@@ -39,7 +39,7 @@ campaign.html - Página de lista de campanhas
 campaign-single.html - Página única da campanha
 blog.html - Página de arquivo do blog
 blog-single.html - Página única do blog
-pastor.html - Página do pastor
+paroco.html - Página do paroco
 gallery.html - Página da galeria
 contact.html - Página de contato
 404.html - Página não encontrada
