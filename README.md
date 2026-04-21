@@ -28,7 +28,7 @@ js - contém arquivos javascript
 index.html - Página de destino principal
 index-video.html - Plano de fundo do vídeo do herói
 index-slider.html - Layout do controle deslizante do herói
-about.html - Página sobre nós
+about.html - Página História
 service.html - Página de serviço
 service-single.html - Página única de serviço
 sermons.html - Página de Lista de Sermões
