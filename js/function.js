@@ -329,5 +329,97 @@
 			fixedContentPos: true
 		});
 	}
+
+	/* Radio Player
+	 * ─────────────────────────────────────────────────────────────────────────
+	 * Substitua STREAM_URL pela URL de streaming da rádio (MP3/AAC/HLS).
+	 * Exemplo: 'https://streaming.exemplo.com.br:8000/radio.mp3'
+	 * ──────────────────────────────────────────────────────────────────────── */
+	(function () {
+		var STREAM_URL = 'URL_DO_STREAM_AQUI'; // ← Coloque aqui a URL do stream
+
+		var audio      = document.getElementById('radioAudio');
+		var playBtn    = document.getElementById('radioPlayBtn');
+		var playIcon   = document.getElementById('radioPlayIcon');
+		var volSlider  = document.getElementById('radioVolume');
+		var volIcon    = document.getElementById('radioVolumeIcon');
+		var closeBtn   = document.getElementById('radioCloseBtn');
+		var playerBar  = document.getElementById('radioPlayerBar');
+
+		if (!audio || !playerBar) { return; }
+
+		var isPlaying  = false;
+
+		function setPlaying(state) {
+			isPlaying = state;
+			playIcon.className = state ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+		}
+
+		function updateVolIcon(vol) {
+			if (vol <= 0) {
+				volIcon.className = 'fa-solid fa-volume-xmark';
+			} else if (vol < 0.5) {
+				volIcon.className = 'fa-solid fa-volume-low';
+			} else {
+				volIcon.className = 'fa-solid fa-volume-high';
+			}
+		}
+
+		playBtn.addEventListener('click', function () {
+			if (isPlaying) {
+				audio.pause();
+				setPlaying(false);
+			} else {
+				if (!audio.src || audio.src === window.location.href) {
+					audio.src = STREAM_URL;
+				}
+				audio.play().then(function () {
+					setPlaying(true);
+				}).catch(function () {
+					setPlaying(false);
+				});
+			}
+		});
+
+		audio.addEventListener('ended', function () { setPlaying(false); });
+		audio.addEventListener('error', function () { setPlaying(false); });
+
+		volSlider.addEventListener('input', function () {
+			audio.volume = parseFloat(this.value);
+			updateVolIcon(audio.volume);
+		});
+
+		volIcon.addEventListener('click', function () {
+			audio.volume = audio.volume > 0 ? 0 : 1;
+			volSlider.value = audio.volume;
+			updateVolIcon(audio.volume);
+		});
+
+		volIcon.addEventListener('keydown', function (e) {
+			if (e.key === 'Enter' || e.key === ' ') { this.click(); }
+		});
+
+		closeBtn.addEventListener('click', function () {
+			audio.pause();
+			audio.src = '';
+			setPlaying(false);
+			playerBar.classList.remove('active');
+		});
+
+		document.querySelectorAll('[data-radio-trigger]').forEach(function (el) {
+			el.addEventListener('click', function (e) {
+				e.preventDefault();
+				playerBar.classList.add('active');
+				if (!isPlaying) {
+					audio.src = STREAM_URL;
+					audio.play().then(function () {
+						setPlaying(true);
+					}).catch(function () {
+						setPlaying(false);
+					});
+				}
+			});
+		});
+	}());
 			
 })(jQuery);

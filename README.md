@@ -18,6 +18,53 @@ Fácil de editar e personalizar
 Formulário de contato AJAX funcional
 Código HTML5 e CSS3 bem escrito e comentado
 Documentação detalhada
+
+---
+
+## Player de Rádio ao Vivo
+
+O site possui um player flutuante de rádio que aparece na parte inferior da tela quando o visitante clica em qualquer botão **"Ouça agora"**. O player exibe o nome da estação, um indicador AO VIVO pulsante, controles de play/pause e volume.
+
+### Como ativar o stream
+
+1. Abra o arquivo `js/function.js`.
+2. Localize a linha:
+   ```js
+   var STREAM_URL = 'URL_DO_STREAM_AQUI';
+   ```
+3. Substitua `'URL_DO_STREAM_AQUI'` pela URL de streaming da rádio. Exemplos de formato:
+   - Icecast / ShoutCast MP3: `http://streaming.radio.com.br:8000/radio.mp3`
+   - HLS (m3u8): `https://streaming.radio.com.br/radio.m3u8`
+   - Zeno.fm ou plataformas similares: fornecida pelo painel da plataforma
+
+> Solicite a URL ao responsável técnico da **Rádio**.
+
+### Onde os botões "Ouça agora" estão localizados
+
+Os seguintes elementos já estão configurados para abrir o player automaticamente:
+
+| Local | Arquivo |
+|---|---|
+| Botão no cabeçalho (desktop) | `index.html` |
+| Item de menu "Ouça agora" | `index.html` |
+| Botão na seção Versículo | `index.html` |
+
+Para adicionar o player em outros botões ou links, basta incluir o atributo `data-radio-trigger` no elemento HTML:
+
+```html
+<a href="#" data-radio-trigger>Ouça a Missa ao Vivo</a>
+```
+
+### Personalização
+
+| O que alterar | Onde |
+|---|---|
+| Nome da estação exibido no player | `index.html` → elemento `.radio-station-name` |
+| Subtítulo exibido no player | `index.html` → elemento `.radio-subtitle` |
+| Cores do player | `css/custom.css` → seção `37. Radio Player css` |
+
+---
+
 Pastas e arquivos
 As pastas e arquivos de modelos são divididos da seguinte forma.
 
