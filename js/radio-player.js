@@ -62,7 +62,10 @@
                         '<i class="fa-solid fa-play" id="radioPlayIcon"></i>' +
                     '</button>' +
                     '<div class="radio-volume-wrap">' +
-                        '<i class="fa-solid fa-volume-high" id="radioVolumeIcon" title="Mutar/desmutar" role="button" tabindex="0"></i>' +
+                        '<div class="radio-vol-popup" id="radioVolPopup">' +
+                            '<input type="range" id="radioVolPopupSlider" min="0" max="1" step="0.05" value="1" aria-label="Volume" orient="vertical">' +
+                        '</div>' +
+                        '<i class="fa-solid fa-volume-high" id="radioVolumeIcon" title="Volume" role="button" tabindex="0"></i>' +
                         '<input type="range" id="radioVolume" min="0" max="1" step="0.05" value="1" aria-label="Volume">' +
                     '</div>' +
                 '</div>' +
@@ -82,6 +85,8 @@
     var playIcon      = document.getElementById('radioPlayIcon');
     var volSlider     = document.getElementById('radioVolume');
     var volIcon       = document.getElementById('radioVolumeIcon');
+    var volPopup      = document.getElementById('radioVolPopup');
+    var volPopupSlider = document.getElementById('radioVolPopupSlider');
     var closeBtn      = document.getElementById('radioCloseBtn');
     var playerBar     = document.getElementById('radioPlayerBar');
     var stationNameEl = document.getElementById('radioStationName');
@@ -226,21 +231,48 @@
     });
 
     /* ── Volume ───────────────────────────────────────────────────────────── */
-    volSlider.addEventListener('input', function () {
-        audio.volume = parseFloat(this.value);
-        updateVolIcon(audio.volume);
+    function isMobile() {
+        return window.innerWidth <= 575;
+    }
+
+    function setVolume(val) {
+        audio.volume    = val;
+        volSlider.value = val;
+        volPopupSlider.value = val;
+        updateVolIcon(val);
         saveState();
+    }
+
+    volSlider.addEventListener('input', function () {
+        setVolume(parseFloat(this.value));
+    });
+
+    volPopupSlider.addEventListener('input', function () {
+        setVolume(parseFloat(this.value));
     });
 
     volIcon.addEventListener('click', function () {
-        audio.volume = audio.volume > 0 ? 0 : 1;
-        volSlider.value = audio.volume;
-        updateVolIcon(audio.volume);
-        saveState();
+        if (isMobile()) {
+            /* Mobile: toggle popup vertical */
+            volPopup.classList.toggle('open');
+        } else {
+            /* Desktop: muta/desmuta */
+            setVolume(audio.volume > 0 ? 0 : 1);
+        }
+    });
+
+    /* Fecha popup ao clicar fora */
+    document.addEventListener('click', function (e) {
+        if (volPopup.classList.contains('open') &&
+            !volPopup.contains(e.target) &&
+            e.target !== volIcon) {
+            volPopup.classList.remove('open');
+        }
     });
 
     volIcon.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { this.click(); }
+        if (e.key === 'Escape') { volPopup.classList.remove('open'); }
     });
 
     /* ── Fechar player ────────────────────────────────────────────────────── */
