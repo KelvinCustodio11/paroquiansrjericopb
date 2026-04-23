@@ -4578,6 +4578,175 @@ header.main-header .header-sticky.active{
 /***    38. Radio Player css      ***/
 /************************************/
 
+/* Station List Panel */
+.radio-station-panel {
+	display: none;
+	flex-direction: column;
+	background-color: #111111;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	max-height: 280px;
+	overflow: hidden;
+}
+
+.radio-station-panel.open {
+	display: flex;
+}
+
+.radio-station-panel-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 20px;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.45);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+	flex-shrink: 0;
+}
+
+.radio-panel-close {
+	background: transparent;
+	border: none;
+	color: rgba(255, 255, 255, 0.4);
+	font-size: 13px;
+	cursor: pointer;
+	padding: 2px 6px;
+	transition: color 0.2s ease;
+}
+
+.radio-panel-close:hover {
+	color: var(--white-color);
+}
+
+.radio-station-list {
+	overflow-y: auto;
+	padding: 6px 0;
+}
+
+.radio-station-list::-webkit-scrollbar {
+	width: 4px;
+}
+
+.radio-station-list::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.radio-station-list::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.15);
+	border-radius: 2px;
+}
+
+.radio-station-loading {
+	padding: 20px;
+	text-align: center;
+	font-size: 13px;
+	color: rgba(255, 255, 255, 0.4);
+}
+
+.radio-station-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 9px 20px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	border: none;
+	background: transparent;
+	width: 100%;
+	text-align: left;
+}
+
+.radio-station-item:hover {
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.radio-station-item.active {
+	background-color: rgba(172, 170, 89, 0.12);
+}
+
+.radio-station-item.featured {
+	border-left: 3px solid var(--accent-color);
+}
+
+.radio-station-favicon {
+	width: 32px;
+	height: 32px;
+	border-radius: 6px;
+	object-fit: cover;
+	flex-shrink: 0;
+	background-color: rgba(255, 255, 255, 0.06);
+}
+
+.radio-station-item-info {
+	flex: 1;
+	min-width: 0;
+}
+
+.radio-station-item-name {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--white-color);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1.3;
+}
+
+.radio-station-item-meta {
+	font-size: 11px;
+	color: rgba(255, 255, 255, 0.4);
+	margin-top: 2px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.radio-station-badge {
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	padding: 2px 7px;
+	border-radius: 20px;
+	flex-shrink: 0;
+}
+
+.radio-station-badge.badge-live {
+	background-color: var(--accent-color);
+	color: var(--primary-color);
+}
+
+.radio-station-badge.badge-featured {
+	background-color: rgba(172, 170, 89, 0.2);
+	color: var(--accent-color);
+	border: 1px solid var(--accent-color);
+}
+
+/* List toggle button */
+.radio-list-btn {
+	width: 36px;
+	height: 36px;
+	border-radius: 8px;
+	background-color: rgba(255, 255, 255, 0.08);
+	border: none;
+	color: rgba(255, 255, 255, 0.65);
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease;
+	flex-shrink: 0;
+}
+
+.radio-list-btn:hover,
+.radio-list-btn.active {
+	background-color: rgba(172, 170, 89, 0.2);
+	color: var(--accent-color);
+}
+
 .radio-player-bar {
 	position: fixed;
 	bottom: 0;
@@ -6263,5 +6432,17 @@ header.main-header .header-sticky.active{
 	.radio-volume-wrap i {
 		font-size: 18px;
 		width: 24px;
+	}
+	.radio-list-btn {
+		width: 30px;
+		height: 30px;
+		font-size: 12px;
+	}
+	.radio-station-panel {
+		max-height: 220px;
+	}
+	.radio-station-item {
+		padding: 8px 14px;
+		gap: 10px;
 	}
 }
