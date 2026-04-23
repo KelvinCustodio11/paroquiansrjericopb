@@ -1424,57 +1424,6 @@
      </footer>
     <!-- Footer End -->
 
-    <!-- Floating Action Buttons Start -->
-    <div class="fab-container">
-        <button class="fab-btn fab-radio" id="fabRadioBtn" data-radio-trigger aria-label="Ouvir Rádio ao Vivo">
-            <i class="fa-solid fa-tower-broadcast"></i>
-        </button>
-        <button class="fab-btn fab-top" id="fabTopBtn" aria-label="Voltar ao topo">
-            <i class="fa-solid fa-arrow-up"></i>
-        </button>
-    </div>
-    <!-- Floating Action Buttons End -->
-
-    <!-- Radio Player Start -->
-    <div class="radio-player-bar" id="radioPlayerBar" role="region" aria-label="Player de Rádio">
-
-        <!-- Radio Station List Panel -->
-        <div class="radio-station-panel" id="radioStationPanel" aria-label="Lista de rádios católicas">
-            <div class="radio-station-panel-header">
-                <span>Rádios Católicas ao Vivo</span>
-                <button class="radio-panel-close" id="radioPanelClose" aria-label="Fechar lista"><i class="fa-solid fa-chevron-down"></i></button>
-            </div>
-            <div class="radio-station-list" id="radioStationList">
-                <div class="radio-station-loading"><i class="fa-solid fa-circle-notch fa-spin"></i> Buscando rádios...</div>
-            </div>
-        </div>
-
-        <audio id="radioAudio" preload="none"></audio>
-        <div class="radio-player-content">
-            <div class="radio-player-info">
-                <div class="radio-live-badge"><span></span> AO VIVO</div>
-                <div class="radio-station-name" id="radioStationName">Rádio Itacambarí FM — Jericó/PB</div>
-                <div class="radio-subtitle">Transmissão da Santa Missa <span class="radio-time"><i class="fa-regular fa-clock"></i> 8h00 às 9h30</span></div>
-            </div>
-            <div class="radio-player-controls">
-                <button class="radio-list-btn" id="radioListBtn" aria-label="Ver lista de rádios" title="Mais rádios católicas">
-                    <i class="fa-solid fa-list-ul"></i>
-                </button>
-                <button class="radio-play-btn" id="radioPlayBtn" aria-label="Reproduzir ou Pausar">
-                    <i class="fa-solid fa-play" id="radioPlayIcon"></i>
-                </button>
-                <div class="radio-volume-wrap">
-                    <i class="fa-solid fa-volume-high" id="radioVolumeIcon" title="Mutar/desmutar" role="button" tabindex="0"></i>
-                    <input type="range" id="radioVolume" min="0" max="1" step="0.05" value="1" aria-label="Volume">
-                </div>
-            </div>
-            <button class="radio-close-btn" id="radioCloseBtn" aria-label="Fechar player">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-    </div>
-    <!-- Radio Player End -->
-
     <!-- Jquery Library File -->
     <script src="js/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap js file -->
@@ -1508,5 +1457,7 @@
     <script src="js/wow.js"></script>
     <!-- Main Custom js file -->
     <script src="js/function.js"></script>
+    <!-- Radio Player -->
+    <script src="js/radio-player.js"></script>
 </body>
 </html>

@@ -4580,16 +4580,19 @@ header.main-header .header-sticky.active{
 
 /* Station List Panel */
 .radio-station-panel {
-	display: none;
+	display: flex;
 	flex-direction: column;
 	background-color: #111111;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-	max-height: 280px;
+	max-height: 0;
 	overflow: hidden;
+	transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+	            border-bottom-color 0.38s ease;
+	border-bottom: 1px solid transparent;
 }
 
 .radio-station-panel.open {
-	display: flex;
+	max-height: 280px;
+	border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .radio-station-panel-header {
@@ -4790,15 +4793,87 @@ header.main-header .header-sticky.active{
 	letter-spacing: 1px;
 	color: var(--accent-color);
 	text-transform: uppercase;
+	margin-bottom: 0;
+}
+
+.radio-live-badge.badge-idle {
+	color: rgba(255, 255, 255, 0.35);
+}
+
+.radio-live-badge.badge-idle .radio-badge-dot,
+.radio-live-badge.badge-loading .radio-badge-dot {
+	background-color: rgba(255, 255, 255, 0.3);
+	animation: none;
+}
+
+.radio-live-badge.badge-loading {
+	color: rgba(255, 255, 255, 0.45);
+}
+
+.radio-live-badge.badge-error {
+	color: #e05a5a;
+}
+
+.radio-live-badge.badge-error .radio-badge-dot {
+	background-color: #e05a5a;
+	animation: none;
+}
+
+/* Status row: live badge + sound bars / paused label */
+.radio-player-status-row {
+	display: flex;
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: 10px;
 	margin-bottom: 3px;
 }
 
-.radio-live-badge span {
+.radio-player-status-row .radio-live-badge {
+	margin-bottom: 0;
+}
+
+/* Animated sound bars */
+.radio-bars {
+	display: none;
+	align-items: flex-end;
+	gap: 2px;
+	height: 14px;
+}
+
+.radio-bars.playing {
+	display: flex;
+}
+
+.radio-state-indicator {
+	display: flex;
+	align-items: center;
+}
+
+.radio-bars span {
+	width: 3px;
+	background-color: var(--accent-color);
+	border-radius: 1px;
+	transform-origin: bottom;
+	animation: radio-bar 0.7s ease-in-out infinite alternate;
+}
+
+.radio-bars span:nth-child(1) { height: 6px;  animation-duration: 0.6s;  animation-delay: 0s;    }
+.radio-bars span:nth-child(2) { height: 14px; animation-duration: 0.5s;  animation-delay: 0.1s;  }
+.radio-bars span:nth-child(3) { height: 9px;  animation-duration: 0.75s; animation-delay: 0.05s; }
+.radio-bars span:nth-child(4) { height: 12px; animation-duration: 0.55s; animation-delay: 0.15s; }
+
+@keyframes radio-bar {
+	from { transform: scaleY(0.25); }
+	to   { transform: scaleY(1); }
+}
+
+.radio-badge-dot {
 	width: 8px;
 	height: 8px;
 	background-color: var(--accent-color);
 	border-radius: 50%;
 	display: inline-block;
+	flex-shrink: 0;
 	animation: radio-live-pulse 1.5s ease-in-out infinite;
 }
 
