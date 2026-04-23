@@ -6513,7 +6513,7 @@ header.main-header .header-sticky.active{
 		height: 30px;
 		font-size: 12px;
 	}
-	.radio-station-panel {
+	.radio-station-panel.open {
 		max-height: 220px;
 	}
 	.radio-station-item {
