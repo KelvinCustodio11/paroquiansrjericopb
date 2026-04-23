@@ -4513,7 +4513,69 @@ header.main-header .header-sticky.active{
 }
 
 /************************************/
-/***    37. Radio Player css      ***/
+/***  37. Floating Action Buttons ***/
+/************************************/
+
+.fab-container {
+	position: fixed;
+	bottom: 30px;
+	right: 25px;
+	z-index: 9998;
+	display: flex;
+	flex-direction: column-reverse;
+	align-items: center;
+	gap: 12px;
+}
+
+.fab-btn {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	border: none;
+	cursor: pointer;
+	font-size: 17px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+	transition: transform 0.2s ease, opacity 0.3s ease, background-color 0.2s ease;
+}
+
+.fab-btn:hover {
+	transform: scale(1.1);
+}
+
+/* Rádio */
+.fab-radio {
+	background-color: var(--accent-color);
+	color: var(--white-color);
+}
+
+.fab-radio:hover {
+	background-color: rgba(172, 170, 89, 0.85);
+}
+
+/* Subir ao topo */
+.fab-top {
+	background-color: rgba(0, 0, 0, 0.5);
+	color: var(--white-color);
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(10px);
+}
+
+.fab-top.visible {
+	opacity: 1;
+	pointer-events: auto;
+	transform: translateY(0);
+}
+
+.fab-top:hover {
+	background-color: rgba(0, 0, 0, 0.75);
+}
+
+/************************************/
+/***    38. Radio Player css      ***/
 /************************************/
 
 .radio-player-bar {

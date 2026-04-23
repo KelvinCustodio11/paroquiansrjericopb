@@ -330,6 +330,24 @@
 		});
 	}
 
+	/* Floating Action Buttons */
+	(function () {
+		var fabTop = document.getElementById('fabTopBtn');
+		if (!fabTop) { return; }
+
+		window.addEventListener('scroll', function () {
+			if (window.scrollY > 300) {
+				fabTop.classList.add('visible');
+			} else {
+				fabTop.classList.remove('visible');
+			}
+		}, { passive: true });
+
+		fabTop.addEventListener('click', function () {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		});
+	}());
+
 	/* Radio Player
 	 * ─────────────────────────────────────────────────────────────────────────
 	 * Substitua STREAM_URL pela URL de streaming da rádio (MP3/AAC/HLS).
