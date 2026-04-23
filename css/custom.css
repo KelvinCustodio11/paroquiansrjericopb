@@ -6236,13 +6236,32 @@ header.main-header .header-sticky.active{
 }
 
 @media only screen and (max-width: 575px) {
-	.radio-volume-wrap {
-		display: none;
+	.radio-player-content {
+		padding: 10px 14px;
+		gap: 10px;
+		align-items: center;
 	}
 	.radio-station-name {
-		font-size: 13px;
+		font-size: 12px;
 	}
 	.radio-subtitle {
+		font-size: 10px;
+		white-space: normal;
+	}
+	.radio-time {
+		white-space: nowrap;
+		display: inline-block;
+	}
+	.radio-player-controls {
+		flex-direction: row;
+		gap: 18px;
+		align-items: center;
+	}
+	#radioVolume {
 		display: none;
+	}
+	.radio-volume-wrap i {
+		font-size: 18px;
+		width: 24px;
 	}
 }
