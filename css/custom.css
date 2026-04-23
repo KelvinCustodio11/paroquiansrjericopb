@@ -5138,8 +5138,9 @@ header.main-header .header-sticky.active{
 
 	.hero{
 		padding: 150px 0;
-		margin-top: -85px;
+		margin-top: -97px;
 		min-height: 100%;
+		background-position: center top;
 	}
 
 	.hero-slider-layout .hero-slide{
@@ -5488,7 +5489,7 @@ header.main-header .header-sticky.active{
 
 	.page-header{
 		padding: 130px 0 50px;
-		margin-top: -85px;
+		margin-top: -97px;
 	}
 	
 	.page-header-box h1{
