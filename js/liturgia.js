@@ -231,6 +231,53 @@
   /* API pública                                                           */
   /* ------------------------------------------------------------------ */
 
+  /* ------------------------------------------------------------------ */
+  /* Banner destaque (homepage — após ticker)                           */
+  /* ------------------------------------------------------------------ */
+
+  function renderBanner(data, container) {
+    var cor = (data.cor || 'Verde').trim();
+    var corStyle = COR_MAP[cor] || COR_MAP['Verde'];
+
+    /* Texto completo do evangelho, formatado em parágrafos sem números de versículo soltos */
+    var excerptHtml = '';
+    if (data.evangelho && data.evangelho.texto) {
+      var lines = data.evangelho.texto
+        .split(/\n+/)
+        .filter(function (l) { return l.trim(); })
+        .map(function (l) {
+          return '<p style="margin:0 0 .65em;line-height:1.65;">' + escHtml(l.trim()) + '</p>';
+        });
+      excerptHtml = '<span class="pddia-gospel-ref">'
+        + escHtml((data.evangelho.titulo || 'Evangelho') + ' — ' + (data.evangelho.referencia || ''))
+        + '</span>'
+        + '<div class="pddia-full-text">' + lines.join('') + '</div>';
+    }
+
+    /* Referências das leituras */
+    var refs = [];
+    if (data.primeiraLeitura && data.primeiraLeitura.referencia) refs.push(data.primeiraLeitura.referencia);
+    if (data.salmo && data.salmo.referencia) refs.push(data.salmo.referencia);
+    if (data.segundaLeitura && data.segundaLeitura.referencia) refs.push(data.segundaLeitura.referencia);
+    if (data.evangelho && data.evangelho.referencia) refs.push(data.evangelho.referencia);
+
+    container.innerHTML = '<div class="pddia-meta">'
+      + '<span class="pddia-badge" style="background:' + corStyle.badge + ';color:' + corStyle.text + ';">'
+      + '<span class="pddia-badge-dot" style="background:' + corStyle.text + ';"></span>'
+      + escHtml(cor)
+      + '</span>'
+      + '<span class="pddia-celebracao">' + escHtml(data.liturgia || '') + '</span>'
+      + '<span class="pddia-data">' + escHtml(data.data || '') + '</span>'
+      + '</div>'
+      + '<div class="pddia-divider"></div>'
+      + excerptHtml
+      + (refs.length ? '<p class="pddia-refs">Leituras: ' + refs.map(escHtml).join(' · ') + '</p>' : '');
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* API pública                                                           */
+  /* ------------------------------------------------------------------ */
+
   window.LiturgiaPlayer = {
     /* Alterna visibilidade de um bloco de leitura */
     toggle: function (bodyId, btn) {
@@ -243,7 +290,38 @@
       if (chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
     },
 
-    /* Carrega e renderiza num container */
+    /* Carrega banner destaque (homepage) */
+    loadBanner: function (containerId) {
+      var id = containerId || 'liturgiaBannerContent';
+      var container = document.getElementById(id);
+      if (!container) return;
+
+      var cached = getFromCache();
+      if (cached) {
+        renderBanner(cached, container);
+        return;
+      }
+
+      container.innerHTML = '<div class="pddia-loading">'
+        + '<div class="pddia-spinner"></div>'
+        + '<span>Carregando a liturgia de hoje…</span>'
+        + '</div>';
+
+      fetch(API_URL)
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function (data) {
+          saveToCache(data);
+          renderBanner(data, container);
+        })
+        .catch(function () {
+          container.innerHTML = '<p style="color:rgba(255,255,255,.4);font-size:.85rem;">Indisponível no momento.</p>';
+        });
+    },
+
+    /* Carrega aba completa se container existir */
     load: function (containerId) {
       var id = containerId || 'liturgiaContainer';
       var container = document.getElementById(id);
@@ -340,6 +418,10 @@
   /* ------------------------------------------------------------------ */
 
   function init() {
+    /* Carrega banner destaque */
+    if (document.getElementById('liturgiaBannerContent')) {
+      LiturgiaPlayer.loadBanner('liturgiaBannerContent');
+    }
     /* Carrega aba completa se container existir */
     if (document.getElementById('liturgiaContainer')) {
       LiturgiaPlayer.load('liturgiaContainer');

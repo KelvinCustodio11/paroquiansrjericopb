@@ -6597,3 +6597,293 @@ header.main-header .header-sticky.active{
 		gap: 10px;
 	}
 }
+
+/* ============================================================
+   Palavra do Dia — Banner Litúrgico
+   ============================================================ */
+
+.palavra-do-dia {
+	background: var(--primary-color);
+	border-top: 3px solid var(--accent-color);
+	padding: 0;
+	position: relative;
+	overflow: hidden;
+}
+
+/* Marca d'água de cruz decorativa */
+.palavra-do-dia::before {
+	content: "\f7a2"; /* fa-cross unicode */
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	position: absolute;
+	right: -40px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 280px;
+	color: rgba(255,255,255,.025);
+	pointer-events: none;
+	line-height: 1;
+}
+
+.palavra-do-dia-inner {
+	display: flex;
+	align-items: stretch;
+	min-height: 220px;
+}
+
+/* Coluna esquerda — decorativa */
+.palavra-do-dia-left {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+	padding: 36px 40px;
+	background: rgba(172,170,89,.10);
+	border-right: 1px solid rgba(172,170,89,.25);
+	min-width: 220px;
+	flex-shrink: 0;
+	text-align: center;
+}
+
+.palavra-do-dia-icon {
+	font-size: 2.8rem;
+	color: var(--accent-color);
+	line-height: 1;
+}
+
+.palavra-do-dia-left-label {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.palavra-do-dia-left-label strong {
+	font-size: .75rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: .12em;
+	color: var(--accent-color);
+	display: block;
+}
+
+.palavra-do-dia-left-label span {
+	font-size: .68rem;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	color: rgba(255,255,255,.4);
+	display: block;
+}
+
+/* Coluna direita — conteúdo dinâmico */
+.palavra-do-dia-right {
+	flex: 1;
+	padding: 32px 40px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 10px;
+}
+
+.pddia-meta {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.pddia-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-size: .7rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	padding: 3px 12px;
+	border-radius: 30px;
+	line-height: 1.8;
+	flex-shrink: 0;
+}
+
+.pddia-badge-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	opacity: .7;
+	flex-shrink: 0;
+}
+
+.pddia-celebracao {
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--white-color);
+	line-height: 1.2;
+}
+
+.pddia-data {
+	font-size: .78rem;
+	color: rgba(255,255,255,.45);
+}
+
+.pddia-divider {
+	width: 48px;
+	height: 1px;
+	background: rgba(172,170,89,.4);
+	margin: 2px 0;
+}
+
+.pddia-gospel-ref {
+	font-size: .75rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .09em;
+	color: var(--accent-color);
+	margin-bottom: 4px;
+	display: block;
+}
+
+.pddia-excerpt {
+	font-size: .95rem;
+	font-style: italic;
+	color: rgba(255,255,255,.7);
+	line-height: 1.6;
+	margin: 0;
+}
+
+.pddia-refs {
+	font-size: .72rem;
+	color: rgba(255,255,255,.3);
+	letter-spacing: .04em;
+}
+
+.pddia-full-text {
+	max-height: 280px;
+	overflow-y: auto;
+	font-size: .92rem;
+	font-style: italic;
+	color: rgba(255,255,255,.72);
+	line-height: 1.65;
+	margin: 4px 0 8px;
+	padding-right: 8px;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(172,170,89,.4) transparent;
+}
+
+.pddia-full-text::-webkit-scrollbar {
+	width: 4px;
+}
+
+.pddia-full-text::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.pddia-full-text::-webkit-scrollbar-thumb {
+	background: rgba(172,170,89,.4);
+	border-radius: 4px;
+}
+
+.pddia-loading {
+	color: rgba(255,255,255,.4);
+	font-size: .9rem;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.pddia-spinner {
+	width: 22px;
+	height: 22px;
+	border: 2px solid rgba(255,255,255,.15);
+	border-top-color: var(--accent-color);
+	border-radius: 50%;
+	animation: pddia-spin .7s linear infinite;
+	flex-shrink: 0;
+}
+
+@keyframes pddia-spin { to { transform: rotate(360deg); } }
+
+/* Coluna CTA */
+.palavra-do-dia-cta-col {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 32px 36px 32px 0;
+	flex-shrink: 0;
+}
+
+.palavra-do-dia-cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	background: var(--accent-color);
+	color: var(--primary-color);
+	font-size: .8rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+	padding: 14px 22px;
+	border-radius: 4px;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: opacity .2s;
+}
+
+.palavra-do-dia-cta:hover {
+	opacity: .85;
+	color: var(--primary-color);
+	text-decoration: none;
+}
+
+/* ---- Responsivo ---- */
+@media (max-width: 991px) {
+	.palavra-do-dia-left {
+		min-width: 160px;
+		padding: 28px 24px;
+	}
+	.palavra-do-dia-right {
+		padding: 28px 24px;
+	}
+	.palavra-do-dia-cta-col {
+		padding: 28px 24px 28px 0;
+	}
+}
+
+@media (max-width: 767px) {
+	.palavra-do-dia-inner {
+		flex-direction: column;
+		min-height: unset;
+	}
+	.palavra-do-dia-left {
+		flex-direction: row;
+		min-width: unset;
+		border-right: none;
+		border-bottom: 1px solid rgba(172,170,89,.25);
+		padding: 18px 20px;
+		text-align: left;
+		background: rgba(172,170,89,.07);
+		gap: 12px;
+	}
+	.palavra-do-dia-icon {
+		font-size: 1.8rem;
+	}
+	.palavra-do-dia-left-label {
+		flex-direction: row;
+		align-items: center;
+		gap: 8px;
+	}
+	.palavra-do-dia-left-label strong,
+	.palavra-do-dia-left-label span {
+		display: inline;
+	}
+	.palavra-do-dia-right {
+		padding: 20px;
+	}
+	.pddia-celebracao {
+		font-size: 1.05rem;
+	}
+	.palavra-do-dia-cta-col {
+		padding: 0 20px 20px;
+		justify-content: flex-start;
+	}
+}
