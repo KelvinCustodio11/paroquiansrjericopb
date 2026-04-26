@@ -151,6 +151,9 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="calendario-tab" data-bs-toggle="tab" data-bs-target="#calendario" type="button" role="tab" aria-selected="false">calendário litúrgico</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="liturgia-tab" data-bs-toggle="tab" data-bs-target="#liturgia" type="button" role="tab" aria-selected="false">liturgia do dia</button>
+                            </li>
                         </ul>
                     </div>
                     <!-- Tabs Nav End -->
@@ -414,6 +417,23 @@
                         </div>
                         <!-- Aba Calendário Litúrgico End -->
 
+                        <!-- Aba Liturgia do Dia Start -->
+                        <div class="our-vision-item tab-pane fade" id="liturgia" role="tabpanel">
+                            <div class="row align-items-start pt-4">
+                                <div class="col-lg-8 col-md-10">
+                                    <div class="vision-mission-content">
+                                        <div class="section-title" style="margin-bottom:28px;">
+                                            <h3 class="wow fadeInUp">palavra de deus</h3>
+                                            <h2 class="text-anime-style-2" data-cursor="-opaque">Liturgia do <span>Dia de Hoje</span></h2>
+                                        </div>
+                                        <!-- Liturgia carregada via JS -->
+                                        <div id="liturgiaContainer"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Aba Liturgia do Dia End -->
+
                     </div>
                     <!-- Tab Content End -->
                 </div>
@@ -570,5 +590,7 @@
     <script src="js/function.js"></script>
     <!-- Radio Player -->
     <script src="js/radio-player.js"></script>
+    <!-- Liturgia Diária -->
+    <script src="js/liturgia.js"></script>
 </body>
 </html>
