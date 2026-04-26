@@ -9,8 +9,8 @@
     'use strict';
 
     /* ── Configuração ─────────────────────────────────────────────────────── */
-    var ITACAMBARI_STREAM = 'URL_DO_STREAM_AQUI'; // ← URL do stream da Rádio Itacambarí FM
-    var ITACAMBARI_NAME   = 'Rádio Itacambarí FM — Jericó/PB';
+    var ITACAMBARI_STREAM = 'https://stm10.srvvox.com.br:7218/stream'; // Rádio Itacambarí FM — Jericó/PB
+    var ITACAMBARI_NAME   = 'Rádio Itacambá FM — Jericó/PB';
     var STORAGE_KEY       = 'nsr_radio_state';
 
     /* ── Injeta HTML ──────────────────────────────────────────────────────── */
