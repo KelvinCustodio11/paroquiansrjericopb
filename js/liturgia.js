@@ -35,6 +35,132 @@
     try { sessionStorage.setItem(todayKey(), JSON.stringify(data)); } catch (e) {}
   }
 
+  /* Dado mais recente carregado (para os handlers de compartilhamento) */
+  var _lastData = null;
+
+  /* URL base do site — funciona em qualquer subpath de hospedagem */
+  function siteUrl(path) {
+    return window.location.href.replace(/\/[^/]*(\?.*)?$/, '/') + path;
+  }
+
+  /* Toast discreto de notificação */
+  function showToast(msg) {
+    var old = document.getElementById('lit-toast');
+    if (old) old.remove();
+    var el = document.createElement('div');
+    el.id = 'lit-toast';
+    el.textContent = msg;
+    el.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);'
+      + 'background:#111;color:#fff;padding:10px 22px;border-radius:6px;'
+      + 'font-size:.85rem;z-index:99999;white-space:nowrap;'
+      + 'box-shadow:0 4px 16px rgba(0,0,0,.4);pointer-events:none;';
+    document.body.appendChild(el);
+    setTimeout(function () { if (el.parentNode) el.remove(); }, 2800);
+  }
+
+  /* Cópia de fallback para navegadores sem clipboard API */
+  function fallbackCopy(text, msg) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); showToast(msg || '\u2713 Copiado!'); }
+    catch (e) { showToast('N\u00e3o foi poss\u00edvel copiar.'); }
+    document.body.removeChild(ta);
+  }
+
+  /* Copia texto para clipboard com mensagem de sucesso */
+  function doCopy(text, msg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(function () { showToast(msg || '\u2713 Copiado!'); })
+        .catch(function () { fallbackCopy(text, msg); });
+    } else {
+      fallbackCopy(text, msg);
+    }
+  }
+
+  /* Atualiza visual do botão TTS */
+  var _ttsActive = null;
+  function updateTtsBtn(ttsId, playing) {
+    var btn = document.querySelector('[data-tts-for="' + ttsId + '"]');
+    if (!btn) return;
+    var icon = btn.querySelector('i');
+    if (icon) icon.className = playing ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
+    if (playing) btn.classList.add('tts-playing');
+    else btn.classList.remove('tts-playing');
+  }
+
+  /* Constrói botão TTS discreto */
+  function buildTtsBtn(ttsId) {
+    return '<button class="lit-tts-btn" data-tts-for="' + ttsId + '" '
+      + 'onclick="LiturgiaPlayer.ttsToggle(\'' + ttsId + '\')" '
+      + 'title="Ouvir leitura" aria-label="Ouvir leitura">'
+      + '<i class="fa-solid fa-volume-high"></i>'
+      + '</button>';
+  }
+
+  /* Contador p/ IDs únicos dos share dropdowns */
+  var _shrCount = 0;
+
+  /* Constrói botão de compartilhar com dropdown */
+  function buildShareTooltip(mode, dark) {
+    var uid = 'shr-' + mode + '-' + (++_shrCount);
+    var wrapCls = dark ? 'lit-shr-wrap lit-shr-dark' : 'lit-shr-wrap';
+    return '<div class="' + wrapCls + '" id="' + uid + '">'
+      + '<button class="lit-shr-trigger" onclick="LiturgiaPlayer.toggleShare(event,\'' + uid + '\')" title="Compartilhar" aria-label="Compartilhar">'
+      + '<i class="fa-solid fa-share-nodes"></i>'
+      + '</button>'
+      + '<div class="lit-shr-dropdown" id="' + uid + '-dd" role="menu">'
+      + '<button class="lit-shr-opt" onclick="LiturgiaPlayer.shareAction(\'copy\',\''
+        + mode + '\')" role="menuitem">'
+      + '<i class="fa-regular fa-copy"></i><span>Copiar leitura</span></button>'
+      + '<button class="lit-shr-opt lit-shr-wpp" onclick="LiturgiaPlayer.shareAction(\'wpp\',\''
+        + mode + '\')" role="menuitem">'
+      + '<i class="fa-brands fa-whatsapp"></i><span>Enviar pelo WhatsApp</span></button>'
+      + '<button class="lit-shr-opt lit-shr-wppst" onclick="LiturgiaPlayer.shareAction(\'wppstatus\',\''
+        + mode + '\')" role="menuitem">'
+      + '<i class="fa-brands fa-whatsapp"></i><span>Status do WhatsApp</span></button>'
+      + '<button class="lit-shr-opt lit-shr-ig" onclick="LiturgiaPlayer.shareAction(\'ig\',\''
+        + mode + '\')" role="menuitem">'
+      + '<i class="fa-brands fa-instagram"></i><span>Instagram</span></button>'
+      + '</div>'
+      + '</div>';
+  }
+
+  /* Texto para compartilhar o Evangelho do dia */
+  function buildVerseShareText(data) {
+    var ref = data.evangelho ? (data.evangelho.referencia || '') : '';
+    var titulo = data.evangelho ? (data.evangelho.titulo || 'Evangelho') : 'Evangelho';
+    var texto = data.evangelho ? (data.evangelho.texto || '').trim() : '';
+    var url = siteUrl('agenda-liturgica.html?tab=liturgia');
+    return '\u2720 ' + titulo + '\n'
+      + (data.liturgia || '') + ' \u00b7 ' + (data.data || '') + '\n'
+      + ref + '\n\n'
+      + '\u201c' + texto + '\u201d\n\n'
+      + '\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n'
+      + 'Par\u00f3quia NSR Jeric\u00f3/PB\n'
+      + url;
+  }
+
+  /* Texto para compartilhar a página completa */
+  function buildPageShareText(data) {
+    var refs = [];
+    if (data.primeiraLeitura && data.primeiraLeitura.referencia) refs.push(data.primeiraLeitura.referencia);
+    if (data.salmo && data.salmo.referencia) refs.push(data.salmo.referencia);
+    if (data.segundaLeitura && data.segundaLeitura.referencia) refs.push(data.segundaLeitura.referencia);
+    if (data.evangelho && data.evangelho.referencia) refs.push(data.evangelho.referencia);
+    var url = siteUrl('agenda-liturgica.html?tab=liturgia');
+    return '\ud83d\udcd6 Liturgia do Dia \u2014 ' + (data.liturgia || '') + '\n'
+      + (data.data || '') + '\n\n'
+      + (refs.length ? 'Leituras: ' + refs.join(' \u00b7 ') + '\n\n' : '')
+      + 'Acesse as leituras completas:\n'
+      + url + '\n\n'
+      + 'Par\u00f3quia NSR Jeric\u00f3/PB';
+  }
+
   /* ------------------------------------------------------------------ */
   /* Render helpers                                                        */
   /* ------------------------------------------------------------------ */
@@ -93,6 +219,9 @@
       + '<i class="fa-solid fa-chevron-down lit-chevron" style="font-size:.8rem; color:#aaa; transition:transform .25s;"></i>'
       + '</button>'
       + '<div id="' + bodyId + '" class="lit-reading-body" style="display:none; padding:20px; background:#fafafa; border-top:1px solid #e9e9e9;">'
+      + '<div class="lit-block-tools">'
+      + buildTtsBtn(bodyId)
+      + '</div>'
       + (titulo ? '<p style="font-size:.82rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#999; margin:0 0 12px;">' + escHtml(titulo) + '</p>' : '')
       + bodyHtml
       + '</div>'
@@ -104,6 +233,7 @@
   /* ------------------------------------------------------------------ */
 
   function renderLiturgia(data, container) {
+    _lastData = data;
     var cor = (data.cor || 'Verde').trim();
     var corStyle = COR_MAP[cor] || COR_MAP['Verde'];
 
@@ -128,6 +258,9 @@
         + '<strong>Antífona de Entrada:</strong> ' + escHtml(data.antifonas.entrada) + '</p>';
     }
     html += '</div>';
+
+    /* Share + área de ferramentas do cabeçalho */
+    html += '<div class="lit-page-tools">' + buildShareTooltip('page') + '</div>';
 
     /* Leituras */
     html += '<div class="lit-readings-list">';
@@ -236,6 +369,7 @@
   /* ------------------------------------------------------------------ */
 
   function renderBanner(data, container) {
+    _lastData = data;
     var cor = (data.cor || 'Verde').trim();
     var corStyle = COR_MAP[cor] || COR_MAP['Verde'];
 
@@ -248,9 +382,12 @@
         .map(function (l) {
           return '<p style="margin:0 0 .65em;line-height:1.65;">' + escHtml(l.trim()) + '</p>';
         });
-      excerptHtml = '<span class="pddia-gospel-ref">'
-        + escHtml((data.evangelho.titulo || 'Evangelho') + ' — ' + (data.evangelho.referencia || ''))
+      excerptHtml = '<div class="pddia-gospel-row">'
+        + '<span class="pddia-gospel-ref">'
+        + escHtml((data.evangelho.titulo || 'Evangelho') + ' \u2014 ' + (data.evangelho.referencia || ''))
         + '</span>'
+        + buildTtsBtn('pddia-gospel')
+        + '</div>'
         + '<div class="pddia-full-text">' + lines.join('') + '</div>';
     }
 
@@ -271,7 +408,10 @@
       + '</div>'
       + '<div class="pddia-divider"></div>'
       + excerptHtml
-      + (refs.length ? '<p class="pddia-refs">Leituras: ' + refs.map(escHtml).join(' · ') + '</p>' : '');
+      + '<div class="pddia-bottom-row">'
+      + (refs.length ? '<p class="pddia-refs">Leituras: ' + refs.map(escHtml).join(' \u00b7 ') + '</p>' : '<p></p>')
+      + buildShareTooltip('verse', true)
+      + '</div>';
   }
 
   /* ------------------------------------------------------------------ */
@@ -281,6 +421,7 @@
   window.LiturgiaPlayer = {
     /* Alterna visibilidade de um bloco de leitura */
     toggle: function (bodyId, btn) {
+
       var body = document.getElementById(bodyId);
       if (!body) return;
       var open = body.style.display === 'none' || body.style.display === '';
@@ -288,6 +429,78 @@
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       var chevron = btn.querySelector('.lit-chevron');
       if (chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
+    },
+
+    /* Leitura em voz alta (TTS) */
+    ttsToggle: function (ttsId) {
+      if (!window.speechSynthesis) {
+        showToast('Leitura de voz n\u00e3o dispon\u00edvel neste navegador.');
+        return;
+      }
+      /* Parar leitura ativa */
+      if (_ttsActive === ttsId && window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        _ttsActive = null;
+        updateTtsBtn(ttsId, false);
+        return;
+      }
+      /* Parar qualquer outra leitura */
+      if (_ttsActive) {
+        window.speechSynthesis.cancel();
+        updateTtsBtn(_ttsActive, false);
+      }
+      _ttsActive = ttsId;
+      /* Obter texto */
+      var text = '';
+      if (ttsId === 'pddia-gospel') {
+        text = _lastData && _lastData.evangelho ? (_lastData.evangelho.texto || '') : '';
+      } else {
+        var el = document.getElementById(ttsId);
+        text = el ? (el.innerText || el.textContent || '') : '';
+      }
+      if (!text.trim()) { _ttsActive = null; return; }
+      var utt = new SpeechSynthesisUtterance(text.trim());
+      utt.lang = 'pt-BR';
+      utt.rate = 0.88;
+      utt.onend = function () { _ttsActive = null; updateTtsBtn(ttsId, false); };
+      utt.onerror = function () { _ttsActive = null; updateTtsBtn(ttsId, false); };
+      updateTtsBtn(ttsId, true);
+      window.speechSynthesis.speak(utt);
+    },
+
+    /* Abre/fecha dropdown de compartilhar */
+    toggleShare: function (event, wrapId) {
+      event.stopPropagation();
+      var dd = document.getElementById(wrapId + '-dd');
+      if (!dd) return;
+      var isOpen = dd.classList.contains('open');
+      /* Fechar todos */
+      document.querySelectorAll('.lit-shr-dropdown.open').forEach(function (el) {
+        el.classList.remove('open');
+      });
+      if (!isOpen) dd.classList.add('open');
+    },
+
+    /* Executa ação de compartilhamento */
+    shareAction: function (action, mode) {
+      if (!_lastData) return;
+      /* Fechar dropdown */
+      document.querySelectorAll('.lit-shr-dropdown.open').forEach(function (el) {
+        el.classList.remove('open');
+      });
+      var text = mode === 'page' ? buildPageShareText(_lastData) : buildVerseShareText(_lastData);
+      if (action === 'copy') {
+        doCopy(text, '\u2713 Leitura copiada!');
+      } else if (action === 'wpp') {
+        window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
+      } else if (action === 'wppstatus') {
+        doCopy(text, '\u2713 Copiado! Abra o WhatsApp \u2192 Status e cole.');
+        setTimeout(function () {
+          window.open('https://wa.me/', '_blank', 'noopener,noreferrer');
+        }, 700);
+      } else if (action === 'ig') {
+        doCopy(text, '\u2713 Copiado! Abra o Instagram e cole na hist\u00f3ria ou direct.');
+      }
     },
 
     /* Carrega banner destaque (homepage) */
@@ -442,6 +655,13 @@
         }
       }
     }
+
+    /* Fechar dropdowns de share ao clicar fora */
+    document.addEventListener('click', function () {
+      document.querySelectorAll('.lit-shr-dropdown.open').forEach(function (el) {
+        el.classList.remove('open');
+      });
+    });
   }
 
   if (document.readyState === 'loading') {
