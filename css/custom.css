@@ -6910,6 +6910,26 @@ header.main-header .header-sticky.active{
 	50% { opacity: .45; }
 }
 
+/* Destaque karaokê por palavra (TTS) */
+.lit-word {
+	border-radius: 3px;
+	transition: background .07s, color .07s;
+}
+
+.tts-word-active {
+	background: rgba(172,170,89,.32);
+	border-radius: 3px;
+	padding: 0 2px;
+	margin: 0 -2px;
+	outline: none;
+}
+
+/* Versão escura (banner do evangelho) */
+.pddia-full-text .tts-word-active {
+	background: rgba(172,170,89,.5);
+	color: #fff;
+}
+
 /* Versão escura do TTS (banner) */
 .palavra-do-dia .lit-tts-btn {
 	border-color: rgba(255,255,255,.2);

@@ -121,6 +121,54 @@
 
   /* Atualiza visual do botão TTS */
   var _ttsActive = null;
+  var _ttsWordEls = [];      /* spans lit-word da leitura ativa */
+  var _ttsWordOffset = 0;   /* quantas palavras TTS antes do primeiro span */
+  var _ttsBoundaryIdx = 0;  /* contador de eventos word disparados */
+  var _ttsTimer = null;
+  var _ttsBoundaryFired = false;
+  var _ttsStartMs = 0;
+
+  /* Remove destaque visual de palavras ativas e cancela timer */
+  function clearTtsHighlights() {
+    if (_ttsTimer) { clearInterval(_ttsTimer); _ttsTimer = null; }
+    _ttsWordEls.forEach(function (el) { el.classList.remove('tts-word-active'); });
+    _ttsWordEls = [];
+    _ttsWordOffset = 0;
+    _ttsBoundaryIdx = 0;
+  }
+
+  /* Envolve cada palavra em <span class="lit-word"> para efeito karaokê */
+  function wrapWords(text) {
+    return text.split(/([\s]+)/).map(function (chunk) {
+      return /\S/.test(chunk)
+        ? '<span class="lit-word">' + escHtml(chunk) + '</span>'
+        : escHtml(chunk);
+    }).join('');
+  }
+
+  /* Preenche _ttsWordEls e calcula _ttsWordOffset (palavras de prefixo antes do texto visível) */
+  function buildWordMap(ttsId, ttsText) {
+    var root = ttsId === 'pddia-gospel'
+      ? document.querySelector('.pddia-full-text')
+      : document.getElementById(ttsId);
+    _ttsWordEls = [];
+    _ttsWordOffset = 0;
+    _ttsBoundaryIdx = 0;
+    if (!root) return;
+    _ttsWordEls = Array.prototype.slice.call(root.querySelectorAll('span.lit-word'));
+    if (!_ttsWordEls.length) return;
+    /* Conta quantas palavras TTS existem antes do primeiro span (prefixo falado) */
+    var firstText = _ttsWordEls[0].textContent.trim();
+    var ttsWords = ttsText.split(/\s+/).filter(function (w) { return w; });
+    var strip = function (s) { return s.replace(/[«»\u201c\u201d\u2018\u2019.,;:!?()\/\[\]\-\u2014\u2013]/g, '').toLowerCase(); };
+    var cleanFirst = strip(firstText);
+    for (var i = 0; i < ttsWords.length; i++) {
+      if (strip(ttsWords[i]) === cleanFirst || ttsWords[i] === firstText) {
+        _ttsWordOffset = i;
+        break;
+      }
+    }
+  }
   function updateTtsBtn(ttsId, playing) {
     var btn = document.querySelector('[data-tts-for="' + ttsId + '"]');
     if (!btn) return;
@@ -303,28 +351,28 @@
       .replace(/'/g, '&#039;');
   }
 
-  /* Converte texto com números de versículo (ex: "38Pedro") em parágrafos limpos */
+  /* Converte texto em parágrafos com palavras envoltas em span para karaokê */
   function formatVerseText(texto) {
     if (!texto) return '';
-    // Quebra em linhas por padrão, conservando parágrafos separados por \n
     var lines = texto.split(/\n+/).filter(function (l) { return l.trim(); });
-    return lines.map(function (l) {
-      return '<p style="margin: 0 0 .8em; line-height: 1.7;">' + escHtml(l.trim()) + '</p>';
+    return lines.map(function (l, i) {
+      return '<p data-lit-par="' + i + '" style="margin: 0 0 .8em; line-height: 1.7;">' + wrapWords(l.trim()) + '</p>';
     }).join('');
   }
 
-  /* Formata texto do salmo: refrain em destaque, estrofes em parágrafo */
+  /* Formata texto do salmo com palavras envoltas em span */
   function formatSalmoText(salmo) {
     if (!salmo) return '';
     var html = '';
+    var idx = 0;
     if (salmo.refrao) {
-      html += '<p style="font-style:italic; font-weight:600; margin:0 0 .8em; line-height:1.7; padding: 10px 14px; background: rgba(0,0,0,.04); border-left: 3px solid var(--accent-color); border-radius: 3px;">'
-        + escHtml(salmo.refrao) + '</p>';
+      html += '<p data-lit-par="' + (idx++) + '" style="font-style:italic; font-weight:600; margin:0 0 .8em; line-height:1.7; padding: 10px 14px; background: rgba(0,0,0,.04); border-left: 3px solid var(--accent-color); border-radius: 3px;">'
+        + wrapWords(salmo.refrao) + '</p>';
     }
     if (salmo.texto) {
       var strofes = salmo.texto.split(/\n+/).filter(function (l) { return l.trim(); });
       strofes.forEach(function (s) {
-        html += '<p style="margin: 0 0 .8em; line-height: 1.7;">' + escHtml(s.trim()) + '</p>';
+        html += '<p data-lit-par="' + (idx++) + '" style="margin: 0 0 .8em; line-height: 1.7;">' + wrapWords(s.trim()) + '</p>';
       });
     }
     return html;
@@ -507,8 +555,8 @@
       var lines = data.evangelho.texto
         .split(/\n+/)
         .filter(function (l) { return l.trim(); })
-        .map(function (l) {
-          return '<p style="margin:0 0 .65em;line-height:1.65;">' + escHtml(l.trim()) + '</p>';
+        .map(function (l, i) {
+          return '<p data-lit-par="' + i + '" style="margin:0 0 .65em;line-height:1.65;">' + wrapWords(l.trim()) + '</p>';
         });
       excerptHtml = '<div class="pddia-gospel-row">'
         + '<span class="pddia-gospel-ref">'
@@ -573,28 +621,78 @@
         window.speechSynthesis.cancel();
         _ttsActive = null;
         updateTtsBtn(ttsId, false);
+        clearTtsHighlights();
         return;
       }
       /* Parar qualquer outra leitura */
       if (_ttsActive) {
         window.speechSynthesis.cancel();
         updateTtsBtn(_ttsActive, false);
+        clearTtsHighlights();
       }
       _ttsActive = ttsId;
-      /* Obter texto */
-      var text = '';
-      if (ttsId === 'pddia-gospel') {
-        text = _lastData && _lastData.evangelho ? (_lastData.evangelho.texto || '') : '';
-      } else {
-        var el = document.getElementById(ttsId);
-        text = el ? (el.innerText || el.textContent || '') : '';
-      }
-      if (!text.trim()) { _ttsActive = null; return; }
-      var utt = new SpeechSynthesisUtterance(text.trim());
+      /* Obter texto com título e referência */
+      var text = getTtsText(ttsId);
+      if (!text) { _ttsActive = null; return; }
+      var utt = new SpeechSynthesisUtterance(text);
       utt.lang = 'pt-BR';
       utt.rate = 0.88;
-      utt.onend = function () { _ttsActive = null; updateTtsBtn(ttsId, false); };
-      utt.onerror = function () { _ttsActive = null; updateTtsBtn(ttsId, false); };
+      utt.pitch = 1.0;
+      /* Usar a voz mais natural disponível */
+      var voice = _ttsVoice || loadBestVoice();
+      if (voice) utt.voice = voice;
+      /* Prepara mapa de palavras para efeito karaokê */
+      buildWordMap(ttsId, text);
+      _ttsBoundaryFired = false;
+      _ttsStartMs = 0;
+
+      /* Destaca o span no índice domIdx da lista de palavras */
+      function activateWord(domIdx) {
+        _ttsWordEls.forEach(function (el) { el.classList.remove('tts-word-active'); });
+        if (domIdx >= 0 && domIdx < _ttsWordEls.length) {
+          _ttsWordEls[domIdx].classList.add('tts-word-active');
+          _ttsWordEls[domIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+
+      /* Fallback por timer quando onboundary não dispara (Firefox, vozes locais) */
+      utt.onstart = function () {
+        _ttsStartMs = Date.now();
+        setTimeout(function () {
+          if (_ttsBoundaryFired || !window.speechSynthesis.speaking || _ttsActive !== ttsId) return;
+          /* ~2.2 palavras/s para pt-BR a rate=0.88 */
+          var wordsPerMs = (utt.rate * 2.2) / 1000;
+          _ttsTimer = setInterval(function () {
+            if (!window.speechSynthesis.speaking || _ttsActive !== ttsId) {
+              clearInterval(_ttsTimer); _ttsTimer = null; return;
+            }
+            activateWord(Math.floor((Date.now() - _ttsStartMs) * wordsPerMs) - _ttsWordOffset);
+          }, 150);
+        }, 800);
+      };
+
+      /* Contagem sequencial: cada evento 'word' avança um índice no array de spans */
+      utt.onboundary = function (e) {
+        if (e.name && e.name !== 'word') return;
+        _ttsBoundaryFired = true;
+        if (_ttsTimer) { clearInterval(_ttsTimer); _ttsTimer = null; }
+        var domIdx = _ttsBoundaryIdx - _ttsWordOffset;
+        _ttsBoundaryIdx++;
+        activateWord(domIdx);
+      };
+
+      utt.onend = function () {
+        _ttsActive = null;
+        updateTtsBtn(ttsId, false);
+        clearTtsHighlights();
+        /* Avançar automaticamente para a próxima leitura */
+        advanceToNext(ttsId);
+      };
+      utt.onerror = function () {
+        _ttsActive = null;
+        updateTtsBtn(ttsId, false);
+        clearTtsHighlights();
+      };
       updateTtsBtn(ttsId, true);
       window.speechSynthesis.speak(utt);
     },
