@@ -6805,6 +6805,19 @@ header.main-header .header-sticky.active{
 	flex-shrink: 0;
 }
 
+/* Versão com texto (botão CTA) */
+.lit-shr-trigger--text {
+	width: auto;
+	height: auto;
+	padding: 14px 22px;
+	gap: 8px;
+	font-size: .8rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+	border-radius: 4px;
+}
+
 .lit-shr-dark .lit-shr-trigger {
 	border-color: rgba(255,255,255,.2);
 	color: rgba(255,255,255,.45);
@@ -6966,10 +6979,23 @@ header.main-header .header-sticky.active{
 /* Coluna CTA */
 .palavra-do-dia-cta-col {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	align-items: flex-start;
 	justify-content: center;
+	gap: 10px;
 	padding: 32px 36px 32px 0;
 	flex-shrink: 0;
+}
+
+/* Holder do share no CTA col */
+.palavra-do-dia-cta-col #liturgiaBannerShareBtn,
+.palavra-do-dia-cta-col #liturgiaBannerShareBtn .lit-shr-wrap {
+	display: flex;
+	width: 100%;
+}
+.palavra-do-dia-cta-col #liturgiaBannerShareBtn .lit-shr-trigger--text {
+	width: 100%;
+	justify-content: center;
 }
 
 .palavra-do-dia-cta {
@@ -7044,6 +7070,17 @@ header.main-header .header-sticky.active{
 	}
 	.palavra-do-dia-cta-col {
 		padding: 0 20px 20px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+		flex-wrap: wrap;
+	}
+	.palavra-do-dia-cta-col #liturgiaBannerShareBtn,
+	.palavra-do-dia-cta-col #liturgiaBannerShareBtn .lit-shr-wrap {
+		width: auto;
+	}
+	.palavra-do-dia-cta-col #liturgiaBannerShareBtn .lit-shr-trigger--text {
+		width: auto;
 		justify-content: flex-start;
 	}
 }

@@ -11,7 +11,7 @@
 
   /* Mapeamento de cor litúrgica para estilo visual */
   var COR_MAP = {
-    'Branco': { bg: '#fff9f0', border: '#F5C518', badge: '#F5C518', text: '#222' },
+    'Branco': { bg: '#fffef5', border: '#f5f0d8', badge: '#f5f0d8', text: '#5a4a1a' },
     'Vermelho': { bg: '#fff5f5', border: '#c0392b', badge: '#c0392b', text: '#fff' },
     'Roxo': { bg: '#f9f5ff', border: '#6A0DAD', badge: '#6A0DAD', text: '#fff' },
     'Verde': { bg: '#f5fff8', border: '#2E7D32', badge: '#2E7D32', text: '#fff' },
@@ -33,6 +33,43 @@
 
   function saveToCache(data) {
     try { sessionStorage.setItem(todayKey(), JSON.stringify(data)); } catch (e) {}
+  }
+
+  /* Valida estrutura mínima dos dados da API */
+  function validateData(data) {
+    return data && typeof data === 'object'
+      && (data.evangelho || data.primeiraLeitura || data.liturgia);
+  }
+
+  /* Fetch com timeout de 12s e até 3 tentativas automáticas */
+  function fetchLiturgia(onSuccess, onError) {
+    var attempts = 0;
+    function doFetch() {
+      attempts++;
+      var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      var opts = controller ? { signal: controller.signal } : {};
+      var timer = controller ? setTimeout(function () { controller.abort(); }, 12000) : null;
+      fetch(API_URL, opts)
+        .then(function (r) {
+          if (timer) clearTimeout(timer);
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function (data) {
+          if (!validateData(data)) throw new Error('invalid_data');
+          saveToCache(data);
+          onSuccess(data);
+        })
+        .catch(function () {
+          if (timer) clearTimeout(timer);
+          if (attempts < 3) {
+            setTimeout(doFetch, 2500);
+          } else {
+            onError();
+          }
+        });
+    }
+    doFetch();
   }
 
   /* Dado mais recente carregado (para os handlers de compartilhamento) */
@@ -102,16 +139,107 @@
       + '</button>';
   }
 
+  /* ---- Seleção de voz natural (pt-BR) ---- */
+  var _ttsVoice = null;
+  function loadBestVoice() {
+    if (!window.speechSynthesis) return null;
+    var voices = window.speechSynthesis.getVoices();
+    if (!voices || !voices.length) return null;
+    var preferred = ['Google português do Brasil', 'Google Portuguese', 'Microsoft Maria', 'Luciana', 'Reed', 'Daniel'];
+    for (var p = 0; p < preferred.length; p++) {
+      for (var v = 0; v < voices.length; v++) {
+        if (voices[v].name.indexOf(preferred[p]) !== -1) { _ttsVoice = voices[v]; return voices[v]; }
+      }
+    }
+    for (var v = 0; v < voices.length; v++) {
+      if (voices[v].lang === 'pt-BR') { _ttsVoice = voices[v]; return voices[v]; }
+    }
+    for (var v = 0; v < voices.length; v++) {
+      if (voices[v].lang && voices[v].lang.toLowerCase().indexOf('pt') === 0) { _ttsVoice = voices[v]; return voices[v]; }
+    }
+    return null;
+  }
+
+  /* ---- Ordem de leituras para avanço automático ---- */
+  var TTS_ORDER = ['lit-body-primeira', 'lit-body-salmo', 'lit-body-segunda', 'lit-body-evangelho',
+    'lit-body-dia', 'lit-body-ofert', 'lit-body-comunhao', 'lit-body-antcom'];
+
+  function getNextTtsId(currentId) {
+    var idx = TTS_ORDER.indexOf(currentId);
+    if (idx < 0) return null;
+    for (var i = idx + 1; i < TTS_ORDER.length; i++) {
+      if (document.getElementById(TTS_ORDER[i])) return TTS_ORDER[i];
+    }
+    return null;
+  }
+
+  /* Monta o texto completo da leitura (título + referência + texto) para TTS */
+  function getTtsText(ttsId) {
+    if (!_lastData) return '';
+    var d = _lastData;
+    var map = {
+      'lit-body-primeira': function () {
+        var r = d.primeiraLeitura;
+        return r ? 'Primeira Leitura. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '. ' + (r.texto || '') : '';
+      },
+      'lit-body-salmo': function () {
+        var r = d.salmo;
+        return r ? 'Salmo Responsorial. ' + (r.referencia || '') + '. '
+          + (r.refrao ? 'Refrão: ' + r.refrao + '. ' : '') + (r.texto || '') : '';
+      },
+      'lit-body-segunda': function () {
+        var r = d.segundaLeitura;
+        return r ? 'Segunda Leitura. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '. ' + (r.texto || '') : '';
+      },
+      'lit-body-evangelho': function () {
+        var r = d.evangelho;
+        return r ? 'Evangelho. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '. ' + (r.texto || '') : '';
+      },
+      'lit-body-dia': function () { return 'Oração do Dia. ' + (d.dia || ''); },
+      'lit-body-ofert': function () { return 'Oração sobre as Oferendas. ' + (d.oferendas || ''); },
+      'lit-body-comunhao': function () { return 'Oração após a Comunhão. ' + (d.comunhao || ''); },
+      'lit-body-antcom': function () { return d.antifonas ? 'Antífona da Comunhão. ' + (d.antifonas.comunhao || '') : ''; },
+      'pddia-gospel': function () {
+        var r = d.evangelho;
+        return r ? 'Evangelho. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '. ' + (r.texto || '') : '';
+      }
+    };
+    var fn = map[ttsId];
+    return fn ? fn().trim() : '';
+  }
+
+  /* Avança automaticamente para a próxima leitura */
+  function advanceToNext(currentId) {
+    var nextId = getNextTtsId(currentId);
+    if (!nextId) return;
+    var bodyEl = document.getElementById(nextId);
+    if (!bodyEl) return;
+    /* Expandir bloco */
+    bodyEl.style.display = 'block';
+    var wrapId = nextId.replace('lit-body-', 'lit-head-') + '-wrap';
+    var wrap = document.getElementById(wrapId);
+    if (wrap) {
+      var toggleBtn = wrap.querySelector('.lit-reading-toggle');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+      var chevron = wrap.querySelector('.lit-chevron');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+      setTimeout(function () { wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+    }
+    setTimeout(function () { LiturgiaPlayer.ttsToggle(nextId); }, 500);
+  }
+
   /* Contador p/ IDs únicos dos share dropdowns */
   var _shrCount = 0;
 
   /* Constrói botão de compartilhar com dropdown */
-  function buildShareTooltip(mode, dark) {
+  function buildShareTooltip(mode, dark, showText) {
     var uid = 'shr-' + mode + '-' + (++_shrCount);
     var wrapCls = dark ? 'lit-shr-wrap lit-shr-dark' : 'lit-shr-wrap';
+    var triggerCls = showText ? 'lit-shr-trigger lit-shr-trigger--text' : 'lit-shr-trigger';
     return '<div class="' + wrapCls + '" id="' + uid + '">'
-      + '<button class="lit-shr-trigger" onclick="LiturgiaPlayer.toggleShare(event,\'' + uid + '\')" title="Compartilhar" aria-label="Compartilhar">'
+      + '<button class="' + triggerCls + '" onclick="LiturgiaPlayer.toggleShare(event,\'' + uid + '\')" title="Compartilhar" aria-label="Compartilhar">'
       + '<i class="fa-solid fa-share-nodes"></i>'
+      + (showText ? '<span>Compartilhar</span>' : '')
       + '</button>'
       + '<div class="lit-shr-dropdown" id="' + uid + '-dd" role="menu">'
       + '<button class="lit-shr-opt" onclick="LiturgiaPlayer.shareAction(\'copy\',\''
@@ -408,10 +536,13 @@
       + '</div>'
       + '<div class="pddia-divider"></div>'
       + excerptHtml
-      + '<div class="pddia-bottom-row">'
-      + (refs.length ? '<p class="pddia-refs">Leituras: ' + refs.map(escHtml).join(' \u00b7 ') + '</p>' : '<p></p>')
-      + buildShareTooltip('verse', true)
-      + '</div>';
+      + (refs.length ? '<p class="pddia-refs" style="margin-top:8px;">Leituras: ' + refs.map(escHtml).join(' \u00b7 ') + '</p>' : '');
+
+    /* Preenche o botão de compartilhar no container externo (CTA col) se existir */
+    var shareHolder = document.getElementById('liturgiaBannerShareBtn');
+    if (shareHolder) {
+      shareHolder.innerHTML = buildShareTooltip('verse', true, true);
+    }
   }
 
   /* ------------------------------------------------------------------ */
@@ -510,7 +641,7 @@
       if (!container) return;
 
       var cached = getFromCache();
-      if (cached) {
+      if (cached && validateData(cached)) {
         renderBanner(cached, container);
         return;
       }
@@ -520,18 +651,12 @@
         + '<span>Carregando a liturgia de hoje…</span>'
         + '</div>';
 
-      fetch(API_URL)
-        .then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        })
-        .then(function (data) {
-          saveToCache(data);
-          renderBanner(data, container);
-        })
-        .catch(function () {
-          container.innerHTML = '<p style="color:rgba(255,255,255,.4);font-size:.85rem;">Indisponível no momento.</p>';
-        });
+      fetchLiturgia(
+        function (data) { renderBanner(data, container); },
+        function () {
+          container.innerHTML = '<p style="color:rgba(255,255,255,.4);font-size:.85rem;">Indisponível no momento. Tente recarregar a página.</p>';
+        }
+      );
     },
 
     /* Carrega aba completa se container existir */
@@ -541,25 +666,17 @@
       if (!container) return;
 
       var cached = getFromCache();
-      if (cached) {
+      if (cached && validateData(cached)) {
         renderLiturgia(cached, container);
         return;
       }
 
       renderLoading(container);
 
-      fetch(API_URL)
-        .then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        })
-        .then(function (data) {
-          saveToCache(data);
-          renderLiturgia(data, container);
-        })
-        .catch(function () {
-          renderError(container);
-        });
+      fetchLiturgia(
+        function (data) { renderLiturgia(data, container); },
+        function () { renderError(container); }
+      );
     },
 
     /* Renderiza widget compacto (homepage) */
@@ -642,6 +759,14 @@
     /* Carrega widget compacto se existir */
     if (document.getElementById('liturgiaWidget')) {
       LiturgiaPlayer.loadWidget('liturgiaWidget');
+    }
+
+    /* Pré-carregar voz TTS */
+    if (window.speechSynthesis) {
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = function () { loadBestVoice(); };
+      }
+      loadBestVoice();
     }
 
     /* Suporte para link com ?tab=liturgia abrir a aba corretamente */
