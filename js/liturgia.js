@@ -355,53 +355,62 @@
       + '</div>';
   }
 
+  /* Formata texto para compartilhamento: versículos em linhas separadas e limpas */
+  function formatTextForShare(texto) {
+    if (!texto) return '';
+    return splitVerseLines(texto).map(function (l) {
+      var p = parseVerseLine(l.trim());
+      return p.num ? '*' + p.num + '* ' + p.text : p.text;
+    }).join('\n');
+  }
+
   /* Texto para compartilhar o Evangelho do dia */
   function buildVerseShareText(data) {
     var ref = data.evangelho ? (data.evangelho.referencia || '') : '';
     var titulo = data.evangelho ? (data.evangelho.titulo || 'Evangelho') : 'Evangelho';
     var texto = data.evangelho ? (data.evangelho.texto || '').trim() : '';
     var url = siteUrl('agenda-liturgica.html?tab=liturgia');
-    return '\u2720 ' + titulo + '\n'
+    return '\u2720 *' + titulo + '*\n'
       + (data.liturgia || '') + ' \u00b7 ' + (data.data || '') + '\n'
-      + ref + '\n\n'
-      + '\u201c' + texto + '\u201d\n\n'
+      + '_' + ref + '_\n\n'
+      + formatTextForShare(texto) + '\n\n'
       + '\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n'
-      + 'Par\u00f3quia NSR Jeric\u00f3/PB\n'
+      + 'Par\u00f3quia NSR Jeric\u00f3/PB\n\n'
       + url;
   }
 
   /* Texto para compartilhar a página completa (inclui textos de todas as leituras) */
   function buildPageShareText(data) {
     var url = siteUrl('agenda-liturgica.html?tab=liturgia');
-    var out = '\ud83d\udcd6 Liturgia do Dia \u2014 ' + (data.liturgia || '') + '\n'
+    var out = '\ud83d\udcd6 *Liturgia do Dia \u2014 ' + (data.liturgia || '') + '*\n'
       + (data.data || '');
 
     if (data.primeiraLeitura && data.primeiraLeitura.texto) {
-      out += '\n\n\ud83d\udcd6 1\u00aa Leitura \u2014 ' + (data.primeiraLeitura.referencia || '');
-      if (data.primeiraLeitura.titulo) out += '\n' + data.primeiraLeitura.titulo;
-      out += '\n\n' + data.primeiraLeitura.texto.trim();
+      out += '\n\n\ud83d\udcd6 *1\u00aa Leitura \u2014 ' + (data.primeiraLeitura.referencia || '') + '*';
+      if (data.primeiraLeitura.titulo) out += '\n_' + data.primeiraLeitura.titulo + '_';
+      out += '\n\n' + formatTextForShare(data.primeiraLeitura.texto);
     }
 
     if (data.salmo && (data.salmo.refrao || data.salmo.texto)) {
-      out += '\n\n\ud83c\udfb5 Salmo \u2014 ' + (data.salmo.referencia || '');
-      if (data.salmo.refrao) out += '\nRefr\u00e3o: ' + data.salmo.refrao;
-      if (data.salmo.texto) out += '\n\n' + data.salmo.texto.trim();
+      out += '\n\n\ud83c\udfb5 *Salmo \u2014 ' + (data.salmo.referencia || '') + '*';
+      if (data.salmo.refrao) out += '\n_Refr\u00e3o: ' + data.salmo.refrao + '_';
+      if (data.salmo.texto) out += '\n\n' + formatTextForShare(data.salmo.texto);
     }
 
     if (data.segundaLeitura && data.segundaLeitura.texto) {
-      out += '\n\n\ud83d\udcdc 2\u00aa Leitura \u2014 ' + (data.segundaLeitura.referencia || '');
-      if (data.segundaLeitura.titulo) out += '\n' + data.segundaLeitura.titulo;
-      out += '\n\n' + data.segundaLeitura.texto.trim();
+      out += '\n\n\ud83d\udcdc *2\u00aa Leitura \u2014 ' + (data.segundaLeitura.referencia || '') + '*';
+      if (data.segundaLeitura.titulo) out += '\n_' + data.segundaLeitura.titulo + '_';
+      out += '\n\n' + formatTextForShare(data.segundaLeitura.texto);
     }
 
     if (data.evangelho && data.evangelho.texto) {
-      out += '\n\n\u271d Evangelho \u2014 ' + (data.evangelho.referencia || '');
-      if (data.evangelho.titulo) out += '\n' + data.evangelho.titulo;
-      out += '\n\n\u201c' + data.evangelho.texto.trim() + '\u201d';
+      out += '\n\n\u271d *Evangelho \u2014 ' + (data.evangelho.referencia || '') + '*';
+      if (data.evangelho.titulo) out += '\n_' + data.evangelho.titulo + '_';
+      out += '\n\n' + formatTextForShare(data.evangelho.texto);
     }
 
     out += '\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n'
-      + 'Par\u00f3quia NSR Jeric\u00f3/PB\n'
+      + 'Par\u00f3quia NSR Jeric\u00f3/PB\n\n'
       + url;
     return out;
   }
