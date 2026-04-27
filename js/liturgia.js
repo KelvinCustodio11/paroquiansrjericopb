@@ -26,13 +26,23 @@
 
   function getFromCache() {
     try {
-      var raw = sessionStorage.getItem(todayKey());
+      var raw = localStorage.getItem(todayKey());
       return raw ? JSON.parse(raw) : null;
     } catch (e) { return null; }
   }
 
   function saveToCache(data) {
-    try { sessionStorage.setItem(todayKey(), JSON.stringify(data)); } catch (e) {}
+    try {
+      var key = todayKey();
+      localStorage.setItem(key, JSON.stringify(data));
+      /* Limpar chaves antigas do mesmo prefixo para não acumular no storage */
+      var toRemove = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf(STORAGE_KEY_PREFIX) === 0 && k !== key) toRemove.push(k);
+      }
+      toRemove.forEach(function (k) { localStorage.removeItem(k); });
+    } catch (e) {}
   }
 
   /* Valida estrutura mínima dos dados da API */
@@ -47,7 +57,7 @@
     function doFetch() {
       attempts++;
       var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      var opts = controller ? { signal: controller.signal } : {};
+      var opts = controller ? { signal: controller.signal, cache: 'no-cache' } : { cache: 'no-cache' };
       var timer = controller ? setTimeout(function () { controller.abort(); }, 12000) : null;
       fetch(API_URL, opts)
         .then(function (r) {
@@ -1043,5 +1053,10 @@
   } else {
     init();
   }
+
+  /* Recarregar conteúdo ao restaurar página do bfcache (botão voltar/avançar) */
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) { init(); }
+  });
 
 })();
