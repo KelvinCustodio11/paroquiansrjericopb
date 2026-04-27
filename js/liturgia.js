@@ -360,20 +360,40 @@
       + url;
   }
 
-  /* Texto para compartilhar a página completa */
+  /* Texto para compartilhar a página completa (inclui textos de todas as leituras) */
   function buildPageShareText(data) {
-    var refs = [];
-    if (data.primeiraLeitura && data.primeiraLeitura.referencia) refs.push(data.primeiraLeitura.referencia);
-    if (data.salmo && data.salmo.referencia) refs.push(data.salmo.referencia);
-    if (data.segundaLeitura && data.segundaLeitura.referencia) refs.push(data.segundaLeitura.referencia);
-    if (data.evangelho && data.evangelho.referencia) refs.push(data.evangelho.referencia);
     var url = siteUrl('agenda-liturgica.html?tab=liturgia');
-    return '\ud83d\udcd6 Liturgia do Dia \u2014 ' + (data.liturgia || '') + '\n'
-      + (data.data || '') + '\n\n'
-      + (refs.length ? 'Leituras: ' + refs.join(' \u00b7 ') + '\n\n' : '')
-      + 'Acesse as leituras completas:\n'
-      + url + '\n\n'
-      + 'Par\u00f3quia NSR Jeric\u00f3/PB';
+    var out = '\ud83d\udcd6 Liturgia do Dia \u2014 ' + (data.liturgia || '') + '\n'
+      + (data.data || '');
+
+    if (data.primeiraLeitura && data.primeiraLeitura.texto) {
+      out += '\n\n\ud83d\udcd6 1\u00aa Leitura \u2014 ' + (data.primeiraLeitura.referencia || '');
+      if (data.primeiraLeitura.titulo) out += '\n' + data.primeiraLeitura.titulo;
+      out += '\n\n' + data.primeiraLeitura.texto.trim();
+    }
+
+    if (data.salmo && (data.salmo.refrao || data.salmo.texto)) {
+      out += '\n\n\ud83c\udfb5 Salmo \u2014 ' + (data.salmo.referencia || '');
+      if (data.salmo.refrao) out += '\nRefr\u00e3o: ' + data.salmo.refrao;
+      if (data.salmo.texto) out += '\n\n' + data.salmo.texto.trim();
+    }
+
+    if (data.segundaLeitura && data.segundaLeitura.texto) {
+      out += '\n\n\ud83d\udcdc 2\u00aa Leitura \u2014 ' + (data.segundaLeitura.referencia || '');
+      if (data.segundaLeitura.titulo) out += '\n' + data.segundaLeitura.titulo;
+      out += '\n\n' + data.segundaLeitura.texto.trim();
+    }
+
+    if (data.evangelho && data.evangelho.texto) {
+      out += '\n\n\u271d Evangelho \u2014 ' + (data.evangelho.referencia || '');
+      if (data.evangelho.titulo) out += '\n' + data.evangelho.titulo;
+      out += '\n\n\u201c' + data.evangelho.texto.trim() + '\u201d';
+    }
+
+    out += '\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n'
+      + 'Par\u00f3quia NSR Jeric\u00f3/PB\n'
+      + url;
+    return out;
   }
 
   /* ------------------------------------------------------------------ */
@@ -390,11 +410,41 @@
       .replace(/'/g, '&#039;');
   }
 
+  /* Detecta número de versículo no início de uma linha de texto bíblico */
+  function parseVerseLine(line) {
+    /* Aceita número colado ao texto (sem espaço) ou com espaço: "11Eu sou" ou "11 Eu sou" */
+    var m = line.match(/^(\d{1,3})\s*([^\d].*)$/);
+    if (m) return { num: m[1], text: m[2] };
+    /* Sobrescritos unicode: ¹²³⁴⁵⁶⁷⁸⁹⁰ */
+    m = line.match(/^([\u00b9\u00b2\u00b3\u2074-\u2079\u2070]+)\s*(.+)$/);
+    if (m) return { num: m[1], text: m[2] };
+    return { num: '', text: line };
+  }
+
+  /* Divide texto em linhas por versículo — suporta \n explícitos e números inline
+     (API retorna texto como "Naquele tempo: 11Eu sou... 12O mercenário...") */
+  function splitVerseLines(texto) {
+    if (!texto) return [];
+    /* Injeta \n antes de número de versículo inline: " 12O " → "\n12O " */
+    var normalized = texto.replace(
+      /[ \t]+(\d{1,3})(?=[^\d,.:;\-\u2013\u2014])/g,
+      '\n$1'
+    );
+    return normalized.split(/\n+/).filter(function (l) { return l.trim(); });
+  }
+
   /* Converte texto em parágrafos com palavras envoltas em span para karaokê */
   function formatVerseText(texto) {
     if (!texto) return '';
-    var lines = texto.split(/\n+/).filter(function (l) { return l.trim(); });
+    var lines = splitVerseLines(texto);
     return lines.map(function (l, i) {
+      var p = parseVerseLine(l.trim());
+      if (p.num) {
+        return '<p data-lit-par="' + i + '" class="lit-verse-p">'
+          + '<span class="lit-vnum">' + escHtml(p.num) + '</span>'
+          + '<span class="lit-vtext">' + wrapWords(p.text) + '</span>'
+          + '</p>';
+      }
       return '<p data-lit-par="' + i + '" style="margin: 0 0 .8em; line-height: 1.7;">' + wrapWords(l.trim()) + '</p>';
     }).join('');
   }
@@ -409,9 +459,17 @@
         + wrapWords(salmo.refrao) + '</p>';
     }
     if (salmo.texto) {
-      var strofes = salmo.texto.split(/\n+/).filter(function (l) { return l.trim(); });
+      var strofes = splitVerseLines(salmo.texto);
       strofes.forEach(function (s) {
-        html += '<p data-lit-par="' + (idx++) + '" style="margin: 0 0 .8em; line-height: 1.7;">' + wrapWords(s.trim()) + '</p>';
+        var p = parseVerseLine(s.trim());
+        if (p.num) {
+          html += '<p data-lit-par="' + (idx++) + '" class="lit-verse-p">'
+            + '<span class="lit-vnum">' + escHtml(p.num) + '</span>'
+            + '<span class="lit-vtext">' + wrapWords(p.text) + '</span>'
+            + '</p>';
+        } else {
+          html += '<p data-lit-par="' + (idx++) + '" style="margin: 0 0 .8em; line-height: 1.7;">' + wrapWords(s.trim()) + '</p>';
+        }
       });
     }
     return html;
@@ -591,10 +649,15 @@
     /* Texto completo do evangelho, formatado em parágrafos sem números de versículo soltos */
     var excerptHtml = '';
     if (data.evangelho && data.evangelho.texto) {
-      var lines = data.evangelho.texto
-        .split(/\n+/)
-        .filter(function (l) { return l.trim(); })
+      var lines = splitVerseLines(data.evangelho.texto)
         .map(function (l, i) {
+          var p = parseVerseLine(l.trim());
+          if (p.num) {
+            return '<p data-lit-par="' + i + '" class="lit-verse-p" style="margin:0 0 .65em;line-height:1.65;">'
+              + '<span class="lit-vnum">' + escHtml(p.num) + '</span>'
+              + '<span class="lit-vtext">' + wrapWords(p.text) + '</span>'
+              + '</p>';
+          }
           return '<p data-lit-par="' + i + '" style="margin:0 0 .65em;line-height:1.65;">' + wrapWords(l.trim()) + '</p>';
         });
       excerptHtml = '<div class="pddia-gospel-row">'

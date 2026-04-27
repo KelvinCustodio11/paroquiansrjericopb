@@ -6930,6 +6930,37 @@ header.main-header .header-sticky.active{
 	color: #fff;
 }
 
+/* Número de versículo destacado nas leituras */
+.lit-verse-p {
+	display: flex;
+	align-items: baseline;
+	gap: 6px;
+	margin: 0 0 .8em;
+	line-height: 1.7;
+}
+
+.lit-vnum {
+	color: var(--accent-color);
+	font-weight: 700;
+	font-size: .7rem;
+	min-width: 1.5em;
+	text-align: right;
+	flex-shrink: 0;
+	opacity: .85;
+	letter-spacing: .02em;
+	padding-top: .15em;
+}
+
+.lit-vtext {
+	flex: 1;
+	min-width: 0;
+}
+
+/* Versão escura (banner do evangelho) */
+.pddia-full-text .lit-vnum {
+	color: rgba(172,170,89,.9);
+}
+
 /* Versão escura do TTS (banner) */
 .palavra-do-dia .lit-tts-btn {
 	border-color: rgba(255,255,255,.2);
