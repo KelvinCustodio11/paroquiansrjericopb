@@ -975,6 +975,15 @@
         .catch(function () {
           container.innerHTML = '<p style="color:#888;font-size:.85rem;text-align:center;padding:16px;">Indisponível no momento.</p>';
         });
+    },
+
+    /* Re-inicializa após navegação PJAX (chamado pelo radio-player.js) */
+    reinit: function () {
+      /* Para qualquer TTS em andamento */
+      if (window.speechSynthesis && window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+      init();
     }
   };
 

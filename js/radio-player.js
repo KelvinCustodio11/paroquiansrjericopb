@@ -534,6 +534,13 @@
                 var s = document.createElement('script');
                 s.src = 'js/function.js?' + Date.now();
                 document.body.appendChild(s);
+
+                /* Re-inicializa liturgia.js após troca de corpo */
+                setTimeout(function () {
+                    if (window.LiturgiaPlayer && window.LiturgiaPlayer.reinit) {
+                        window.LiturgiaPlayer.reinit();
+                    }
+                }, 0);
             })
             .catch(function () {
                 pjaxOverlay.style.opacity = '0';
