@@ -535,11 +535,9 @@
                 s.src = 'js/function.js?' + Date.now();
                 document.body.appendChild(s);
 
-                /* Re-inicializa liturgia.js após troca de corpo */
+                /* Notifica demais módulos que o DOM foi trocado */
                 setTimeout(function () {
-                    if (window.LiturgiaPlayer && window.LiturgiaPlayer.reinit) {
-                        window.LiturgiaPlayer.reinit();
-                    }
+                    document.dispatchEvent(new CustomEvent('pjax:ready'));
                 }, 0);
             })
             .catch(function () {
