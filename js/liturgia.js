@@ -121,9 +121,8 @@
 
   /* Atualiza visual do botão TTS */
   var _ttsActive = null;
-  var _ttsWordEls = [];      /* spans lit-word da leitura ativa */
-  var _ttsWordOffset = 0;   /* quantas palavras TTS antes do primeiro span */
-  var _ttsBoundaryIdx = 0;  /* contador de eventos word disparados */
+  var _ttsWordEls = [];  /* spans lit-word da leitura ativa */
+  var _ttsCharMap = [];  /* [{charStart, el}] posição de cada span em ttsText */
   var _ttsTimer = null;
   var _ttsBoundaryFired = false;
   var _ttsStartMs = 0;
@@ -133,8 +132,7 @@
     if (_ttsTimer) { clearInterval(_ttsTimer); _ttsTimer = null; }
     _ttsWordEls.forEach(function (el) { el.classList.remove('tts-word-active'); });
     _ttsWordEls = [];
-    _ttsWordOffset = 0;
-    _ttsBoundaryIdx = 0;
+    _ttsCharMap = [];
   }
 
   /* Envolve cada palavra em <span class="lit-word"> para efeito karaokê */
@@ -146,28 +144,30 @@
     }).join('');
   }
 
-  /* Preenche _ttsWordEls e calcula _ttsWordOffset (palavras de prefixo antes do texto visível) */
-  function buildWordMap(ttsId, ttsText) {
+  /* Mapeia cada span.lit-word → charStart em bodyText (texto do corpo, sem prefixo) */
+  function buildWordMap(ttsId, bodyText) {
     var root = ttsId === 'pddia-gospel'
       ? document.querySelector('.pddia-full-text')
       : document.getElementById(ttsId);
     _ttsWordEls = [];
-    _ttsWordOffset = 0;
-    _ttsBoundaryIdx = 0;
+    _ttsCharMap = [];
     if (!root) return;
     _ttsWordEls = Array.prototype.slice.call(root.querySelectorAll('span.lit-word'));
     if (!_ttsWordEls.length) return;
-    /* Conta quantas palavras TTS existem antes do primeiro span (prefixo falado) */
-    var firstText = _ttsWordEls[0].textContent.trim();
-    var ttsWords = ttsText.split(/\s+/).filter(function (w) { return w; });
-    var strip = function (s) { return s.replace(/[«»\u201c\u201d\u2018\u2019.,;:!?()\/\[\]\-\u2014\u2013]/g, '').toLowerCase(); };
-    var cleanFirst = strip(firstText);
-    for (var i = 0; i < ttsWords.length; i++) {
-      if (strip(ttsWords[i]) === cleanFirst || ttsWords[i] === firstText) {
-        _ttsWordOffset = i;
-        break;
+    /* O bodyText é exatamente o texto dos spans — mapeamento direto sem offset */
+    var searchFrom = 0;
+    _ttsWordEls.forEach(function (el) {
+      var t = el.textContent;
+      if (!t.trim()) return;
+      var idx = bodyText.indexOf(t, searchFrom);
+      if (idx >= 0) {
+        _ttsCharMap.push({ charStart: idx, el: el });
+        searchFrom = idx + t.length;
+      } else {
+        _ttsCharMap.push({ charStart: searchFrom, el: el });
+        searchFrom += t.length + 1;
       }
-    }
+    });
   }
   function updateTtsBtn(ttsId, playing) {
     var btn = document.querySelector('[data-tts-for="' + ttsId + '"]');
@@ -193,7 +193,17 @@
     if (!window.speechSynthesis) return null;
     var voices = window.speechSynthesis.getVoices();
     if (!voices || !voices.length) return null;
-    var preferred = ['Google português do Brasil', 'Google Portuguese', 'Microsoft Maria', 'Luciana', 'Reed', 'Daniel'];
+    /* Verificar preferência salva pelo usuário */
+    try {
+      var saved = localStorage.getItem('lit_tts_voice');
+      if (saved) {
+        for (var v = 0; v < voices.length; v++) {
+          if (voices[v].name === saved) { _ttsVoice = voices[v]; return voices[v]; }
+        }
+      }
+    } catch (e) {}
+    /* Prioridade padrão: vozes online pt-BR primeiro */
+    var preferred = ['Google português do Brasil', 'Microsoft Francisca', 'Microsoft Maria', 'Google Portuguese', 'Luciana', 'Reed', 'Daniel'];
     for (var p = 0; p < preferred.length; p++) {
       for (var v = 0; v < voices.length; v++) {
         if (voices[v].name.indexOf(preferred[p]) !== -1) { _ttsVoice = voices[v]; return voices[v]; }
@@ -221,62 +231,91 @@
     return null;
   }
 
-  /* Monta o texto completo da leitura (título + referência + texto) para TTS */
+  /* Monta o texto da leitura separado em prefixo (cabeçalho) e corpo (texto visível) */
   function getTtsText(ttsId) {
-    if (!_lastData) return '';
+    if (!_lastData) return null;
     var d = _lastData;
     var map = {
       'lit-body-primeira': function () {
         var r = d.primeiraLeitura;
-        return r ? 'Primeira Leitura. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '. ' + (r.texto || '') : '';
+        return r ? {
+          prefix: 'Primeira Leitura. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '.',
+          body: (r.texto || '').trim()
+        } : null;
       },
       'lit-body-salmo': function () {
         var r = d.salmo;
-        return r ? 'Salmo Responsorial. ' + (r.referencia || '') + '. '
-          + (r.refrao ? 'Refrão: ' + r.refrao + '. ' : '') + (r.texto || '') : '';
+        if (!r) return null;
+        var body = (r.refrao ? r.refrao + '. ' : '') + (r.texto || '');
+        return { prefix: 'Salmo Responsorial. ' + (r.referencia || '') + '.', body: body.trim() };
       },
       'lit-body-segunda': function () {
         var r = d.segundaLeitura;
-        return r ? 'Segunda Leitura. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '. ' + (r.texto || '') : '';
+        return r ? {
+          prefix: 'Segunda Leitura. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '.',
+          body: (r.texto || '').trim()
+        } : null;
       },
       'lit-body-evangelho': function () {
         var r = d.evangelho;
-        return r ? 'Evangelho. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '. ' + (r.texto || '') : '';
+        return r ? {
+          prefix: 'Evangelho. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '.',
+          body: (r.texto || '').trim()
+        } : null;
       },
-      'lit-body-dia': function () { return 'Oração do Dia. ' + (d.dia || ''); },
-      'lit-body-ofert': function () { return 'Oração sobre as Oferendas. ' + (d.oferendas || ''); },
-      'lit-body-comunhao': function () { return 'Oração após a Comunhão. ' + (d.comunhao || ''); },
-      'lit-body-antcom': function () { return d.antifonas ? 'Antífona da Comunhão. ' + (d.antifonas.comunhao || '') : ''; },
+      'lit-body-dia': function () {
+        return { prefix: 'Oração do Dia.', body: (d.dia || '').trim() };
+      },
+      'lit-body-ofert': function () {
+        return { prefix: 'Oração sobre as Oferendas.', body: (d.oferendas || '').trim() };
+      },
+      'lit-body-comunhao': function () {
+        return { prefix: 'Oração após a Comunhão.', body: (d.comunhao || '').trim() };
+      },
+      'lit-body-antcom': function () {
+        return d.antifonas ? { prefix: 'Antífona da Comunhão.', body: (d.antifonas.comunhao || '').trim() } : null;
+      },
       'pddia-gospel': function () {
         var r = d.evangelho;
-        return r ? 'Evangelho. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '. ' + (r.texto || '') : '';
+        return r ? {
+          prefix: 'Evangelho. ' + (r.referencia || '') + '. ' + (r.titulo || '') + '.',
+          body: (r.texto || '').trim()
+        } : null;
       }
     };
     var fn = map[ttsId];
-    return fn ? fn().trim() : '';
+    return fn ? fn() : null;
   }
 
-  /* Avança automaticamente para a próxima leitura */
-  function advanceToNext(currentId) {
-    var nextId = getNextTtsId(currentId);
-    if (!nextId) return;
-    var bodyEl = document.getElementById(nextId);
+  /* Expande um bloco colapsável pelo bodyId e volta o chevron */
+  function expandBlock(bodyId) {
+    var bodyEl = document.getElementById(bodyId);
     if (!bodyEl) return;
-    /* Expandir bloco */
     bodyEl.style.display = 'block';
-    var wrapId = nextId.replace('lit-body-', 'lit-head-') + '-wrap';
+    /* ID do wrapper: lit-head-XXXX-wrap */
+    var wrapId = bodyId.replace('lit-body-', 'lit-head-') + '-wrap';
     var wrap = document.getElementById(wrapId);
     if (wrap) {
       var toggleBtn = wrap.querySelector('.lit-reading-toggle');
       if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
       var chevron = wrap.querySelector('.lit-chevron');
       if (chevron) chevron.style.transform = 'rotate(180deg)';
-      setTimeout(function () { wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
     }
-    setTimeout(function () { LiturgiaPlayer.ttsToggle(nextId); }, 500);
   }
 
-  /* Contador p/ IDs únicos dos share dropdowns */
+  /* Avança automaticamente para a próxima leitura e expande o bloco */
+  function advanceToNext(currentId) {
+    var nextId = getNextTtsId(currentId);
+    if (!nextId) return;
+    if (!document.getElementById(nextId)) return;
+    expandBlock(nextId);
+    var wrapId = nextId.replace('lit-body-', 'lit-head-') + '-wrap';
+    var wrap = document.getElementById(wrapId);
+    if (wrap) {
+      setTimeout(function () { wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+    }
+    setTimeout(function () { LiturgiaPlayer.ttsToggle(nextId); }, 600);
+  }
   var _shrCount = 0;
 
   /* Constrói botão de compartilhar com dropdown */
@@ -610,10 +649,10 @@
       if (chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
     },
 
-    /* Leitura em voz alta (TTS) */
+    /* Leitura em voz alta (TTS) — prefixo + corpo em duas utterances */
     ttsToggle: function (ttsId) {
       if (!window.speechSynthesis) {
-        showToast('Leitura de voz n\u00e3o dispon\u00edvel neste navegador.');
+        showToast('Leitura de voz não disponível neste navegador.');
         return;
       }
       /* Parar leitura ativa */
@@ -631,70 +670,119 @@
         clearTtsHighlights();
       }
       _ttsActive = ttsId;
-      /* Obter texto com título e referência */
-      var text = getTtsText(ttsId);
-      if (!text) { _ttsActive = null; return; }
-      var utt = new SpeechSynthesisUtterance(text);
-      utt.lang = 'pt-BR';
-      utt.rate = 0.88;
-      utt.pitch = 1.0;
-      /* Usar a voz mais natural disponível */
+      /* Expandir bloco de leitura se ainda estiver fechado */
+      expandBlock(ttsId);
+
+      var parts = getTtsText(ttsId);
+      if (!parts || !parts.body) { _ttsActive = null; return; }
+
       var voice = _ttsVoice || loadBestVoice();
-      if (voice) utt.voice = voice;
-      /* Prepara mapa de palavras para efeito karaokê */
-      buildWordMap(ttsId, text);
+
+      function makeUtt(text) {
+        var u = new SpeechSynthesisUtterance(text);
+        u.lang = 'pt-BR';
+        u.rate = 0.88;
+        u.pitch = 1.0;
+        if (voice) u.voice = voice;
+        return u;
+      }
+
+      /* ---- Utterance 2: CORPO (texto visível) — karaokê ativo ---- */
+      var uttBody = makeUtt(parts.body);
+      buildWordMap(ttsId, parts.body);  /* mapeamento 1:1 sem offset */
       _ttsBoundaryFired = false;
       _ttsStartMs = 0;
 
-      /* Destaca o span no índice domIdx da lista de palavras */
-      function activateWord(domIdx) {
+      function activateAtCharIdx(ci) {
+        var best = -1;
+        for (var i = 0; i < _ttsCharMap.length; i++) {
+          if (_ttsCharMap[i].charStart <= ci) best = i;
+          else break;
+        }
         _ttsWordEls.forEach(function (el) { el.classList.remove('tts-word-active'); });
-        if (domIdx >= 0 && domIdx < _ttsWordEls.length) {
-          _ttsWordEls[domIdx].classList.add('tts-word-active');
-          _ttsWordEls[domIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (best >= 0) {
+          _ttsCharMap[best].el.classList.add('tts-word-active');
+          _ttsCharMap[best].el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       }
 
-      /* Fallback por timer quando onboundary não dispara (Firefox, vozes locais) */
-      utt.onstart = function () {
+      uttBody.onstart = function () {
         _ttsStartMs = Date.now();
+        /* Fallback por timer se onboundary não disparar (Firefox/vozes locais) */
         setTimeout(function () {
           if (_ttsBoundaryFired || !window.speechSynthesis.speaking || _ttsActive !== ttsId) return;
-          /* ~2.2 palavras/s para pt-BR a rate=0.88 */
-          var wordsPerMs = (utt.rate * 2.2) / 1000;
+          var charsPerMs = (11 * uttBody.rate) / 1000;
           _ttsTimer = setInterval(function () {
             if (!window.speechSynthesis.speaking || _ttsActive !== ttsId) {
               clearInterval(_ttsTimer); _ttsTimer = null; return;
             }
-            activateWord(Math.floor((Date.now() - _ttsStartMs) * wordsPerMs) - _ttsWordOffset);
+            activateAtCharIdx(Math.floor((Date.now() - _ttsStartMs) * charsPerMs));
           }, 150);
-        }, 800);
+        }, 600);
       };
 
-      /* Contagem sequencial: cada evento 'word' avança um índice no array de spans */
-      utt.onboundary = function (e) {
+      uttBody.onboundary = function (e) {
         if (e.name && e.name !== 'word') return;
         _ttsBoundaryFired = true;
         if (_ttsTimer) { clearInterval(_ttsTimer); _ttsTimer = null; }
-        var domIdx = _ttsBoundaryIdx - _ttsWordOffset;
-        _ttsBoundaryIdx++;
-        activateWord(domIdx);
+        activateAtCharIdx(e.charIndex);
       };
 
-      utt.onend = function () {
+      uttBody.onend = function () {
+        if (_ttsActive !== ttsId) return;
         _ttsActive = null;
         updateTtsBtn(ttsId, false);
         clearTtsHighlights();
-        /* Avançar automaticamente para a próxima leitura */
         advanceToNext(ttsId);
       };
-      utt.onerror = function () {
+
+      uttBody.onerror = function () {
         _ttsActive = null;
         updateTtsBtn(ttsId, false);
         clearTtsHighlights();
       };
-      updateTtsBtn(ttsId, true);
-      window.speechSynthesis.speak(utt);
+
+      /* ---- Utterance 1: PREFIXO (cabeçalho) — sem karaokê ---- */
+      if (parts.prefix) {
+        var uttPrefix = makeUtt(parts.prefix);
+        uttPrefix.onend = function () {
+          if (_ttsActive !== ttsId) return; /* foi cancelado entre as duas */
+          window.speechSynthesis.speak(uttBody);
+        };
+        uttPrefix.onerror = function () {
+          if (_ttsActive !== ttsId) return;
+          window.speechSynthesis.speak(uttBody); /* tenta o corpo mesmo assim */
+        };
+        updateTtsBtn(ttsId, true);
+        window.speechSynthesis.speak(uttPrefix);
+      } else {
+        updateTtsBtn(ttsId, true);
+        window.speechSynthesis.speak(uttBody);
+      }
+    },
+
+    /* Lista vozes disponíveis no console para escolha */
+    voices: function () {
+      var vs = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      var pt = vs.filter(function (v) { return v.lang && v.lang.toLowerCase().indexOf('pt') === 0; });
+      console.log('=== Vozes pt-* disponíveis ===');
+      pt.forEach(function (v, i) {
+        console.log(i + ': "' + v.name + '" | ' + v.lang + (v.localService ? ' [local]' : ' [online]'));
+      });
+      if (!pt.length) {
+        console.log('Nenhuma voz pt encontrada. Todas as vozes:');
+        vs.forEach(function (v, i) { console.log(i + ': "' + v.name + '" | ' + v.lang); });
+      }
+      try { console.log('Voz atual:', localStorage.getItem('lit_tts_voice') || '(automática)'); } catch (e) {}
+      return pt.map(function (v) { return v.name; });
+    },
+
+    /* Define voz preferida pelo nome exato (persistido em localStorage) */
+    setVoice: function (name) {
+      try { localStorage.setItem('lit_tts_voice', name); } catch (e) {}
+      _ttsVoice = null;
+      loadBestVoice();
+      console.log('Voz definida:', name, '| Reinicie a leitura para aplicar.');
     },
 
     /* Abre/fecha dropdown de compartilhar */
