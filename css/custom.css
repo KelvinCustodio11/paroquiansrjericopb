@@ -7135,3 +7135,58 @@ header.main-header .header-sticky.active{
 		justify-content: flex-start;
 	}
 }
+
+/* ── Santo do Dia — Aba em agenda-liturgica.html ───────── */
+/* Estilos mínimos — layout delegado às classes do template */
+
+/* Spinner de carregamento */
+.sd-loading-wrap {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 0;
+}
+
+.sd-loading-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    animation: sdPulse 1.2s ease-in-out infinite;
+}
+
+.sd-loading-dot:nth-child(2) { animation-delay: 0.2s; }
+.sd-loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes sdPulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50%       { opacity: 1;   transform: scale(1.1); }
+}
+
+/* Placeholder quando não há imagem do santo */
+.sd-img-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--secondary-color);
+    aspect-ratio: 1 / 1.22;
+    font-size: 3rem;
+    color: var(--accent-color);
+    border-radius: 0 0 80px 0;
+}
+
+/* Label da data da festa litúrgica */
+.sd-feast-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent-color);
+    margin-bottom: 4px;
+}
+
+/* Descrição litúrgica breve do santo */
+.sd-descricao {
+    font-style: italic;
+    font-size: 14px;
+}

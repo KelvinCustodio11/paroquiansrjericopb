@@ -154,6 +154,9 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="liturgia-tab" data-bs-toggle="tab" data-bs-target="#liturgia" type="button" role="tab" aria-selected="false">liturgia do dia</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="santo-dia-tab" data-bs-toggle="tab" data-bs-target="#santo-dia" type="button" role="tab" aria-selected="false">santo do dia</button>
+                            </li>
                         </ul>
                     </div>
                     <!-- Tabs Nav End -->
@@ -434,6 +437,81 @@
                         </div>
                         <!-- Aba Liturgia do Dia End -->
 
+                        <!-- Aba Santo do Dia Start -->
+                        <div class="our-vision-item tab-pane fade" id="santo-dia" role="tabpanel">
+
+                            <!-- Cabeçalho + seletor de data -->
+                            <div class="row align-items-end pt-4 mb-4">
+                                <div class="col-lg-8 col-md-7">
+                                    <div class="section-title mb-0">
+                                        <h3 class="wow fadeInUp">hagiografia</h3>
+                                        <h2 class="text-anime-style-2" data-cursor="-opaque">Santo do <span>Dia</span></h2>
+                                        <p class="wow fadeInUp" data-wow-delay="0.25s">Conheça a vida, a missão e o testemunho dos santos que a Igreja celebra a cada dia do ano litúrgico.</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-5">
+                                    <div class="wow fadeInUp" data-wow-delay="0.25s">
+                                        <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
+                                            <label for="sdDateInput" style="font-weight:600;margin-bottom:0;white-space:nowrap;">Data:</label>
+                                            <input type="date" id="sdDateInput" class="form-control" style="max-width:160px;display:inline-block;width:auto;">
+                                            <button id="sdDateBtn" class="btn-default" style="padding:10px 50px 10px 16px;">
+                                                <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Estado: Carregando -->
+                            <div id="sdLoading" class="text-center py-4">
+                                <div class="sd-loading-wrap">
+                                    <span class="sd-loading-dot"></span>
+                                    <span class="sd-loading-dot"></span>
+                                    <span class="sd-loading-dot"></span>
+                                </div>
+                                <p class="mt-2 text-muted">Buscando o santo do dia…</p>
+                            </div>
+
+                            <!-- Estado: Erro -->
+                            <div id="sdError" hidden class="text-center py-5">
+                                <i class="fa-solid fa-church fa-3x d-block mb-3" style="color:#ccc;"></i>
+                                <p>Não foi possível encontrar o santo do dia para esta data.<br>Tente outra data ou verifique sua conexão.</p>
+                            </div>
+
+                            <!-- Resultado -->
+                            <div id="sdCard" hidden>
+                                <div class="row align-items-start">
+
+                                    <!-- Imagem + identidade -->
+                                    <div class="col-lg-4 col-md-5 mb-4">
+                                        <div class="team-member-item">
+                                            <div class="team-image">
+                                                <figure class="image-anime">
+                                                    <img id="sdCardImg" src="" alt="" hidden>
+                                                    <div id="sdImgPlaceholder" class="sd-img-placeholder">
+                                                        <i class="fa-solid fa-person-praying"></i>
+                                                    </div>
+                                                </figure>
+                                            </div>
+                                            <div class="team-content">
+                                                <p id="sdCardDate" class="sd-feast-label"></p>
+                                                <h3 id="sdCardNome"></h3>
+                                                <p id="sdCardDescricao" class="sd-descricao"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Conteúdo biográfico -->
+                                    <div class="col-lg-8 col-md-7">
+                                        <div class="post-entry" id="sdContent"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Aba Santo do Dia End -->
+
                     </div>
                     <!-- Tab Content End -->
                 </div>
@@ -592,5 +670,221 @@
     <script src="js/radio-player.js"></script>
     <!-- Liturgia Diária -->
     <script src="js/liturgia.js"></script>
+    <!-- Calendário Romano Geral -->
+    <script src="js/calendario-romano.js"></script>
+    <!-- Santo do Dia -->
+    <script src="js/santo-dia.js"></script>
+    <script>
+    (function () {
+        'use strict';
+
+        var MESES_PT = [
+            'janeiro','fevereiro','março','abril','maio','junho',
+            'julho','agosto','setembro','outubro','novembro','dezembro'
+        ];
+
+        /* Ícones por título de seção */
+        var SECTION_ICONS = {
+            'biografia':              'fa-book-open',
+            'vida':                   'fa-seedling',
+            'vida e obra':            'fa-seedling',
+            'história':               'fa-scroll',
+            'infância':               'fa-child',
+            'infancia':               'fa-child',
+            'juventude':              'fa-person',
+            'espiritualidade':        'fa-dove',
+            'espiritualidade e mística': 'fa-dove',
+            'missão':                 'fa-compass',
+            'apostolado':             'fa-hands-praying',
+            'reforma da igreja':      'fa-church',
+            'reforma':                'fa-church',
+            'virtudes':               'fa-star',
+            'martírio':               'fa-cross',
+            'martirio':               'fa-cross',
+            'morte':                  'fa-cross',
+            'canonização':            'fa-certificate',
+            'canonizacao':            'fa-certificate',
+            'beatificação':           'fa-certificate',
+            'beatificacao':           'fa-certificate',
+            'veneração':              'fa-heart',
+            'veneracao':              'fa-heart',
+            'padroeira':              'fa-shield-halved',
+            'padroeiro':              'fa-shield-halved',
+            'patronagem':             'fa-shield-halved',
+            'obras':                  'fa-feather-pointed',
+            'escritos':               'fa-feather-pointed',
+            'legado':                 'fa-landmark',
+            'herança espiritual':     'fa-landmark',
+            'milagres':               'fa-star-of-david',
+            'iconografia':            'fa-image',
+            'relíquias':              'fa-box',
+            'reliquias':              'fa-box',
+            'culto':                  'fa-hands-praying',
+            'tentações':              'fa-fire-flame-curved',
+            'tentacoes':              'fa-fire-flame-curved',
+            'dom das lágrimas':       'fa-droplet',
+            'ordem dominicana':       'fa-om',
+            'fontes para vida':       'fa-book',
+            'doutora da igreja':      'fa-graduation-cap',
+            'doutor da igreja':       'fa-graduation-cap'
+        };
+
+        function getIcon(title) {
+            if (!title) return 'fa-cross';
+            var t = title.toLowerCase().trim();
+            return SECTION_ICONS[t] || 'fa-cross';
+        }
+
+        function formatDate(d) {
+            return d.getDate() + ' de ' + MESES_PT[d.getMonth()] + ' de ' + d.getFullYear();
+        }
+
+        function showLoading() {
+            document.getElementById('sdLoading').removeAttribute('hidden');
+            document.getElementById('sdCard').setAttribute('hidden', '');
+            document.getElementById('sdError').setAttribute('hidden', '');
+        }
+
+        function showError() {
+            document.getElementById('sdLoading').setAttribute('hidden', '');
+            document.getElementById('sdCard').setAttribute('hidden', '');
+            document.getElementById('sdError').removeAttribute('hidden');
+        }
+
+        function showCard(data, d) {
+            document.getElementById('sdLoading').setAttribute('hidden', '');
+            document.getElementById('sdError').setAttribute('hidden', '');
+
+            /* ── Identidade ── */
+            document.getElementById('sdCardDate').textContent = 'Festa: ' + formatDate(d);
+            document.getElementById('sdCardNome').textContent = data.nome || '';
+            document.getElementById('sdCardDescricao').textContent = data.descricao || '';
+
+            /* ── Imagem ── */
+            var imgEl = document.getElementById('sdCardImg');
+            var placeholder = document.getElementById('sdImgPlaceholder');
+            if (data.imagemGrande || data.imagem) {
+                imgEl.src = data.imagemGrande || data.imagem;
+                imgEl.alt = data.nome || 'Santo';
+                imgEl.removeAttribute('hidden');
+                if (placeholder) placeholder.style.display = 'none';
+            } else {
+                imgEl.setAttribute('hidden', '');
+                if (placeholder) placeholder.style.display = 'flex';
+            }
+
+            /* ── Conteúdo biográfico ── */
+            var contentEl = document.getElementById('sdContent');
+            contentEl.innerHTML = '';
+
+            if (data.bioHtml) {
+                /* Bio HTML da Evangelizo — injetar diretamente */
+                contentEl.innerHTML = data.bioHtml;
+                /* Appenda seções complementares da Wikipedia (apenas com título) */
+                if (data.secoes && data.secoes.length) {
+                    data.secoes.forEach(function (sec) {
+                        if (!sec.title || !sec.paras.length) return;
+                        var h = document.createElement('h3');
+                        h.textContent = sec.title;
+                        contentEl.appendChild(h);
+                        sec.paras.forEach(function (para) {
+                            var p = document.createElement('p');
+                            p.textContent = para;
+                            contentEl.appendChild(p);
+                        });
+                    });
+                }
+            } else if (data.secoes && data.secoes.length) {
+                /* Fallback: seções da Wikipedia em texto plano */
+                data.secoes.forEach(function (sec, idx) {
+                    if (idx === 0) {
+                        sec.paras.forEach(function (para) {
+                            var p = document.createElement('p');
+                            p.textContent = para;
+                            contentEl.appendChild(p);
+                        });
+                        return;
+                    }
+                    if (!sec.paras.length) return;
+                    if (sec.title) {
+                        var h = document.createElement('h3');
+                        h.textContent = sec.title;
+                        contentEl.appendChild(h);
+                    }
+                    sec.paras.forEach(function (para) {
+                        var p = document.createElement('p');
+                        p.textContent = para;
+                        contentEl.appendChild(p);
+                    });
+                });
+            } else {
+                contentEl.innerHTML = '<p>Conteúdo biográfico não disponível para este santo.</p>';
+            }
+
+            document.getElementById('sdCard').removeAttribute('hidden');
+        }
+
+        function loadSanto(d) {
+            showLoading();
+            window.SantoDia.fetchForDate(d, function (data) { showCard(data, d); }, showError);
+        }
+
+        var _initDone = false;
+
+        function initSantoTab() {
+            var input = document.getElementById('sdDateInput');
+            var btn   = document.getElementById('sdDateBtn');
+            if (!input || !btn) return;
+
+            var today = new Date();
+            // Usa data local (não UTC) para evitar bug de fuso horário
+            var yyyy = today.getFullYear();
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var dd = String(today.getDate()).padStart(2, '0');
+            var todayStr = yyyy + '-' + mm + '-' + dd;
+            input.value = todayStr;
+            input.max   = todayStr;
+
+            if (!_initDone) {
+                _initDone = true;
+                loadSanto(today);
+
+                btn.addEventListener('click', function () {
+                    var val = input.value;
+                    if (!val) return;
+                    var parts = val.split('-');
+                    var d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+                    loadSanto(d);
+                });
+
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') btn.click();
+                });
+            }
+        }
+
+        function activateSantoTabIfHash() {
+            if (window.location.hash === '#santo-dia') {
+                var tab = document.getElementById('santo-dia-tab');
+                if (tab && typeof bootstrap !== 'undefined') {
+                    new bootstrap.Tab(tab).show();
+                }
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function () { initSantoTab(); activateSantoTabIfHash(); });
+        } else {
+            initSantoTab();
+            activateSantoTabIfHash();
+        }
+
+        document.addEventListener('pjax:ready', function () {
+            _initDone = false;
+            initSantoTab();
+            activateSantoTabIfHash();
+        });
+    }());
+    </script>
 </body>
 </html>
