@@ -451,10 +451,15 @@
                                 </div>
                                 <div class="col-lg-4 col-md-5">
                                     <div class="wow fadeInUp" data-wow-delay="0.25s">
-                                        <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
-                                            <label for="sdDateInput" style="font-weight:600;margin-bottom:0;white-space:nowrap;">Data:</label>
-                                            <input type="date" id="sdDateInput" class="form-control" style="max-width:160px;display:inline-block;width:auto;">
-                                            <button id="sdDateBtn" class="btn-default" style="padding:10px 50px 10px 16px;">
+                                        <div class="mb-2">
+                                            <input type="text" id="sdTextInput" class="form-control sd-text-input"
+                                                placeholder="Nome do santo ou vocação…"
+                                                aria-label="Buscar santo por nome ou vocação">
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <label for="sdDateInput" class="sd-or-label">ou data:</label>
+                                            <input type="date" id="sdDateInput" class="form-control" style="flex:1;min-width:120px;width:auto;">
+                                            <button id="sdBuscarBtn" class="btn-default" style="padding:10px 50px 10px 16px;">
                                                 <i class="fa-solid fa-magnifying-glass"></i> Buscar
                                             </button>
                                         </div>
@@ -472,6 +477,12 @@
                                 <p class="mt-2 text-muted">Buscando o santo do dia…</p>
                             </div>
 
+                            <!-- Estado: resultados da busca textual -->
+                            <div id="sdSearchResults" hidden>
+                                <p id="sdSearchHint" class="sd-search-hint"></p>
+                                <div id="sdSearchList" class="row g-4"></div>
+                            </div>
+
                             <!-- Estado: Erro -->
                             <div id="sdError" hidden class="text-center py-5">
                                 <i class="fa-solid fa-church fa-3x d-block mb-3" style="color:#ccc;"></i>
@@ -480,6 +491,12 @@
 
                             <!-- Resultado -->
                             <div id="sdCard" hidden>
+                                <!-- Botão voltar para lista de resultados -->
+                                <div id="sdBackBtn" hidden class="mb-4">
+                                    <button class="sd-back-btn">
+                                        <i class="fa-solid fa-arrow-left me-2"></i>Voltar aos resultados
+                                    </button>
+                                </div>
                                 <div class="row align-items-start">
 
                                     <!-- Imagem + identidade -->
@@ -739,24 +756,46 @@
             return d.getDate() + ' de ' + MESES_PT[d.getMonth()] + ' de ' + d.getFullYear();
         }
 
-        function showLoading() {
+        function showLoading(msg) {
             document.getElementById('sdLoading').removeAttribute('hidden');
             document.getElementById('sdCard').setAttribute('hidden', '');
             document.getElementById('sdError').setAttribute('hidden', '');
+            document.getElementById('sdSearchResults').setAttribute('hidden', '');
+            var txtEl = document.querySelector('#sdLoading p');
+            if (txtEl) txtEl.textContent = msg || 'Buscando o santo do dia…';
         }
 
-        function showError() {
+        function showError(customMsg) {
             document.getElementById('sdLoading').setAttribute('hidden', '');
             document.getElementById('sdCard').setAttribute('hidden', '');
-            document.getElementById('sdError').removeAttribute('hidden');
+            document.getElementById('sdSearchResults').setAttribute('hidden', '');
+            var errEl = document.getElementById('sdError');
+            if (customMsg) {
+                errEl.innerHTML =
+                    '<i class="fa-solid fa-magnifying-glass fa-3x d-block mb-3" style="color:#ccc;"></i>' +
+                    '<p>' + customMsg + '</p>';
+            } else {
+                errEl.innerHTML =
+                    '<i class="fa-solid fa-church fa-3x d-block mb-3" style="color:#ccc;"></i>' +
+                    '<p>Não foi possível encontrar o santo do dia para esta data.<br>Tente outra data ou verifique sua conexão.</p>';
+            }
+            errEl.removeAttribute('hidden');
         }
 
-        function showCard(data, d) {
+        function showCard(data, d, fromQuery) {
             document.getElementById('sdLoading').setAttribute('hidden', '');
             document.getElementById('sdError').setAttribute('hidden', '');
+            document.getElementById('sdSearchResults').setAttribute('hidden', '');
 
-            /* ── Identidade ── */
-            document.getElementById('sdCardDate').textContent = 'Festa: ' + formatDate(d);
+            /* ── Botão voltar ── */
+            var backBtn = document.getElementById('sdBackBtn');
+            if (fromQuery && _lastSearchResults && _lastSearchResults.length > 1) {
+                backBtn._fromQuery = fromQuery;
+                backBtn.removeAttribute('hidden');
+            } else {
+                backBtn.setAttribute('hidden', '');
+            }
+            document.getElementById('sdCardDate').textContent = d ? 'Festa: ' + formatDate(d) : '';
             document.getElementById('sdCardNome').textContent = data.nome || '';
             document.getElementById('sdCardDescricao').textContent = data.descricao || '';
 
@@ -826,14 +865,96 @@
 
         function loadSanto(d) {
             showLoading();
-            window.SantoDia.fetchForDate(d, function (data) { showCard(data, d); }, showError);
+            window.SantoDia.fetchForDate(d, function (data) { showCard(data, d, null); }, showError);
         }
 
-        var _initDone = false;
+        var _initDone          = false;
+        var _lastSearchResults = null;
+
+        /* ── Utilitário de escape HTML ─────────────────────────────── */
+        function escHtml(s) {
+            return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        /* ── Funções de busca textual ──────────────────────────────── */
+
+        function showSearchResults(results, query) {
+            _lastSearchResults = results;
+            document.getElementById('sdLoading').setAttribute('hidden', '');
+            document.getElementById('sdCard').setAttribute('hidden', '');
+            document.getElementById('sdError').setAttribute('hidden', '');
+
+            var hint = document.getElementById('sdSearchHint');
+            hint.innerHTML =
+                '<i class="fa-solid fa-list-ul me-1"></i> ' +
+                results.length + ' resultado' + (results.length > 1 ? 's' : '') + ' para ' +
+                '<strong>"' + escHtml(query) + '"</strong> &mdash; selecione para ver a hagiografia:';
+
+            var list = document.getElementById('sdSearchList');
+            list.innerHTML = '';
+
+            results.forEach(function (r) {
+                var col      = document.createElement('div');
+                col.className = 'col-lg-3 col-md-4 col-sm-6 col-6';
+
+                var hasImg = !!r.imagem;
+                col.innerHTML =
+                    '<div class="sd-result-card" role="button" tabindex="0" aria-label="Ver hagiografia de ' + escHtml(r.nome) + '">' +
+                        (hasImg
+                            ? '<div class="sd-result-img"><img src="' + escHtml(r.imagem) + '" alt="' + escHtml(r.nome) + '" loading="lazy"></div>'
+                            : '<div class="sd-result-img sd-result-img--placeholder"><i class="fa-solid fa-person-praying"></i></div>'
+                        ) +
+                        '<div class="sd-result-info">' +
+                            '<h5 class="sd-result-nome">' + escHtml(r.nome) + '</h5>' +
+                            (r.descricao ? '<p class="sd-result-desc">' + escHtml(r.descricao) + '</p>' : '') +
+                        '</div>' +
+                    '</div>';
+
+                var card = col.querySelector('.sd-result-card');
+                (function (title) {
+                    function select() { loadSantoByTitle(title, query); }
+                    card.addEventListener('click', select);
+                    card.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); }
+                    });
+                }(r.title));
+
+                list.appendChild(col);
+            });
+
+            document.getElementById('sdSearchResults').removeAttribute('hidden');
+        }
+
+        function loadSantoByTitle(title, fromQuery) {
+            document.getElementById('sdSearchResults').setAttribute('hidden', '');
+            showLoading('Carregando hagiografia\u2026');
+            window.SantoDia.fetchForTitle(title, function (data) {
+                showCard(data, null, fromQuery);
+            }, function () {
+                showError('N\u00e3o foi poss\u00edvel carregar os dados deste santo.<br>Verifique sua conex\u00e3o e tente novamente.');
+            });
+        }
+
+        function searchSantos(query) {
+            if (!query.trim()) return;
+            showLoading('Buscando santos\u2026');
+            window.SantoDia.searchSaints(query, function (results) {
+                if (results.length === 1) {
+                    loadSantoByTitle(results[0].title, null);
+                } else {
+                    showSearchResults(results, query);
+                }
+            }, function () {
+                showError('Nenhum santo encontrado para <strong>"' + escHtml(query) + '"</strong>.<br>Tente outro nome ou voca\u00e7\u00e3o.');
+            });
+        }
 
         function initSantoTab() {
-            var input = document.getElementById('sdDateInput');
-            var btn   = document.getElementById('sdDateBtn');
+            var input     = document.getElementById('sdDateInput');
+            var textInput = document.getElementById('sdTextInput');
+            var btn       = document.getElementById('sdBuscarBtn');
+            var backBtn   = document.getElementById('sdBackBtn');
             if (!input || !btn) return;
 
             var today = new Date();
@@ -848,17 +969,36 @@
                 _initDone = true;
                 loadSanto(today);
 
+                /* Um único botão: texto tem prioridade; fallback para data */
                 btn.addEventListener('click', function () {
-                    var val = input.value;
-                    if (!val) return;
-                    var parts = val.split('-');
-                    var d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
-                    loadSanto(d);
+                    var txt = textInput ? textInput.value.trim() : '';
+                    if (txt) {
+                        searchSantos(txt);
+                    } else {
+                        var val = input.value;
+                        if (!val) return;
+                        var parts = val.split('-');
+                        var d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+                        loadSanto(d);
+                    }
                 });
 
-                input.addEventListener('keydown', function (e) {
-                    if (e.key === 'Enter') btn.click();
+                /* Enter em qualquer campo dispara o botão */
+                [input, textInput].forEach(function (el) {
+                    if (!el) return;
+                    el.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter') btn.click();
+                    });
                 });
+
+                if (backBtn) {
+                    backBtn.querySelector('button').addEventListener('click', function () {
+                        document.getElementById('sdCard').setAttribute('hidden', '');
+                        if (_lastSearchResults && _lastSearchResults.length > 1) {
+                            showSearchResults(_lastSearchResults, backBtn._fromQuery || '');
+                        }
+                    });
+                }
             }
         }
 

@@ -49,6 +49,30 @@
         'escultura de', 'representação de', 'representacao de'
     ];
 
+    /* ── Termos que confirmam um santo/beato católico ────────────── */
+    var SAINT_POSITIVE = [
+        'santo ', 'santa ', 'santos ', 'santas ',
+        'beato ', 'beata ', 'beatos ', 'beatas ',
+        'mártir', 'martir', 'mártires', 'martires',
+        'sacerdote', 'presbítero', 'presbitero',
+        'bispo católico', 'arcebispo', 'cardeal',
+        'papa ', 'pontífice', 'pontifice',
+        'monge ', 'monja ', 'freira ', 'religiosa ', 'religioso ',
+        'virgem consagrada', 'virgem e mártir',
+        'confessor ', 'diácono ', 'diacono ',
+        'apóstolo', 'apostolo', 'evangelista',
+        'abade ', 'abadessa ',
+        'canonizado', 'canonizada', 'beatificado', 'beatificada',
+        'padroeiro', 'padroeira',
+        'missionário', 'missionaria',
+        'fundador da ordem', 'fundadora da ordem',
+        'doutor da igreja', 'doutora da igreja',
+        'ordem religiosa', 'ordem franciscana', 'ordem dominicana',
+        'ordem beneditina', 'ordem agostiniana', 'ordem carmelita',
+        'companhia de jesus', 'jesuíta', 'jesuita',
+        'calendário romano', 'festejo litúrgico', 'festa litúrgica'
+    ];
+
     /* ── Cache ──────────────────────────────────────────────────── */
 
     function cacheKey(d) {
@@ -100,6 +124,18 @@
             if (combined.indexOf(SKIP_DESC[i]) >= 0) return false;
         }
         return true;
+    }
+
+    /* Filtro mais estrito para busca textual: exige ao menos 1 termo positivo */
+    function isValidSaintSearch(summary) {
+        if (!isValidSaint(summary)) return false;
+        var desc    = (summary.description || '').toLowerCase();
+        var extract = (summary.extract || '').substring(0, 500).toLowerCase();
+        var combined = desc + ' ' + extract;
+        for (var i = 0; i < SAINT_POSITIVE.length; i++) {
+            if (combined.indexOf(SAINT_POSITIVE[i]) >= 0) return true;
+        }
+        return false;
     }
 
     /* ── Limpa HTML da Wikipedia ────────────────────────────────── */
@@ -538,7 +574,121 @@
     document.addEventListener('pjax:ready', initBanner);
     window.addEventListener('pageshow', function (e) { if (e.persisted) initBanner(); });
 
+    /* ── Busca de santos por nome / vocação ─────────────────────── */
+
+    /**
+     * Pesquisa santos pelo nome ou vocação litúrgica.
+     * Consulta a Wikipedia PT e filtra resultados válidos.
+     *
+     * @param {string}   query     - Texto livre (nome, vocação, título)
+     * @param {Function} onResults - Chamado com array de { title, nome, descricao, imagem }
+     * @param {Function} onError   - Chamado quando não há resultados
+     */
+    function searchSaints(query, onResults, onError) {
+        var q = (query || '').trim();
+        if (!q) { onError(); return; }
+
+        /* Adiciona contexto católico à busca para reduzir ruído */
+        var biasedQ = q + ' santo católico';
+
+        fetchJson(
+            'https://pt.wikipedia.org/w/api.php?action=query&list=search' +
+            '&srsearch=' + encodeURIComponent(biasedQ) +
+            '&srnamespace=0&srlimit=10&format=json&origin=*',
+            10000
+        ).then(function (data) {
+            var hits = (data.query && data.query.search) || [];
+            if (!hits.length) { onError(); return; }
+
+            /* Preserva a ordem de relevância da busca usando slots indexados */
+            var slots     = new Array(hits.length).fill(null);
+            var remaining = hits.length;
+
+            function checkDone() {
+                remaining--;
+                if (remaining === 0) {
+                    var results = slots.filter(function (r) { return r !== null; });
+                    if (results.length) onResults(results);
+                    else onError();
+                }
+            }
+
+            hits.forEach(function (hit, idx) {
+                fetch('https://pt.wikipedia.org/api/rest_v1/page/summary/' +
+                    encodeURIComponent(hit.title.replace(/ /g, '_')))
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (s) {
+                    if (isValidSaintSearch(s)) {
+                        slots[idx] = {
+                            title:     s.title,
+                            nome:      s.title,
+                            descricao: s.description || '',
+                            imagem:    (s.thumbnail && s.thumbnail.source) || ''
+                        };
+                    }
+                    checkDone();
+                })
+                .catch(function () { checkDone(); });
+            });
+        }).catch(function () { onError(); });
+    }
+
+    /**
+     * Carrega dados completos de um santo a partir do título Wikipedia.
+     * Usa cache localStorage keyed pelo título.
+     *
+     * @param {string}   wikiTitle - Título exato do artigo na Wikipedia PT
+     * @param {Function} onSuccess - Chamado com { nome, descricao, imagem, imagemGrande, resumo, secoes }
+     * @param {Function} onError   - Chamado em caso de falha
+     */
+    function fetchForTitle(wikiTitle, onSuccess, onError) {
+        var cacheK = STORAGE_KEY + 'title_' + wikiTitle;
+        try {
+            var raw = localStorage.getItem(cacheK);
+            if (raw) {
+                var parsed = JSON.parse(raw);
+                if (parsed && parsed.secoes) { onSuccess(parsed); return; }
+            }
+        } catch (e) {}
+
+        fetch('https://pt.wikipedia.org/api/rest_v1/page/summary/' +
+            encodeURIComponent(wikiTitle.replace(/ /g, '_')))
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (summary) {
+            if (!summary) { onError(); return; }
+
+            var imagem       = (summary.thumbnail && summary.thumbnail.source) || '';
+            var imagemGrande = (summary.originalimage && summary.originalimage.source) || imagem;
+            var resumo       = summary.extract || '';
+            if (resumo.length > 320) resumo = resumo.substring(0, 317) + '…';
+
+            function persist(secoes) {
+                var result = {
+                    nome:         summary.title,
+                    descricao:    summary.description || '',
+                    imagem:       imagem,
+                    imagemGrande: imagemGrande,
+                    resumo:       resumo,
+                    secoes:       secoes
+                };
+                try { localStorage.setItem(cacheK, JSON.stringify(result)); } catch (e) {}
+                onSuccess(result);
+            }
+
+            fetchFullArticle(wikiTitle, persist, function () {
+                persist(summary.extract
+                    ? [{ title: '', level: '2', paras: summary.extract.split('\n').filter(function (s) { return s.trim().length > 10; }) }]
+                    : []);
+            });
+        })
+        .catch(function () { onError(); });
+    }
+
     /* ── API pública ────────────────────────────────────────────── */
-    window.SantoDia = { fetchForDate: fetchForDate };
+    window.SantoDia = {
+        fetchForDate:  fetchForDate,
+        searchSaints:  searchSaints,
+        fetchForTitle: fetchForTitle
+    };
 
 }());
