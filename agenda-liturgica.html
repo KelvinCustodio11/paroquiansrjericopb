@@ -872,6 +872,39 @@
             }
         }
 
+        /* ── Corrige WOW.js + abas Bootstrap ───────────────────────
+         * Elementos com classe .wow dentro de abas inativas ficam com
+         * visibility:hidden porque o WOW.js os oculta na inicialização
+         * e nunca os anima (a aba estava display:none quando a página
+         * carregou). Ao mostrar a aba forçamos a visibilidade e
+         * disparamos a animação manualmente.
+         * ─────────────────────────────────────────────────────────── */
+        function fixWowInTab(tabId) {
+            var pane = document.getElementById(tabId);
+            if (!pane) return;
+            pane.querySelectorAll('.wow').forEach(function (el) {
+                if (el.style.visibility === 'hidden' || getComputedStyle(el).visibility === 'hidden') {
+                    el.style.visibility = 'visible';
+                    el.style.opacity    = '1';
+                    /* Mantém a animação CSS caso WOW já a tenha definido */
+                    if (!el.classList.contains('animated')) {
+                        el.classList.add('animated');
+                    }
+                }
+            });
+        }
+
+        /* Dispara fixWowInTab ao mostrar cada aba de conteúdo */
+        var tabEls = document.querySelectorAll('#agendaTab .nav-link');
+        tabEls.forEach(function (btn) {
+            btn.addEventListener('shown.bs.tab', function () {
+                var target = btn.getAttribute('data-bs-target');
+                if (target && target.charAt(0) === '#') {
+                    fixWowInTab(target.slice(1));
+                }
+            });
+        });
+
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function () { initSantoTab(); activateSantoTabIfHash(); });
         } else {

@@ -374,8 +374,20 @@
         var dd   = String(d.getDate()).padStart(2, '0');
         var url  = 'https://publication.evangelizo.ws/PT/days/' + yyyy + '-' + mm + '-' + dd + '/saints';
 
-        fetch(url)
-            .then(function (r) { return r.ok ? r.json() : Promise.reject('http'); })
+        var evController = typeof AbortController !== 'undefined' ? new AbortController() : null;
+        var evTimer = evController
+            ? setTimeout(function () { evController.abort(); }, 8000)
+            : null;
+
+        fetch(url, evController ? { signal: evController.signal } : {})
+            .then(function (r) {
+                if (evTimer) clearTimeout(evTimer);
+                return r.ok ? r.json() : Promise.reject('http');
+            })
+            .catch(function (err) {
+                if (evTimer) clearTimeout(evTimer);
+                throw err;
+            })
             .then(function (json) {
                 var saints = (json && json.data) || [];
                 if (!saints.length) { onError(); return; }
