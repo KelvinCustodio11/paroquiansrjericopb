@@ -64,11 +64,13 @@
                                 <li class="nav-item"><a class="nav-link" href="index.html">Página Inicial</a></li>
                                 <li class="nav-item"><a class="nav-link" href="about.html">História</a></li>
                                 <li class="nav-item"><a class="nav-link" href="service.html">Pastoral</a></li>
+                                <li class="nav-item"><a class="nav-link" href="eventos.html">Eventos</a></li>
                                 <li class="nav-item"><a class="nav-link" href="agenda-liturgica.html">Agenda Litúrgica</a></li>
                                 <li class="nav-item"><a class="nav-link" href="agenda-liturgica.html?tab=liturgia">Liturgia do Dia</a></li>
                                 <li class="nav-item submenu"><a class="nav-link" href="#">Páginas</a>
                                     <ul>                                        
                                         <li class="nav-item"><a class="nav-link" href="service-single.html">Detalhes da Pastoral</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="eventos.html">Eventos e Novidades</a></li>
                                         <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
                                         <li class="nav-item"><a class="nav-link" href="objetos-sagrados.html">Objetos Sagrados</a></li>
                                         <li class="nav-item"><a class="nav-link" href="blog-single.html">Detalhes do Blog</a></li>
@@ -1050,7 +1052,7 @@
                 <div class="col-lg-6">
                     <div class="event-image">
                         <figure class="image-anime reveal">
-                            <img src="images/event-image.jpg" alt="">
+                            <img src="images/event-image.jpg" id="next-event-img" alt="">
                         </figure>
                     </div>
                 </div>
@@ -1059,8 +1061,8 @@
                     <div class="event-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">próximo evento</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Festa de Nossa Senhora <span>dos Remédios 2025</span></h2>
+                            <h3 class="wow fadeInUp" id="next-event-label">próximo evento</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque" id="next-event-title">Festa de Nossa Senhora <span>dos Remédios 2025</span></h2>
                         </div>
                         <!-- Section Title End -->
 
@@ -1072,7 +1074,7 @@
                                     <i class="fa-solid fa-calendar-days"></i>
                                 </div>
                                 <div class="event-item-content">
-                                    <p>08 Set, 2025 - 6:00 - 21:00</p>
+                                    <p id="next-event-date">08 Set, 2025 - 6:00 - 21:00</p>
                                 </div>
                             </div>
                             <!-- Event Item End -->
@@ -1083,7 +1085,7 @@
                                     <i class="fa-solid fa-location-dot"></i>
                                 </div>
                                 <div class="event-item-content">
-                                    <p>Paróquia Nossa Senhora dos Remédios, Praça Pe. Sebastião, Jericó - PB</p>
+                                    <p id="next-event-location">Paróquia Nossa Senhora dos Remédios, Praça Pe. Sebastião, Jericó - PB</p>
                                 </div>
                             </div>
                             <!-- Event Item End -->
@@ -1092,13 +1094,13 @@
 
                         <!-- Event Footer Start -->
                         <div class="event-footer">
-                            <p class="wow fadeInUp" data-wow-delay="0.5s">A Festa da Padroeira é o maior evento da vida paroquial de Jericó. Durante os festejos são realizadas missas solenes, novena, procissão, apresentações culturais e momentos de confraternização que reúnem toda a comunidade em louvor à Nossa Senhora dos Remédios.</p>
+                            <p class="wow fadeInUp" data-wow-delay="0.5s" id="next-event-desc">A Festa da Padroeira é o maior evento da vida paroquial de Jericó. Durante os festejos são realizadas missas solenes, novena, procissão, apresentações culturais e momentos de confraternização que reúnem toda a comunidade em louvor à Nossa Senhora dos Remédios.</p>
                         </div>
                         <!-- Event Footer End -->
 
                         <!-- Event Btn Start -->
                         <div class="event-btn wow fadeInUp" data-wow-delay="0.75s">
-                            <a href="#" class="btn-default">participe pessoalmente</a>
+                            <a href="#" class="btn-default" id="next-event-btn">participe pessoalmente</a>
                         </div>
                         <!-- Event Btn End -->
                     </div>
@@ -1107,6 +1109,95 @@
         </div>
     </div>
     <!-- Our Event Section End -->
+
+    <!-- Novidades e Eventos em Destaque Section Start -->
+    <div class="our-ministries" id="home-eventos" style="padding: 80px 0;">
+        <div class="container">
+            <div class="row section-row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h3 class="wow fadeInUp">comunidade em movimento</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">Próximos Eventos e <span>Novidades da Paróquia</span></h2>
+                        <p class="wow fadeInUp" data-wow-delay="0.25s">Fique por dentro de tudo que acontece na nossa comunidade. Confira os próximos eventos, festas e celebrações especiais.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grade de próximos eventos -->
+            <div class="row">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="ministries-item">
+                        <div class="ministries-image" data-cursor-text="Ver">
+                            <a href="evento-single.html">
+                                <figure>
+                                    <img src="images/uploads/events/mes-de-maio-2026-abertura.jpeg"
+                                         onerror="this.src='images/campaign-img-1.jpg'"
+                                         alt="Abertura do Mês Mariano">
+                                </figure>
+                            </a>
+                        </div>
+                        <div class="ministries-content">
+                            <h3>Abertura do Mês Mariano</h3>
+                            <p>01 de Mai — 19h — Igreja Matriz</p>
+                        </div>
+                        <div class="ministries-btn">
+                            <a href="evento-single.html" class="readmore-btn"><img src="images/arrow-white.svg" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.25s">
+                    <div class="ministries-item">
+                        <div class="ministries-image" data-cursor-text="Ver">
+                            <a href="evento-single.html">
+                                <figure>
+                                    <img src="images/uploads/events/mes-de-maio-2026-capa.jpeg"
+                                         onerror="this.src='images/campaign-img-3.jpg'"
+                                         alt="Celebrações em Família">
+                                </figure>
+                            </a>
+                        </div>
+                        <div class="ministries-content">
+                            <h3>Celebrações em Família</h3>
+                            <p>Todo mês de maio — 19h — Igreja Matriz</p>
+                        </div>
+                        <div class="ministries-btn">
+                            <a href="evento-single.html" class="readmore-btn"><img src="images/arrow-white.svg" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="ministries-item">
+                        <div class="ministries-image" data-cursor-text="Ver">
+                            <a href="evento-single.html">
+                                <figure>
+                                    <img src="images/uploads/events/mes-de-maio-2026-capa.jpeg"
+                                         onerror="this.src='images/campaign-img-2.jpg'"
+                                         alt="Coroação de Nossa Senhora">
+                                </figure>
+                            </a>
+                        </div>
+                        <div class="ministries-content">
+                            <h3>Coroação de Nossa Senhora</h3>
+                            <p>31 de Mai — 19h — Igreja Matriz</p>
+                        </div>
+                        <div class="ministries-btn">
+                            <a href="evento-single.html" class="readmore-btn"><img src="images/arrow-white.svg" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="our-ministries-footer wow fadeInUp" data-wow-delay="0.75s">
+                        <p>Confira todos os eventos e novidades da nossa paróquia e participe das celebrações. <a href="eventos.html">Ver Todos os Eventos</a></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Novidades e Eventos em Destaque Section End -->
 
     <!-- Donate Now Section Start -->
     <div class="donate-now parallaxie">
@@ -1490,6 +1581,8 @@
     <script src="js/plyr.js"></script>
     <!-- Wow js file -->
     <script src="js/wow.js"></script>
+    <!-- Próximo Evento: atualiza dinamicamente a seção our-event com base na data atual -->
+    <script src="js/proximos-eventos.js"></script>
     <!-- Main Custom js file -->
     <script src="js/function.js"></script>
     <!-- Radio Player -->
