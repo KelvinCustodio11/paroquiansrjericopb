@@ -25,16 +25,38 @@ Leia o **checklist de aceite** em [MELHORIAS_GERAIS.md §11](MELHORIAS_GERAIS.md
 ## Estrutura
 ```
 /
-├── *.html              # 21 páginas (a migrar para PT-BR — ver MELHORIAS_GERAIS.md §6)
-├── form-process.php    # endpoint do formulário de contato (hardenizado)
-├── css/                # estilos (Bootstrap, Avenix custom, plugins)
-├── js/                 # scripts (jQuery, plugins, scripts próprios da paróquia)
-├── images/             # imagens estáticas e uploads/
-├── webfonts/           # ícones Font Awesome
+├── *.html                  # 21 páginas (a migrar para PT-BR — ver MELHORIAS_GERAIS.md §6)
+├── form-process.php        # endpoint do formulário de contato (hardenizado)
+├── css/                    # estilos (Bootstrap, Avenix custom, plugins)
+├── js/                     # scripts (jQuery, plugins, scripts próprios da paróquia)
+├── images/                 # imagens estáticas e uploads/
+├── webfonts/               # ícones Font Awesome
+├── _template-avenix/       # 📚 referência — Avenix Church original (NÃO MODIFICAR)
+├── _template-paroquia/     # 📚 referência — versão pré-sync com customizações (NÃO MODIFICAR)
+├── .github/                # instructions e prompts do Copilot Chat
+│   ├── copilot-instructions.md
+│   ├── instructions/       # regras por tipo de arquivo (frontend/backend/js)
+│   └── prompts/            # comandos /nova-pagina, /novo-post, /auditar-seo etc.
+├── .htaccess               # segurança, cache, redirects
 ├── robots.txt
 ├── sitemap.xml
-└── *.md                # documentação técnica e padrões
+└── *.md                    # documentação técnica e padrões
 ```
+
+## Templates de referência
+
+Duas pastas read-only servem como **fonte visual e estrutural** para novos componentes:
+
+- **`_template-avenix/`** — snapshot da branch `main` (Avenix Church puro, sem customizações).
+- **`_template-paroquia/`** — snapshot da branch `developer` antes da sincronização com `production` (Avenix + radio player, liturgia, santo do dia, calendário, etc.).
+
+Nunca modifique nem faça deploy dessas pastas. Use-as como base para copiar HTML/CSS de blocos ainda não-aproveitados. Ambas estão bloqueadas no `.htaccess` e `robots.txt`.
+
+## Branches
+
+- `main` — template Avenix original (não tocar; serve de referência de diff).
+- `developer` — branch de integração; abrir PRs daqui.
+- `production` — branch de deploy.
 
 ## Configuração do `form-process.php`
 Antes de usar em produção:
