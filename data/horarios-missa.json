@@ -1,0 +1,20 @@
+{
+  "_schema": "../schemas/horarios-missa.schema.json",
+  "_descricao": "Horarios de missa por igreja/comunidade. CONFERIR antes de publicar (placeholders).",
+  "igrejas": [
+    {
+      "slug": "matriz",
+      "nome": "Igreja Matriz Nossa Senhora dos Remédios",
+      "endereco": "Praça da Matriz, s/n - Centro",
+      "bairro": "Centro",
+      "tipo": "matriz",
+      "horarios": [
+        { "dia_semana": "domingo", "hora": "07:00", "tipo_celebracao": "missa" },
+        { "dia_semana": "domingo", "hora": "19:00", "tipo_celebracao": "missa" },
+        { "dia_semana": "quarta", "hora": "19:00", "tipo_celebracao": "missa", "observacao": "Missa com novena" },
+        { "dia_semana": "sexta", "hora": "15:00", "tipo_celebracao": "adoracao", "observacao": "Hora Santa" },
+        { "dia_semana": "sabado", "hora": "19:00", "tipo_celebracao": "missa" }
+      ]
+    }
+  ]
+}

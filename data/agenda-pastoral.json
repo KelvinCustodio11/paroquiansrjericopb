@@ -1,0 +1,5 @@
+{
+  "_schema": "../schemas/agenda-pastoral.schema.json",
+  "_descricao": "Compromissos pastorais (reunioes, formacoes, visitas). Apenas itens com 'publico: true' aparecem no site.",
+  "compromissos": []
+}

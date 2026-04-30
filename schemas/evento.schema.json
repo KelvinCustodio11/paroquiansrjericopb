@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Evento",
+  "type": "object",
+  "required": ["slug", "titulo", "data_inicio", "status", "descricao_curta"],
+  "properties": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "titulo": { "type": "string", "minLength": 5, "maxLength": 120 },
+    "categoria": { "type": "string", "enum": ["liturgico", "pastoral", "social", "formativo", "festivo", "outro"] },
+    "status": { "type": "string", "enum": ["agendado", "em-andamento", "encerrado", "cancelado"] },
+    "destaque": { "type": "boolean" },
+    "data_inicio": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "data_fim": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "horario_inicio": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+    "horario_fim": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+    "fuso_horario": { "type": "string" },
+    "recorrencia": { "type": ["string", "null"], "enum": [null, "semanal", "mensal", "anual"] },
+    "local": {
+      "type": "object",
+      "required": ["nome", "cidade", "estado"],
+      "properties": {
+        "nome": { "type": "string" },
+        "endereco": { "type": "string" },
+        "bairro": { "type": "string" },
+        "cidade": { "type": "string" },
+        "estado": { "type": "string", "minLength": 2, "maxLength": 2 },
+        "cep": { "type": "string" },
+        "pais": { "type": "string" },
+        "mapa": {
+          "type": "object",
+          "properties": {
+            "latitude": { "type": "number" },
+            "longitude": { "type": "number" },
+            "google_maps_url": { "type": "string", "format": "uri" }
+          }
+        }
+      }
+    },
+    "imagem_capa": {
+      "type": "object",
+      "required": ["url", "alt"],
+      "properties": {
+        "url": { "type": "string" },
+        "alt": { "type": "string" },
+        "largura": { "type": "integer" },
+        "altura": { "type": "integer" }
+      }
+    },
+    "descricao_curta": { "type": "string", "minLength": 20, "maxLength": 320 },
+    "descricao_completa": { "type": "string" },
+    "programacao": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["hora", "titulo"],
+        "properties": {
+          "hora": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+          "titulo": { "type": "string" }
+        }
+      }
+    },
+    "inscricao": {
+      "type": "object",
+      "properties": {
+        "obrigatoria": { "type": "boolean" },
+        "link": { "type": ["string", "null"] },
+        "vagas_total": { "type": ["integer", "null"] },
+        "vagas_restantes": { "type": ["integer", "null"] },
+        "valor": { "type": ["number", "null"] }
+      }
+    },
+    "organizador": {
+      "type": "object",
+      "properties": {
+        "nome": { "type": "string" },
+        "contato": { "type": "string" }
+      }
+    }
+  }
+}

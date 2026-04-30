@@ -1,0 +1,27 @@
+{
+  "_schema": "../schemas/artigo.schema.json",
+  "_descricao": "Artigos / noticias da paroquia. Conteudo HTML simples ou Markdown.",
+  "artigos": [
+    {
+      "slug": "boas-vindas-novo-site",
+      "titulo": "Bem-vindos ao novo site da Paróquia NSR Jericó/PB",
+      "data_publicacao": "2026-04-01",
+      "autor": {
+        "nome": "PASCOM Paróquia NSR",
+        "papel": "Pastoral da Comunicação"
+      },
+      "categoria": "noticias",
+      "tags": ["site", "comunicação", "paróquia"],
+      "resumo": "Apresentamos o novo portal da Paróquia Nossa Senhora dos Remédios, com agenda litúrgica, eventos, horários de missas e muito mais.",
+      "imagem_capa": {
+        "url": "/images/uploads/demo/blog-1.jpg",
+        "alt": "Fachada da Paróquia Nossa Senhora dos Remédios em Jericó/PB",
+        "largura": 1200,
+        "altura": 800
+      },
+      "conteudo": "<p>É com grande alegria que apresentamos o novo portal da nossa Paróquia Nossa Senhora dos Remédios em Jericó/PB.</p><p>Aqui você encontra a agenda litúrgica diária, eventos, horários de missas, informações sobre nossos ministérios e contato direto com a equipe pastoral.</p><p>Esperamos que este espaço fortaleça nossa comunhão como comunidade de fé.</p>",
+      "destaque": true,
+      "publicado": true
+    }
+  ]
+}

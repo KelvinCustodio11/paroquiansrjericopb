@@ -1,0 +1,60 @@
+{
+  "_schema": "../schemas/evento.schema.json",
+  "_descricao": "Lista de eventos da paroquia. Editado pelo CMS futuro ou manualmente. Apos editar, rode: npm run validate-data && npm run build:content",
+  "eventos": [
+    {
+      "slug": "assembleia-pascom-2026",
+      "titulo": "Assembleia Diocesana da PASCOM 2026",
+      "categoria": "pastoral",
+      "status": "agendado",
+      "destaque": true,
+      "data_inicio": "2026-05-10",
+      "data_fim": "2026-05-10",
+      "horario_inicio": "08:00",
+      "horario_fim": "17:00",
+      "fuso_horario": "America/Recife",
+      "recorrencia": null,
+      "local": {
+        "nome": "Salão Paroquial",
+        "endereco": "Praça da Matriz, s/n",
+        "bairro": "Centro",
+        "cidade": "Jericó",
+        "estado": "PB",
+        "cep": "58835-000",
+        "pais": "BR",
+        "mapa": {
+          "latitude": -6.5500,
+          "longitude": -38.0000,
+          "google_maps_url": "https://maps.google.com/?q=Par%C3%B3quia+NSR+Jeric%C3%B3+PB"
+        }
+      },
+      "imagem_capa": {
+        "url": "/images/uploads/events/assembleia-pascom-2026-capa.webp",
+        "alt": "Cartaz da Assembleia da PASCOM 2026",
+        "largura": 1200,
+        "altura": 630
+      },
+      "descricao_curta": "Encontro anual de comunicadores católicos da Diocese de Cajazeiras, com missa, palestras e oficinas durante todo o dia.",
+      "descricao_completa": "<p>A Assembleia Diocesana da PASCOM 2026 reúne agentes de comunicação das paróquias da Diocese de Cajazeiras para um dia inteiro de formação, espiritualidade e partilha de experiências.</p><p>O encontro acontece na Paróquia Nossa Senhora dos Remédios em Jericó/PB, com missa de abertura, palestras sobre comunicação e evangelização e oficinas práticas.</p>",
+      "programacao": [
+        { "hora": "08:00", "titulo": "Credenciamento e café da manhã" },
+        { "hora": "09:00", "titulo": "Missa de abertura" },
+        { "hora": "10:30", "titulo": "Palestra: Comunicação e Evangelização" },
+        { "hora": "12:00", "titulo": "Almoço" },
+        { "hora": "14:00", "titulo": "Oficinas práticas (3 trilhas)" },
+        { "hora": "16:30", "titulo": "Bênção final e encerramento" }
+      ],
+      "inscricao": {
+        "obrigatoria": true,
+        "link": "https://forms.google.com/exemplo-pascom",
+        "vagas_total": 150,
+        "vagas_restantes": 80,
+        "valor": 0
+      },
+      "organizador": {
+        "nome": "PASCOM Paróquia NSR Jericó/PB",
+        "contato": "contato@pascomjerico.com.br"
+      }
+    }
+  ]
+}

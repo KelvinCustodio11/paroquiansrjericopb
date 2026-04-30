@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Artigo",
+  "type": "object",
+  "required": ["slug", "titulo", "data_publicacao", "autor", "resumo", "conteudo"],
+  "properties": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "titulo": { "type": "string", "minLength": 5, "maxLength": 120 },
+    "data_publicacao": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "data_atualizacao": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "autor": {
+      "type": "object",
+      "required": ["nome"],
+      "properties": {
+        "nome": { "type": "string" },
+        "papel": { "type": "string" },
+        "foto": { "type": "string" }
+      }
+    },
+    "categoria": { "type": "string", "enum": ["noticias", "espiritualidade", "pastoral", "comunidade", "formacao", "evangelho", "outro"] },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "resumo": { "type": "string", "minLength": 30, "maxLength": 320 },
+    "imagem_capa": {
+      "type": "object",
+      "required": ["url", "alt"],
+      "properties": {
+        "url": { "type": "string" },
+        "alt": { "type": "string" },
+        "largura": { "type": "integer" },
+        "altura": { "type": "integer" }
+      }
+    },
+    "conteudo": { "type": "string", "minLength": 100 },
+    "destaque": { "type": "boolean" },
+    "publicado": { "type": "boolean" }
+  }
+}
