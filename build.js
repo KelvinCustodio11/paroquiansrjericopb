@@ -21,7 +21,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = __dirname;
-const EXCLUDES = new Set(['_template-avenix', '_template-paroquia', 'partials', 'node_modules', '.git', 'images', 'css', 'js', 'webfonts']);
+const EXCLUDES = new Set(['_template-avenix', '_template-paroquia', 'partials', 'templates', 'node_modules', '.git', 'images', 'css', 'js', 'webfonts', 'data', 'schemas', 'scripts', 'eventos', 'artigos', 'homilias']);
 
 function listHtmlFiles(dir) {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
