@@ -1,0 +1,25 @@
+# robots.txt — Paróquia NSR Jericó/PB
+# Permitir indexação por todos os bots conhecidos
+
+User-agent: *
+Allow: /
+Disallow: /form-process.php
+Disallow: /partials/
+Disallow: /data/
+Disallow: /*.json$
+
+# Bots agressivos / scrapers — bloquear
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Sitemap
+Sitemap: https://paroquiansr.com.br/sitemap.xml
