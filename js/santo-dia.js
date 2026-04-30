@@ -529,16 +529,38 @@
         var p    = container.querySelector('.section-title p');
         var btnA = container.querySelector('.verse-church-btn a');
 
-        if (h3) h3.textContent = 'santo do dia';
+        if (h3) {
+            h3.textContent = 'santo do dia';
+            /* Garante visibilidade: WOW.js pode ter ocultado este elemento */
+            h3.style.visibility = 'visible';
+            h3.style.opacity    = '1';
+        }
 
         if (h2) {
             var spanHtml = data.descricao
                 ? ' <span>' + escHtml(data.descricao) + '</span>'
                 : '';
+            /* Substituir innerHTML destrói os chars do GSAP SplitText (que
+             * estavam com autoAlpha:0). O novo texto não tem estilos inline
+             * de GSAP, mas forçamos visibilidade por segurança. */
             h2.innerHTML = escHtml(data.nome) + spanHtml;
+            h2.style.visibility = 'visible';
+            h2.style.opacity    = '1';
         }
 
-        if (p) p.textContent = data.resumo || '';
+        if (p) {
+            p.textContent = data.resumo || '';
+            /* WOW.js pode ter ocultado este parágrafo */
+            p.style.visibility = 'visible';
+            p.style.opacity    = '1';
+        }
+
+        /* Garante que o container do botão (wow fadeInUp) fique visível */
+        var btnWrap = container.querySelector('.verse-church-btn');
+        if (btnWrap) {
+            btnWrap.style.visibility = 'visible';
+            btnWrap.style.opacity    = '1';
+        }
 
         if (btnA) {
             var newBtn = document.createElement('a');

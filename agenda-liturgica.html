@@ -1078,6 +1078,18 @@
                     }
                 }
             });
+            /* Corrige elementos text-anime-style-2 cujos chars podem estar
+             * ocultos por GSAP (autoAlpha:0) quando a aba estava display:none
+             * durante a inicialização — o scrollTrigger nunca dispara. */
+            pane.querySelectorAll('.text-anime-style-2').forEach(function (el) {
+                el.style.visibility = 'visible';
+                el.style.opacity    = '1';
+                /* Força visibilidade nos chars gerados pelo SplitText */
+                el.querySelectorAll('[style*="visibility"], [style*="opacity"]').forEach(function (ch) {
+                    ch.style.visibility = 'visible';
+                    ch.style.opacity    = '1';
+                });
+            });
         }
 
         /* Dispara fixWowInTab ao mostrar cada aba de conteúdo */
@@ -1087,6 +1099,12 @@
                 var target = btn.getAttribute('data-bs-target');
                 if (target && target.charAt(0) === '#') {
                     fixWowInTab(target.slice(1));
+                    /* Para a aba Santo do Dia: garante que o input de data e o
+                     * conteúdo sejam carregados mesmo se a aba estava oculta
+                     * durante o DOMContentLoaded. */
+                    if (target === '#santo-dia') {
+                        initSantoTab();
+                    }
                 }
             });
         });
