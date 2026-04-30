@@ -184,3 +184,51 @@ Laravel 11 (PHP 8.3)
 A escolha final depende de **quem manterá o sistema nos próximos 3+ anos**:
 - **Voluntário/freelancer dev PHP-Laravel disponível** → Filament.
 - **Apenas pessoas leigas + orçamento mensal de manutenção terceirizada** → WordPress.
+
+---
+
+## 11. Status atual (sessão de auditoria — branch `chore/auditoria-tecnica-pt-br`)
+
+**Decisão registrada:** **Estratégia híbrida B** — Filament administra
+banco; comando artisan `content:export` regenera `data/*.json`; gerador
+estático Node (`scripts/build-content.js`) regenera HTMLs; site público
+permanece estático.
+
+### Já entregue nesta sessão (PRs 1–5)
+
+| PR | Conteúdo | Status |
+|---|---|---|
+| 1 | Camada de dados: `data/*.json` (7 entidades) + `schemas/*.schema.json` (draft-07) + `scripts/validate-data.js` + 3 instructions de conteúdo | ✅ commitado |
+| 2-3-4 | Gerador estático: `templates/{evento,artigo,homilia}.html` + `scripts/build-content.js` (mini-engine Mustache-like + path-rewrite + idempotência) + 3 páginas de exemplo geradas e validadas (HTTP 200) | ✅ commitado |
+| 5 | Componentes dinâmicos: `js/horarios-missa.js` + `js/agenda-pastoral.js` (lêem JSON em runtime, sem rebuild) + integração em `contato.html` e `eventos.html` via `data-component=...` | ✅ commitado |
+| 6 | Spike Laravel/Filament em `cms/` (composer.json, migration `Evento`, model com `toJsonExport()`, comando `content:export --build --validate`) | 🟡 esqueleto (sem `composer install`) |
+
+### Workflow editorial atual (sem CMS ainda)
+
+```bash
+# 1. Editar JSON
+$EDITOR data/eventos.json
+
+# 2. Validar contra schemas
+npm run validate-data
+
+# 3. Regerar HTMLs
+npm run build:content
+
+# 4. Commit
+git add data/ eventos/ artigos/ homilias/
+git commit -m "content: ..."
+```
+
+Quando o CMS Filament entrar no ar, esses 4 passos viram **um clique**
+em `Publicar` no painel admin (que dispara internamente
+`php artisan content:export --build --validate`).
+
+### Próximos PRs sugeridos
+
+7. `composer create-project` real em `cms/` (subrepo separado).
+8. Migrations + Models para Artigo, Homilia, HorarioMissa+Igreja, Compromisso, Ministerio, Paroco.
+9. Filament Resources (Forms espelhando schemas; uploads → `images/uploads/`).
+10. Seeders que importam o estado atual de `data/*.json` (migração inicial).
+11. RBAC via `spatie/laravel-permission` (perfis: pároco, secretaria, PASCOM).
+12. Deploy em `admin.pascomjerico.com.br` (Plesk/Napoleon, PHP 8.2+).
