@@ -67,6 +67,17 @@ function clientIp(): string
 
 /* ---------------------- VALIDAÇÕES INICIAIS --------------- */
 
+// Endpoint GET: devolve um CSRF token (consumido pelo contact.html estático).
+// O cookie de sessão setado aqui é reutilizado no POST de envio.
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['action'] ?? '') === 'token') {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    echo json_encode(['csrf_token' => $_SESSION['csrf_token']], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(405, 'Método não permitido.');
 }
