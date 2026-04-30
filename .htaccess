@@ -19,10 +19,16 @@ RewriteRule ^_template-avenix/?.*$    - [F,L]
 RewriteRule ^_template-paroquia/?.*$  - [F,L]
 RewriteRule ^\.github/?.*$            - [F,L]
 RewriteRule ^partials/?.*$            - [F,L]
-RewriteRule ^data/?.*$                - [F,L]
+RewriteRule ^templates/?.*$           - [F,L]
+RewriteRule ^schemas/?.*$             - [F,L]
+RewriteRule ^scripts/?.*$             - [F,L]
+RewriteRule ^cms/?.*$                 - [F,L]
+# data/ NAO e bloqueado: componentes dinamicos (horarios-missa, agenda-pastoral)
+# fazem fetch('data/*.json') em runtime. Acesso publico controlado abaixo.
 
 # --- Bloquear acesso direto a arquivos de documentação e config ---
-<FilesMatch "\.(md|json|yml|yaml|env|gitignore|htaccess|log|bak|orig|tmp)$">
+# .json e PERMITIDO globalmente porque data/*.json sao consumidos pelo front
+<FilesMatch "\.(md|yml|yaml|env|gitignore|htaccess|log|bak|orig|tmp)$">
   Require all denied
 </FilesMatch>
 
@@ -33,6 +39,11 @@ RewriteRule ^data/?.*$                - [F,L]
 <Files "sitemap.xml">
   Require all granted
 </Files>
+
+# --- Bloquear .json fora de data/ (impede vazar package.json, composer.json etc.) ---
+<If "%{REQUEST_URI} =~ m#\.json$# && %{REQUEST_URI} !~ m#^/data/#">
+  Require all denied
+</If>
 
 # =====================================================================
 #  Cabeçalhos de segurança (requer mod_headers)
