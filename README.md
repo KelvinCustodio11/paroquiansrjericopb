@@ -39,6 +39,19 @@ node build.js          # ou: npm run build
 
 **Migração inicial**: feita uma única vez via `node scripts/migrate-to-partials.js` (não precisa rodar de novo, mas o script fica versionado para referência).
 
+## SEO data-driven
+
+Meta tags (title, description, Open Graph, Twitter Card, canonical) e JSON-LD (Church + BreadcrumbList) são gerados a partir de [`seo-data.json`](seo-data.json) e injetados em cada página pelo script:
+
+```bash
+node scripts/seo-fill.js     # ou: npm run seo
+```
+
+- **Editar metadados**: altere `seo-data.json` e rode o comando acima. É idempotente (usa marcadores `<!-- @seo-start -->` ... `<!-- @seo-end -->`).
+- **Adicionar nova página**: crie a entrada em `seo-data.json` antes de rodar o script.
+- **Validar**: depois do deploy, rodar [Rich Results Test](https://search.google.com/test/rich-results) e [Facebook Debugger](https://developers.facebook.com/tools/debug/).
+- **Imagens OG** (`/images/og-*.jpg` 1200×630): ainda precisam ser produzidas. Enquanto isso, o navegador cai no `og-default.jpg`.
+
 
 ## Estrutura
 ```

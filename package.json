@@ -5,6 +5,7 @@
   "description": "Site Paróquia Nossa Senhora dos Remédios — Jericó/PB",
   "scripts": {
     "build": "node build.js",
+    "seo": "node scripts/seo-fill.js",
     "migrate-partials": "node scripts/migrate-to-partials.js"
   },
   "engines": {
