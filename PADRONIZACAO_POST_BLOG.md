@@ -113,8 +113,8 @@ Cada artigo pertence a **uma única categoria principal** (mais tags livres).
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{titulo}}">
 <meta property="og:description" content="{{resumo}}">
-<meta property="og:url" content="https://paroquiansr.com.br{{url}}">
-<meta property="og:image" content="https://paroquiansr.com.br{{imagem_og}}">
+<meta property="og:url" content="https://pascomjerico.com.br{{url}}">
+<meta property="og:image" content="https://pascomjerico.com.br{{imagem_og}}">
 <meta property="og:locale" content="pt_BR">
 <meta property="article:author" content="{{autor.nome}}">
 <meta property="article:published_time" content="{{data_publicacao}}">
@@ -123,9 +123,9 @@ Cada artigo pertence a **uma única categoria principal** (mais tags livres).
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{titulo}}">
 <meta name="twitter:description" content="{{resumo}}">
-<meta name="twitter:image" content="https://paroquiansr.com.br{{imagem_og}}">
+<meta name="twitter:image" content="https://pascomjerico.com.br{{imagem_og}}">
 
-<link rel="canonical" href="https://paroquiansr.com.br{{url}}">
+<link rel="canonical" href="https://pascomjerico.com.br{{url}}">
 
 <!-- JSON-LD Article -->
 <script type="application/ld+json">
@@ -134,7 +134,7 @@ Cada artigo pertence a **uma única categoria principal** (mais tags livres).
   "@type": "Article",
   "headline": "{{titulo}}",
   "description": "{{resumo}}",
-  "image": "https://paroquiansr.com.br{{imagem_destaque.url}}",
+  "image": "https://pascomjerico.com.br{{imagem_destaque.url}}",
   "datePublished": "{{data_publicacao}}",
   "dateModified": "{{data_atualizacao}}",
   "author": {
@@ -147,10 +147,10 @@ Cada artigo pertence a **uma única categoria principal** (mais tags livres).
     "name": "Paróquia Nossa Senhora dos Remédios",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://paroquiansr.com.br/images/logo.png"
+      "url": "https://pascomjerico.com.br/images/logo.png"
     }
   },
-  "mainEntityOfPage": "https://paroquiansr.com.br{{url}}"
+  "mainEntityOfPage": "https://pascomjerico.com.br{{url}}"
 }
 </script>
 ```

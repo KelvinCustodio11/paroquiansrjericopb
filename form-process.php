@@ -30,14 +30,20 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 
 /* ---------------------- CONFIGURAÇÃO ---------------------- */
 
-const EMAIL_TO        = 'contato@paroquiansr.com.br';            // ⚠️ Trocar pelo e-mail oficial da paróquia
-const EMAIL_FROM      = 'nao-responda@paroquiansr.com.br';       // ⚠️ Deve ser do domínio (SPF/DKIM)
-const EMAIL_FROM_NAME = 'Site Paróquia NSR Jericó/PB';
+// Permite sobrescrever via variáveis de ambiente (.env / Plesk env vars).
+// Em produção, o ideal é definir EMAIL_TO/EMAIL_FROM no painel sem hardcoded.
+define('EMAIL_TO',        getenv('EMAIL_TO')        ?: 'contato@pascomjerico.com.br');
+define('EMAIL_FROM',      getenv('EMAIL_FROM')      ?: 'nao-responda@pascomjerico.com.br'); // ⚠️ deve estar no SPF/DKIM
+define('EMAIL_FROM_NAME', getenv('EMAIL_FROM_NAME') ?: 'Site Paróquia NSR Jericó/PB');
 const SUBJECT         = 'Novo contato pelo site — Paróquia NSR Jericó/PB';
 const MAX_BODY_LEN    = 5000;
 const RATE_LIMIT_MAX  = 3;
 const RATE_LIMIT_WIN  = 600;        // 10 min
-const ALLOWED_ORIGINS = ['https://paroquiansr.com.br', 'https://www.paroquiansr.com.br'];
+const ALLOWED_ORIGINS = [
+    'https://pascomjerico.com.br',
+    'https://www.pascomjerico.com.br',
+    'https://kelvincustodio11.github.io', // GitHub Pages (preview p/ equipe)
+];
 
 /* ---------------------- HELPERS --------------------------- */
 

@@ -81,7 +81,7 @@ organizador:
   responsavel: "Maria da Silva"
   telefone: "+55-83-99999-9999"
   whatsapp_url: "https://wa.me/5583999999999?text=Quero%20participar%20da%20Assembleia%20PASCOM%202026"
-  email: "pascom@paroquiansr.com.br"
+  email: "pascom@pascomjerico.com.br"
 
 # CTA
 cta_inscricao:
@@ -157,12 +157,12 @@ Padrão Avenix Church para `/eventos/{slug}/`:
 <meta property="og:type" content="event">
 <meta property="og:title" content="{{titulo}}">
 <meta property="og:description" content="{{descricao_curta}}">
-<meta property="og:url" content="https://paroquiansr.com.br{{url}}">
-<meta property="og:image" content="https://paroquiansr.com.br{{imagem_og}}">
+<meta property="og:url" content="https://pascomjerico.com.br{{url}}">
+<meta property="og:image" content="https://pascomjerico.com.br{{imagem_og}}">
 <meta property="og:locale" content="pt_BR">
 
 <meta name="twitter:card" content="summary_large_image">
-<link rel="canonical" href="https://paroquiansr.com.br{{url}}">
+<link rel="canonical" href="https://pascomjerico.com.br{{url}}">
 
 <!-- JSON-LD Event (CRÍTICO para Google Events) -->
 <script type="application/ld+json">
@@ -187,15 +187,15 @@ Padrão Avenix Church para `/eventos/{slug}/`:
       "addressCountry": "{{local.pais}}"
     }
   },
-  "image": ["https://paroquiansr.com.br{{imagem_capa.url}}"],
+  "image": ["https://pascomjerico.com.br{{imagem_capa.url}}"],
   "organizer": {
     "@type": "Organization",
     "name": "{{organizador.nome}}",
-    "url": "https://paroquiansr.com.br/"
+    "url": "https://pascomjerico.com.br/"
   },
   "offers": {
     "@type": "Offer",
-    "url": "https://paroquiansr.com.br{{url}}",
+    "url": "https://pascomjerico.com.br{{url}}",
     "price": "{{inscricao.valor || 0}}",
     "priceCurrency": "BRL",
     "availability": "https://schema.org/InStock",

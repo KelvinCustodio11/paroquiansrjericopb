@@ -1,97 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Sitemap inicial — Paróquia NSR Jericó/PB
-  IMPORTANTE: Substituir o domínio "paroquiansr.com.br" pelo domínio real em produção.
+  Domínio de produção: pascomjerico.com.br
   Após migração de URLs para PT-BR (ver MELHORIAS_GERAIS.md §6), atualizar este arquivo.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://paroquiansr.com.br/</loc>
+    <loc>https://pascomjerico.com.br/</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/about.html</loc>
+    <loc>https://pascomjerico.com.br/about.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/paroco.html</loc>
+    <loc>https://pascomjerico.com.br/paroco.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/service.html</loc>
+    <loc>https://pascomjerico.com.br/service.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/ministries.html</loc>
+    <loc>https://pascomjerico.com.br/ministries.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/eventos.html</loc>
+    <loc>https://pascomjerico.com.br/eventos.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/agenda-liturgica.html</loc>
+    <loc>https://pascomjerico.com.br/agenda-liturgica.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/blog.html</loc>
+    <loc>https://pascomjerico.com.br/blog.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/sermons.html</loc>
+    <loc>https://pascomjerico.com.br/sermons.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/campaign.html</loc>
+    <loc>https://pascomjerico.com.br/campaign.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/gallery.html</loc>
+    <loc>https://pascomjerico.com.br/gallery.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/objetos-sagrados.html</loc>
+    <loc>https://pascomjerico.com.br/objetos-sagrados.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://paroquiansr.com.br/contact.html</loc>
+    <loc>https://pascomjerico.com.br/contact.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>

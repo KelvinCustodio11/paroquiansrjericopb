@@ -197,8 +197,8 @@ Toda nova página **deve**:
 <head>
   {{> head titulo="Nome da Página — Paróquia NSR Jericó/PB"
             descricao="Descrição de 150-160 caracteres em PT-BR."
-            url="https://paroquiansr.com.br/nome-da-pagina/"
-            imagem="https://paroquiansr.com.br/images/og-nome-da-pagina.jpg" }}
+            url="https://pascomjerico.com.br/nome-da-pagina/"
+            imagem="https://pascomjerico.com.br/images/og-nome-da-pagina.jpg" }}
 </head>
 <body>
   {{> preloader }}

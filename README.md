@@ -61,7 +61,7 @@ Nunca modifique nem faça deploy dessas pastas. Use-as como base para copiar HTM
 ## Configuração do `form-process.php`
 Antes de usar em produção:
 1. Edite `EMAIL_TO` no início do arquivo com o e-mail oficial da paróquia.
-2. Edite `EMAIL_FROM` com um endereço **do domínio da paróquia** (ex: `nao-responda@paroquiansr.com.br`) — exigido por SPF/DKIM da maioria dos provedores.
+2. Edite `EMAIL_FROM` com um endereço **do domínio da paróquia** (ex: `nao-responda@pascomjerico.com.br`) — exigido por SPF/DKIM da maioria dos provedores.
 3. Garanta que a sessão PHP esteja habilitada no servidor.
 4. (Opcional, recomendado) Cadastre chaves do **reCAPTCHA v3** em variáveis de ambiente.
 

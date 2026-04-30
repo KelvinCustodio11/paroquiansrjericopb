@@ -26,4 +26,4 @@ User-agent: DotBot
 Disallow: /
 
 # Sitemap
-Sitemap: https://paroquiansr.com.br/sitemap.xml
+Sitemap: https://pascomjerico.com.br/sitemap.xml

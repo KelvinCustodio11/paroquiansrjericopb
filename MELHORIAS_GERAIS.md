@@ -128,17 +128,17 @@ Exemplos:
 <meta property="og:type" content="website">
 <meta property="og:title" content="...">
 <meta property="og:description" content="...">
-<meta property="og:image" content="https://paroquiansr.com.br/images/og-default.jpg">
-<meta property="og:url" content="https://paroquiansr.com.br/...">
+<meta property="og:image" content="https://pascomjerico.com.br/images/og-default.jpg">
+<meta property="og:url" content="https://pascomjerico.com.br/...">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Paróquia NSR Jericó/PB">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="...">
 <meta name="twitter:description" content="...">
-<meta name="twitter:image" content="https://paroquiansr.com.br/images/og-default.jpg">
+<meta name="twitter:image" content="https://pascomjerico.com.br/images/og-default.jpg">
 
-<link rel="canonical" href="https://paroquiansr.com.br/...">
+<link rel="canonical" href="https://pascomjerico.com.br/...">
 ```
 
 ### 5.3. Structured Data (JSON-LD)
@@ -149,9 +149,9 @@ Adicionar no `<head>` de `index.html`:
   "@context": "https://schema.org",
   "@type": "Church",
   "name": "Paróquia Nossa Senhora dos Remédios",
-  "url": "https://paroquiansr.com.br",
-  "logo": "https://paroquiansr.com.br/images/logo.png",
-  "image": "https://paroquiansr.com.br/images/og-default.jpg",
+  "url": "https://pascomjerico.com.br",
+  "logo": "https://pascomjerico.com.br/images/logo.png",
+  "image": "https://pascomjerico.com.br/images/og-default.jpg",
   "telephone": "+55-83-3435-1020",
   "address": {
     "@type": "PostalAddress",
