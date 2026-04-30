@@ -6,7 +6,11 @@ Allow: /
 Disallow: /form-process.php
 Disallow: /partials/
 Disallow: /data/
+Disallow: /_template-avenix/
+Disallow: /_template-paroquia/
+Disallow: /.github/
 Disallow: /*.json$
+Disallow: /*.md$
 
 # Bots agressivos / scrapers — bloquear
 User-agent: AhrefsBot

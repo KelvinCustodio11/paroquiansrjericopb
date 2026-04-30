@@ -1,0 +1,101 @@
+# =====================================================================
+#  .htaccess — Paróquia NSR Jericó/PB
+#  Configuração Apache: segurança, cache e bloqueio de pastas internas
+# =====================================================================
+
+# --- Habilitar reescrita ---
+RewriteEngine On
+
+# --- Forçar HTTPS (descomente em produção quando SSL estiver ativo) ---
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# --- Forçar www OU non-www (escolher um; deixado comentado) ---
+# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+# RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
+
+# --- Bloquear acesso direto a pastas internas ---
+RewriteRule ^_template-avenix/?.*$    - [F,L]
+RewriteRule ^_template-paroquia/?.*$  - [F,L]
+RewriteRule ^\.github/?.*$            - [F,L]
+RewriteRule ^partials/?.*$            - [F,L]
+RewriteRule ^data/?.*$                - [F,L]
+
+# --- Bloquear acesso direto a arquivos de documentação e config ---
+<FilesMatch "\.(md|json|yml|yaml|env|gitignore|htaccess|log|bak|orig|tmp)$">
+  Require all denied
+</FilesMatch>
+
+# --- Permitir robots.txt e sitemap.xml mesmo dentro de regras restritivas ---
+<Files "robots.txt">
+  Require all granted
+</Files>
+<Files "sitemap.xml">
+  Require all granted
+</Files>
+
+# =====================================================================
+#  Cabeçalhos de segurança (requer mod_headers)
+# =====================================================================
+<IfModule mod_headers.c>
+  Header set X-Frame-Options             "SAMEORIGIN"
+  Header set X-Content-Type-Options      "nosniff"
+  Header set Referrer-Policy             "strict-origin-when-cross-origin"
+  Header set Permissions-Policy          "geolocation=(), microphone=(), camera=()"
+  # HSTS — habilitar somente após confirmar HTTPS estável
+  # Header set Strict-Transport-Security  "max-age=31536000; includeSubDomains"
+
+  # CSP básica (ajustar conforme integrações)
+  Header set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://liturgia.up.railway.app https://pt.wikipedia.org https://commons.wikimedia.org https://stm10.srvvox.com.br https://*.srvvox.com.br; media-src 'self' https://stm10.srvvox.com.br https://*.srvvox.com.br; frame-src https://www.youtube.com https://www.google.com;"
+</IfModule>
+
+# =====================================================================
+#  Compressão (requer mod_deflate)
+# =====================================================================
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript application/json application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# =====================================================================
+#  Cache HTTP (requer mod_expires)
+# =====================================================================
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+  ExpiresByType text/html              "access plus 1 hour"
+  ExpiresByType text/css               "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType image/jpeg             "access plus 6 months"
+  ExpiresByType image/png              "access plus 6 months"
+  ExpiresByType image/webp             "access plus 6 months"
+  ExpiresByType image/svg+xml          "access plus 6 months"
+  ExpiresByType font/woff2             "access plus 1 year"
+</IfModule>
+
+# =====================================================================
+#  Página 404 customizada
+# =====================================================================
+ErrorDocument 404 /404.html
+
+# =====================================================================
+#  Redirecionamentos 301 — migração de URLs para PT-BR
+#  Ver MELHORIAS_GERAIS.md §6 para o plano completo
+#  ATIVAR somente após criar as novas páginas em PT-BR.
+# =====================================================================
+# Redirect 301 /about.html        /historia.html
+# Redirect 301 /service.html      /sacramentos.html
+# Redirect 301 /service-single.html  /sacramentos/detalhe.html
+# Redirect 301 /ministries.html   /ministerios.html
+# Redirect 301 /ministry-single.html /ministerios/detalhe.html
+# Redirect 301 /blog.html         /artigos.html
+# Redirect 301 /blog-single.html  /artigos/detalhe.html
+# Redirect 301 /sermons.html      /homilias.html
+# Redirect 301 /sermons-single.html /homilias/detalhe.html
+# Redirect 301 /campaign.html     /campanhas.html
+# Redirect 301 /campaign-single.html /campanhas/detalhe.html
+# Redirect 301 /gallery.html      /galeria.html
+# Redirect 301 /contact.html      /contato.html
+# pastor.html já foi renomeado para paroco.html no commit 294aa83
+Redirect 301 /pastor.html         /paroco.html
