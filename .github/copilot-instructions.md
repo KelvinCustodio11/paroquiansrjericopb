@@ -13,6 +13,8 @@ Site institucional da **Paróquia Nossa Senhora dos Remédios — Jericó/PB**, 
 3. **Antes de duplicar HTML**, verificar se já existe componente equivalente no projeto ou nos templates de referência (`_template-avenix/`, `_template-paroquia/`).
 4. **Nunca modificar** arquivos dentro de `_template-avenix/` ou `_template-paroquia/` — são pastas de **referência somente leitura**.
 5. **Nunca usar** imagens de `_template-avenix/images/` em produção — são demo licenciadas pelo ThemeForest.
+6. **Header/footer/scripts comuns** ficam em `partials/`. Para alterar qualquer um deles, edite o arquivo em `partials/` e rode `node build.js` (idempotente). **Nunca** edite manualmente o miolo entre `<!-- @include-start -->` e `<!-- @include-end -->` em uma página — será sobrescrito no próximo build.
+7. **Item de menu ativo**: definir via `<body data-page="...">`. Valores aceitos: `home`, `historia`, `pastoral`, `eventos`, `agenda`, `liturgia`, `contato`. O JS `active-nav.js` aplica a classe `.active`.
 
 ## Documentação obrigatória — leia antes de propor mudanças
 

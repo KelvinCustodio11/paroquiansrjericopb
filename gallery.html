@@ -1,109 +1,85 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-	<!-- Meta -->
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Paróquia NSR - Jericó/PB</title>
 	<meta name="description" content="">
 	<meta name="keywords" content="">
-	<meta name="author" content="Awaiken">
-	<!-- Page Title -->
-    <title>Paróquia NSR - Jericó/PB</title>
-	<!-- Favicon Icon -->
-	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
-	<!-- Google Fonts Css-->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-	<!-- Bootstrap Css -->
-	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-	<!-- SlickNav Css -->
-	<link href="css/slicknav.min.css" rel="stylesheet">
-	<!-- Swiper Css -->
-	<link rel="stylesheet" href="css/swiper-bundle.min.css">
-	<!-- Font Awesome Icon Css-->
-	<link href="css/all.css" rel="stylesheet" media="screen">
-	<!-- Animated Css -->
-	<link href="css/animate.css" rel="stylesheet">
-	<!-- Magnific Popup Core Css File -->
-	<link rel="stylesheet" href="css/magnific-popup.css">
-	<!-- Mouse Cursor Css File -->
-	<link rel="stylesheet" href="css/mousecursor.css">
-    <!-- Audio Css File -->
-	<link rel="stylesheet" href="css/plyr.css">
-	<!-- Main Custom Css -->
-	<link href="css/custom.css" rel="stylesheet" media="screen">
+<!-- @include-start partials/head-css.html -->
+<!-- Meta padrão (charset/viewport/author) -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Paróquia NSR Jericó/PB">
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<!-- CSS Plugins -->
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/slicknav.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/swiper-bundle.min.css">
+<link href="css/all.css" rel="stylesheet" media="screen">
+<link href="css/animate.css" rel="stylesheet">
+<link rel="stylesheet" href="css/magnific-popup.css">
+<link rel="stylesheet" href="css/mousecursor.css">
+<link rel="stylesheet" href="css/plyr.css">
+<!-- CSS Customizado -->
+<link href="css/custom.css" rel="stylesheet" media="screen">
+<!-- @include-end partials/head-css.html -->
 </head>
-<body>
+<body data-page="eventos">
 
-    <!-- Preloader Start -->
-	<div class="preloader">
-		<div class="loading-container">
-			<div class="loading"></div>
-			<div id="loading-icon"><img src="images/loader.png" alt=""></div>
-		</div>
-	</div>
-	<!-- Preloader End -->
+<!-- @include-start partials/header.html -->
+<!-- Preloader Start -->
+<div class="preloader">
+    <div class="loading-container">
+        <div class="loading"></div>
+        <div id="loading-icon"><img src="images/loader.png" alt=""></div>
+    </div>
+</div>
+<!-- Preloader End -->
 
-    <!-- Header Start -->
-	<header class="main-header">
-		<div class="header-sticky">
-			<nav class="navbar navbar-expand-lg">
-				<div class="container">
-					<!-- Logo Start -->
-					<a class="navbar-brand" href="./">
-						<img src="images/logo.png" alt="Logo" style="max-height:55px;">
-					</a>
-					<!-- Logo End -->
+<!-- Skip link (a11y) -->
+<a class="visually-hidden-focusable" href="#main-content">Pular para o conteúdo principal</a>
 
-					<!-- Main Menu Start -->
-					<div class="collapse navbar-collapse main-menu">
-                                                                        <div class="nav-menu-wrapper">
-                            <ul class="navbar-nav mr-auto" id="menu">
-                                <li class="nav-item"><a class="nav-link" href="index.html">Página Inicial</a></li>
-                                <li class="nav-item"><a class="nav-link" href="about.html">História</a></li>
-                                <li class="nav-item"><a class="nav-link" href="service.html">Pastoral</a></li>
-                                <li class="nav-item"><a class="nav-link" href="eventos.html">Eventos</a></li>
-                                <li class="nav-item"><a class="nav-link" href="agenda-liturgica.html">Agenda Litúrgica</a></li>
-                                <li class="nav-item"><a class="nav-link" href="agenda-liturgica.html?tab=liturgia">Liturgia do Dia</a></li>
-                                <!-- Páginas (oculto temporariamente)
-                                <li class="nav-item submenu"><a class="nav-link" href="#">Páginas</a>
-                                    <ul>
-                                        <li class="nav-item"><a class="nav-link" href="service-single.html">Detalhes da Pastoral</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="eventos.html">Eventos e Novidades</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="objetos-sagrados.html">Objetos Sagrados</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="blog-single.html">Detalhes do Blog</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="sermons.html">Homilias</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="sermons-single.html">Detalhes da Homilia</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="campaign.html">Campanhas</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="campaign-single.html">Detalhes da Campanha</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="ministries.html">Ministérios</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="ministry-single.html">Detalhes do Ministério</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="pastor.html">Pároco</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="gallery.html">Galeria</a></li>
-                                    </ul>
-                                </li>
-                                -->
-                                <li class="nav-item"><a class="nav-link" href="contact.html">Contato</a></li>
-                                <li class="nav-item highlighted-menu"><a class="nav-link" href="#" data-radio-trigger>Ouça agora</a></li>
-                            </ul>
-                        </div>
-                        <!-- Let's Start Button Start -->
-                        <div class="header-btn d-inline-flex">
-                            <a href="#" class="btn-default" data-radio-trigger>Ouça agora</a>
-                        </div>
-                        <!-- Let's Start Button End -->
-					</div>
-					<!-- Main Menu End -->
-					<div class="navbar-toggle"></div>
-				</div>
-			</nav>
-			<div class="responsive-menu"></div>
-		</div>
-	</header>
-	<!-- Header End -->
+<!-- Header Start -->
+<header class="main-header">
+    <div class="header-sticky">
+        <nav class="navbar navbar-expand-lg" aria-label="Navegação principal">
+            <div class="container">
+                <!-- Logo -->
+                <a class="navbar-brand" href="./" aria-label="Paróquia NSR Jericó/PB — Página Inicial">
+                    <img src="images/logo.png" alt="Logo Paróquia Nossa Senhora dos Remédios" style="max-height:55px;" width="140" height="55">
+                </a>
+
+                <!-- Main Menu -->
+                <div class="collapse navbar-collapse main-menu">
+                    <div class="nav-menu-wrapper">
+                        <ul class="navbar-nav mr-auto" id="menu">
+                            <li class="nav-item"><a class="nav-link" data-page="home"            href="index.html">Página Inicial</a></li>
+                            <li class="nav-item"><a class="nav-link" data-page="historia"        href="about.html">História</a></li>
+                            <li class="nav-item"><a class="nav-link" data-page="pastoral"        href="service.html">Pastoral</a></li>
+                            <li class="nav-item"><a class="nav-link" data-page="eventos"         href="eventos.html">Eventos</a></li>
+                            <li class="nav-item"><a class="nav-link" data-page="agenda"          href="agenda-liturgica.html">Agenda Litúrgica</a></li>
+                            <li class="nav-item"><a class="nav-link" data-page="liturgia"        href="agenda-liturgica.html?tab=liturgia">Liturgia do Dia</a></li>
+                            <li class="nav-item"><a class="nav-link" data-page="contato"         href="contact.html">Contato</a></li>
+                            <li class="nav-item highlighted-menu"><a class="nav-link" href="#" data-radio-trigger>Ouça agora</a></li>
+                        </ul>
+                    </div>
+                    <div class="header-btn d-inline-flex">
+                        <a href="#" class="btn-default" data-radio-trigger>Ouça agora</a>
+                    </div>
+                </div>
+                <div class="navbar-toggle"></div>
+            </div>
+        </nav>
+        <div class="responsive-menu"></div>
+    </div>
+</header>
+<!-- Header End -->
+<!-- @include-end partials/header.html -->
 
     <!-- Page Header Start -->
 	<div class="page-header">
@@ -209,175 +185,126 @@
 	</div>
 	<!-- Photo Gallery Section End -->
 
-    <!-- Footer Start -->
-    <footer class="main-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <!-- About Footer Start -->
-                    <div class="about-footer">
-                        <!-- Footer Logo Start -->
-                        <div class="footer-logo">
-                            <img src="images/footer-logo.png" alt="" style="max-height:60px;">
-                        </div>
-                        <!-- Footer Logo End -->
-
-                        <!-- About Footer Content Start -->
-                        <div class="about-footer-content">
-                            <p>A Paróquia Nossa Senhora dos Remédios é uma comunidade de fé comprometida com o amor a Deus e ao próximo.</p>
-                        </div>
-                        <!-- Footer Social Links Start -->
-                        <div class="footer-social-links">
-                            <ul>
-                                <li><a href="https://www.facebook.com/people/Par%C3%B3quia-Nossa-Senhora-dos-Rem%C3%A9dios/100095364065282/" target="_blank"><i class="fa-brands fa-facebook-f"></i></a></li>
-                                <li><a href="https://www.instagram.com/pascomremedios.jerico" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
-                                <li><a href="https://wa.me/558334351020" target="_blank"><i class="fa-brands fa-whatsapp"></i></a></li>                                                                
-                            </ul>
-                        </div>
-                        <!-- Footer Social Links End -->
-                        
+<!-- @include-start partials/footer.html -->
+<!-- Footer Start -->
+<footer class="main-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="about-footer">
+                    <div class="footer-logo">
+                        <img src="images/footer-logo.png" alt="Paróquia Nossa Senhora dos Remédios" style="max-height:60px;" width="180" height="60">
                     </div>
-                    <!-- About Footer End -->
-                </div>
-                
-                <div class="col-lg-2 col-md-3 col-6">
-                    <!-- About Links Start -->
-                    <div class="footer-links">
-                        <h3>links rápidos</h3>
+                    <div class="about-footer-content">
+                        <p>A Paróquia Nossa Senhora dos Remédios é uma comunidade de fé comprometida com o amor a Deus e ao próximo.</p>
+                    </div>
+                    <div class="footer-social-links">
                         <ul>
-                            <li><a href="index.html">início</a></li>
-                            <li><a href="about.html">nossa paróquia</a></li>
-                            <li><a href="service.html">sacramentos</a></li>
-                            <li><a href="ministries.html">ministérios</a></li>
-                            <li><a href="contact.html">contato</a></li>
+                            <li><a href="https://www.facebook.com/people/Par%C3%B3quia-Nossa-Senhora-dos-Rem%C3%A9dios/100095364065282/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a></li>
+                            <li><a href="https://www.instagram.com/pascomremedios.jerico" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></li>
+                            <li><a href="https://wa.me/558334351020" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a></li>
                         </ul>
                     </div>
-                    <!-- About Links End -->
-                </div>
-
-                <div class="col-lg-3 col-md-4 col-6">
-                    <!-- About Links Start -->
-                    <div class="footer-links">
-                        <h3>sacramentos</h3>
-                        <ul>
-                            <li><a href="#">batismo</a></li>
-                            <li><a href="#">eucaristia</a></li>
-                            <li><a href="#">crisma</a></li>
-                            <li><a href="#">matrimônio</a></li>
-                            <li><a href="#">unção dos enfermos</a></li>
-                        </ul>
-                    </div>
-                    <!-- About Links End -->
-                </div>
-
-                <div class="col-lg-3 col-md-5">
-                    <!-- About Links Start -->
-                    <div class="footer-contact">
-                        <h3>contato</h3>
-                        <!-- Footer Contact Details Start -->
-                        <div class="footer-contact-details">
-                            <!-- Footer Info Box Start -->
-                            <div class="footer-info-box">
-                                <div class="icon-box">
-                                    <img src="images/icon-phone.svg" alt="">
-                                </div>
-                                <div class="footer-info-box-content">
-                                    <p>(83) 3435-1020</p>
-                                </div>                                
-                            </div>
-                            <!-- Footer Info Box End -->
-
-                            <!-- Footer Info Box Start -->
-                            <div class="footer-info-box">
-                                <div class="icon-box">
-                                    <img src="images/icon-mail.svg" alt="">
-                                </div>
-                                <div class="footer-info-box-content">
-                                    <p>paroquiaremediosjerico@gmail.com</p>
-                                </div>
-                            </div>
-                            <!-- Footer Info Box End -->
-
-                            <!-- Footer Info Box Start -->
-                            <div class="footer-info-box">
-                                <div class="icon-box">
-                                    <img src="images/icon-location.svg" alt="">
-                                </div>
-                                <div class="footer-info-box-content">
-                                    <p>Praça Pe. Sebastião, s/n - Jericó/PB</p>
-                                </div>                                
-                            </div>
-                            <!-- Footer Info Box End -->
-                        </div>
-                        <!-- Footer Contact Details End -->
-                    </div>
-                    <!-- About Links End -->
                 </div>
             </div>
 
-            <!-- Footer Copyright Section Start -->
-            <div class="footer-copyright">
-                <div class="row align-items-center">
-                    <div class="col-lg-6 col-md-6">
-                        <!-- Footer Copyright Start -->
-                        <div class="footer-copyright-text">
-                            <p>Paróquia Nossa Senhora dos Remédios - Jericó/PB<br>&copy; 2024 Todos os direitos reservados.</p>
-                        </div>
-                        <!-- Footer Copyright End -->
-                    </div>
+            <div class="col-lg-2 col-md-3 col-6">
+                <div class="footer-links">
+                    <h3>links rápidos</h3>
+                    <ul>
+                        <li><a href="index.html">início</a></li>
+                        <li><a href="about.html">nossa paróquia</a></li>
+                        <li><a href="service.html">sacramentos</a></li>
+                        <li><a href="ministries.html">ministérios</a></li>
+                        <li><a href="contact.html">contato</a></li>
+                    </ul>
+                </div>
+            </div>
 
-                    <div class="col-lg-6 col-md-6">
-                        <!-- Footer Social Link Start -->
-                        <div class="footer-privacy-policy">
-                            <ul>
-                                <li><a href="https://diocesedecajazeiras.com.br" target="_blank">site da diocese</a></li>
-                                <li><a href="#">horário das missas</a></li>
-                                <li><a href="#">política de privacidade</a></li>
-                            </ul>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="footer-links">
+                    <h3>sacramentos</h3>
+                    <ul>
+                        <li><a href="#">batismo</a></li>
+                        <li><a href="#">eucaristia</a></li>
+                        <li><a href="#">crisma</a></li>
+                        <li><a href="#">matrimônio</a></li>
+                        <li><a href="#">unção dos enfermos</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-5">
+                <div class="footer-contact">
+                    <h3>contato</h3>
+                    <div class="footer-contact-details">
+                        <div class="footer-info-box">
+                            <div class="icon-box"><img src="images/icon-phone.svg" alt="" width="24" height="24"></div>
+                            <div class="footer-info-box-content"><p><a href="tel:+558334351020">(83) 3435-1020</a></p></div>
                         </div>
-                        <!-- Footer Social Link End -->
+                        <div class="footer-info-box">
+                            <div class="icon-box"><img src="images/icon-mail.svg" alt="" width="24" height="24"></div>
+                            <div class="footer-info-box-content"><p><a href="mailto:paroquiaremediosjerico@gmail.com">paroquiaremediosjerico@gmail.com</a></p></div>
+                        </div>
+                        <div class="footer-info-box">
+                            <div class="icon-box"><img src="images/icon-location.svg" alt="" width="24" height="24"></div>
+                            <div class="footer-info-box-content"><p>Rua da Matriz, s/n - Centro, Jericó/PB, CEP 58830-000</p></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Footer Copyright Section End -->
         </div>
-     </footer>
-    <!-- Footer End -->
 
-    <!-- Jquery Library File -->
-    <script src="js/jquery-3.7.1.min.js"></script>
-    <!-- Bootstrap js file -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- Validator js file -->
-    <script src="js/validator.min.js"></script>
-    <!-- SlickNav js file -->
-    <script src="js/jquery.slicknav.js"></script>
-    <!-- Swiper js file -->
-    <script src="js/swiper-bundle.min.js"></script>
-    <!-- Counter js file -->
-    <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/jquery.counterup.min.js"></script>
-    <!-- Magnific js file -->
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <!-- SmoothScroll -->
-    <script src="js/SmoothScroll.js"></script>
-    <!-- Parallax js -->
-    <script src="js/parallaxie.js"></script>
-    <!-- MagicCursor js file -->
-    <script src="js/gsap.min.js"></script>
-    <script src="js/magiccursor.js"></script>
-    <!-- Text Effect js file -->
-    <script src="js/SplitText.js"></script>
-    <script src="js/ScrollTrigger.min.js"></script>
-    <!-- YTPlayer js File -->
-    <script src="js/jquery.mb.YTPlayer.min.js"></script>
-    <!-- Audio js File -->
-    <script src="js/plyr.js"></script>
-    <!-- Wow js file -->
-    <script src="js/wow.js"></script>
-    <!-- Main Custom js file -->
-    <script src="js/function.js"></script>
-    <!-- Radio Player -->
-    <script src="js/radio-player.js"></script>
+        <div class="footer-copyright">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6">
+                    <div class="footer-copyright-text">
+                        <p>Paróquia Nossa Senhora dos Remédios - Jericó/PB<br>&copy; <span id="currentYear"></span> Todos os direitos reservados.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="footer-privacy-policy">
+                        <ul>
+                            <li><a href="https://diocesedecajazeiras.com.br" target="_blank" rel="noopener noreferrer">site da diocese</a></li>
+                            <li><a href="agenda-liturgica.html">horário das missas</a></li>
+                            <li><a href="#">política de privacidade</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer End -->
+<!-- @include-end partials/footer.html -->
+
+<!-- @include-start partials/scripts-common.html -->
+<!-- Scripts comuns a todas as páginas -->
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/validator.min.js"></script>
+<script src="js/jquery.slicknav.js"></script>
+<script src="js/swiper-bundle.min.js"></script>
+<script src="js/jquery.waypoints.min.js"></script>
+<script src="js/jquery.counterup.min.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+<script src="js/SmoothScroll.js"></script>
+<script src="js/parallaxie.js"></script>
+<script src="js/gsap.min.js"></script>
+<script src="js/magiccursor.js"></script>
+<script src="js/SplitText.js"></script>
+<script src="js/ScrollTrigger.min.js"></script>
+<script src="js/jquery.mb.YTPlayer.min.js"></script>
+<script src="js/plyr.js"></script>
+<script src="js/wow.js"></script>
+<script src="js/function.js"></script>
+<script src="js/active-nav.js"></script>
+<script src="js/radio-player.js"></script>
+<script>
+    var _y = document.getElementById('currentYear');
+    if (_y) _y.textContent = new Date().getFullYear();
+</script>
+<!-- @include-end partials/scripts-common.html -->
+	<script src="js/radio-player.js"></script>
 </body>
 </html>

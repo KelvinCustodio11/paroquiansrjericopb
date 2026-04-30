@@ -22,11 +22,33 @@ Site institucional da Paróquia NSR de Jericó (Paraíba), construído sobre o t
 ## Antes de subir qualquer mudança
 Leia o **checklist de aceite** em [MELHORIAS_GERAIS.md §11](MELHORIAS_GERAIS.md).
 
+## Build (partials → HTML estático)
+
+Para evitar duplicação de header/footer/scripts entre as 21 páginas, o projeto usa um sistema simples de partials processados por um script Node sem dependências.
+
+```bash
+node build.js          # ou: npm run build
+```
+
+- **Origem**: `partials/head-css.html`, `partials/header.html`, `partials/footer.html`, `partials/scripts-common.html`.
+- **Marcadores**: cada página HTML contém `<!-- @include partials/X.html -->`. O build expande para um par `<!-- @include-start X --> ... <!-- @include-end X -->` (idempotente — pode rodar quantas vezes quiser).
+- **Saída**: o build edita os HTMLs **in-place** (sem pasta `dist/`). Funciona em GitHub Pages e Plesk sem configuração extra.
+- **Item de menu ativo**: cada página declara `<body data-page="eventos">` e `js/active-nav.js` aplica `class="active"` no link correspondente.
+
+**Workflow para editar header/footer**: edite o partial em `partials/`, rode `node build.js`, comite as mudanças (HTMLs alterados + partial). 
+
+**Migração inicial**: feita uma única vez via `node scripts/migrate-to-partials.js` (não precisa rodar de novo, mas o script fica versionado para referência).
+
+
 ## Estrutura
 ```
 /
 ├── *.html                  # 21 páginas (a migrar para PT-BR — ver MELHORIAS_GERAIS.md §6)
 ├── form-process.php        # endpoint do formulário de contato (hardenizado)
+├── partials/               # head-css, header, footer, scripts-common (fonte para build)
+├── build.js                # script Node que expande @include
+├── scripts/
+│   └── migrate-to-partials.js   # migração one-time (já executado)
 ├── css/                    # estilos (Bootstrap, Avenix custom, plugins)
 ├── js/                     # scripts (jQuery, plugins, scripts próprios da paróquia)
 ├── images/                 # imagens estáticas e uploads/
