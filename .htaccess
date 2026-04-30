@@ -80,22 +80,21 @@ RewriteRule ^data/?.*$                - [F,L]
 ErrorDocument 404 /404.html
 
 # =====================================================================
-#  Redirecionamentos 301 — migração de URLs para PT-BR
-#  Ver MELHORIAS_GERAIS.md §6 para o plano completo
-#  ATIVAR somente após criar as novas páginas em PT-BR.
+#  Redirecionamentos 301 — migração de URLs EN -> PT-BR (Plesk/Apache)
+#  Os arquivos antigos também contêm meta refresh (fallback p/ GitHub Pages)
 # =====================================================================
-# Redirect 301 /about.html        /historia.html
-# Redirect 301 /service.html      /sacramentos.html
-# Redirect 301 /service-single.html  /sacramentos/detalhe.html
-# Redirect 301 /ministries.html   /ministerios.html
-# Redirect 301 /ministry-single.html /ministerios/detalhe.html
-# Redirect 301 /blog.html         /artigos.html
-# Redirect 301 /blog-single.html  /artigos/detalhe.html
-# Redirect 301 /sermons.html      /homilias.html
-# Redirect 301 /sermons-single.html /homilias/detalhe.html
-# Redirect 301 /campaign.html     /campanhas.html
-# Redirect 301 /campaign-single.html /campanhas/detalhe.html
-# Redirect 301 /gallery.html      /galeria.html
-# Redirect 301 /contact.html      /contato.html
-# pastor.html já foi renomeado para paroco.html no commit 294aa83
-Redirect 301 /pastor.html         /paroco.html
+Redirect 301 /pastor.html             /paroco.html
+Redirect 301 /about.html              /historia.html
+Redirect 301 /service.html            /sacramentos.html
+Redirect 301 /service-single.html     /sacramento-detalhe.html
+Redirect 301 /ministries.html         /ministerios.html
+Redirect 301 /ministry-single.html    /ministerio-detalhe.html
+Redirect 301 /evento-single.html      /evento-detalhe.html
+Redirect 301 /blog.html               /artigos.html
+Redirect 301 /blog-single.html        /artigo-detalhe.html
+Redirect 301 /sermons.html            /homilias.html
+Redirect 301 /sermons-single.html     /homilia-detalhe.html
+Redirect 301 /campaign.html           /campanhas.html
+Redirect 301 /campaign-single.html    /campanha-detalhe.html
+Redirect 301 /gallery.html            /galeria.html
+Redirect 301 /contact.html            /contato.html

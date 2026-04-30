@@ -17,10 +17,10 @@
       "image": "/images/og-home.jpg",
       "keywords": "Paróquia, Nossa Senhora dos Remédios, Jericó, PB, igreja católica, missa, agenda litúrgica"
     },
-    "about.html": {
+    "historia.html": {
       "title": "História da Paróquia | NSR Jericó/PB",
       "description": "Conheça a história, missão e devoção da Paróquia Nossa Senhora dos Remédios em Jericó/PB. Tradição de fé construída com a comunidade.",
-      "url": "/about.html",
+      "url": "/historia.html",
       "type": "website",
       "image": "/images/og-historia.jpg",
       "keywords": "história, paróquia, Nossa Senhora dos Remédios, Jericó, devoção"
@@ -33,34 +33,34 @@
       "image": "/images/og-paroco.jpg",
       "keywords": "pároco, sacerdote, padre, paróquia, Jericó"
     },
-    "service.html": {
+    "sacramentos.html": {
       "title": "Pastoral e Sacramentos | Paróquia NSR Jericó/PB",
       "description": "Sacramentos celebrados na Paróquia Nossa Senhora dos Remédios: batismo, eucaristia, crisma, matrimônio, unção dos enfermos.",
-      "url": "/service.html",
+      "url": "/sacramentos.html",
       "type": "website",
       "image": "/images/og-pastoral.jpg",
       "keywords": "pastoral, sacramentos, batismo, crisma, matrimônio, eucaristia"
     },
-    "service-single.html": {
+    "sacramento-detalhe.html": {
       "title": "Detalhes do Serviço | Paróquia NSR Jericó/PB",
       "description": "Detalhes sobre o serviço pastoral oferecido pela Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
-      "url": "/service-single.html",
+      "url": "/sacramento-detalhe.html",
       "type": "article",
       "image": "/images/og-pastoral.jpg",
       "keywords": "pastoral, serviço, paróquia"
     },
-    "ministries.html": {
+    "ministerios.html": {
       "title": "Ministérios | Paróquia NSR Jericó/PB",
       "description": "Conheça os ministérios e pastorais da Paróquia Nossa Senhora dos Remédios em Jericó/PB. Participe da vida da comunidade.",
-      "url": "/ministries.html",
+      "url": "/ministerios.html",
       "type": "website",
       "image": "/images/og-ministerios.jpg",
       "keywords": "ministérios, pastorais, voluntários, comunidade católica"
     },
-    "ministry-single.html": {
+    "ministerio-detalhe.html": {
       "title": "Detalhes do Ministério | Paróquia NSR Jericó/PB",
       "description": "Saiba mais sobre o ministério da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
-      "url": "/ministry-single.html",
+      "url": "/ministerio-detalhe.html",
       "type": "article",
       "image": "/images/og-ministerios.jpg",
       "keywords": "ministério, pastoral, paróquia"
@@ -73,10 +73,10 @@
       "image": "/images/og-eventos.jpg",
       "keywords": "eventos católicos, paróquia, retiros, encontros, celebrações"
     },
-    "evento-single.html": {
+    "evento-detalhe.html": {
       "title": "Detalhes do Evento | Paróquia NSR Jericó/PB",
       "description": "Detalhes do evento da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
-      "url": "/evento-single.html",
+      "url": "/evento-detalhe.html",
       "type": "article",
       "image": "/images/og-eventos.jpg",
       "keywords": "evento, paróquia, Jericó"
@@ -97,58 +97,58 @@
       "image": "/images/og-liturgia.jpg",
       "keywords": "liturgia, agenda litúrgica, santo do dia, calendário romano, missas"
     },
-    "blog.html": {
+    "artigos.html": {
       "title": "Blog | Paróquia NSR Jericó/PB",
       "description": "Reflexões, notícias e artigos da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
-      "url": "/blog.html",
+      "url": "/artigos.html",
       "type": "website",
       "image": "/images/og-blog.jpg",
       "keywords": "blog católico, reflexões, notícias paróquia"
     },
-    "blog-single.html": {
+    "artigo-detalhe.html": {
       "title": "Artigo do Blog | Paróquia NSR Jericó/PB",
       "description": "Artigo do blog da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
-      "url": "/blog-single.html",
+      "url": "/artigo-detalhe.html",
       "type": "article",
       "image": "/images/og-blog.jpg",
       "keywords": "artigo, blog, reflexão"
     },
-    "sermons.html": {
+    "homilias.html": {
       "title": "Homilias | Paróquia NSR Jericó/PB",
       "description": "Homilias e pregações da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
-      "url": "/sermons.html",
+      "url": "/homilias.html",
       "type": "website",
       "image": "/images/og-homilias.jpg",
       "keywords": "homilias, pregações, padre, paróquia"
     },
-    "sermons-single.html": {
+    "homilia-detalhe.html": {
       "title": "Detalhes da Homilia | Paróquia NSR Jericó/PB",
       "description": "Homilia da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
-      "url": "/sermons-single.html",
+      "url": "/homilia-detalhe.html",
       "type": "article",
       "image": "/images/og-homilias.jpg",
       "keywords": "homilia, evangelho, paróquia"
     },
-    "campaign.html": {
+    "campanhas.html": {
       "title": "Campanhas | Paróquia NSR Jericó/PB",
       "description": "Campanhas e ações solidárias da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
-      "url": "/campaign.html",
+      "url": "/campanhas.html",
       "type": "website",
       "image": "/images/og-campanhas.jpg",
       "keywords": "campanhas católicas, ações solidárias, doações"
     },
-    "campaign-single.html": {
+    "campanha-detalhe.html": {
       "title": "Detalhes da Campanha | Paróquia NSR Jericó/PB",
       "description": "Conheça e apoie esta campanha da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
-      "url": "/campaign-single.html",
+      "url": "/campanha-detalhe.html",
       "type": "article",
       "image": "/images/og-campanhas.jpg",
       "keywords": "campanha, doação, solidariedade"
     },
-    "gallery.html": {
+    "galeria.html": {
       "title": "Galeria | Paróquia NSR Jericó/PB",
       "description": "Galeria de fotos dos eventos e celebrações da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
-      "url": "/gallery.html",
+      "url": "/galeria.html",
       "type": "website",
       "image": "/images/og-galeria.jpg",
       "keywords": "galeria, fotos, eventos, paróquia"
@@ -161,10 +161,10 @@
       "image": "/images/og-objetos.jpg",
       "keywords": "objetos sagrados, relíquias, itens litúrgicos"
     },
-    "contact.html": {
+    "contato.html": {
       "title": "Contato | Paróquia NSR Jericó/PB",
       "description": "Entre em contato com a Paróquia Nossa Senhora dos Remédios em Jericó/PB. Endereço, telefone, e-mail e formulário de contato.",
-      "url": "/contact.html",
+      "url": "/contato.html",
       "type": "website",
       "image": "/images/og-contato.jpg",
       "keywords": "contato, paróquia, endereço, telefone, e-mail"

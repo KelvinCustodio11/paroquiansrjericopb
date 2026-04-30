@@ -52,11 +52,17 @@ node scripts/seo-fill.js     # ou: npm run seo
 - **Validar**: depois do deploy, rodar [Rich Results Test](https://search.google.com/test/rich-results) e [Facebook Debugger](https://developers.facebook.com/tools/debug/).
 - **Imagens OG** (`/images/og-*.jpg` 1200×630): ainda precisam ser produzidas. Enquanto isso, o navegador cai no `og-default.jpg`.
 
+## URLs em PT-BR
+
+Todas as páginas foram migradas para nomes em português (ex.: `about.html` → `historia.html`, `contact.html` → `contato.html`). Os arquivos antigos foram mantidos como **stubs de redirect** (canonical + `meta refresh` + `script`) para preservar links externos / GitHub Pages, e o `.htaccess` aplica `Redirect 301` no Plesk.
+
+A migração foi executada uma única vez via [`scripts/migrate-urls-pt-br.js`](scripts/migrate-urls-pt-br.js); o script fica versionado para referência. Para nomes futuros, **prefira PT-BR direto** e atualize `seo-data.json` + `sitemap.xml` + `partials/header.html`.
+
 
 ## Estrutura
 ```
 /
-├── *.html                  # 21 páginas (a migrar para PT-BR — ver MELHORIAS_GERAIS.md §6)
+├── *.html                  # 21 páginas em PT-BR (+ stubs de redirect dos nomes EN antigos)
 ├── form-process.php        # endpoint do formulário de contato (hardenizado)
 ├── partials/               # head-css, header, footer, scripts-common (fonte para build)
 ├── build.js                # script Node que expande @include

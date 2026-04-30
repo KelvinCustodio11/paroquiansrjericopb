@@ -14,7 +14,7 @@
   </url>
 
   <url>
-    <loc>https://pascomjerico.com.br/about.html</loc>
+    <loc>https://pascomjerico.com.br/historia.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -28,14 +28,14 @@
   </url>
 
   <url>
-    <loc>https://pascomjerico.com.br/service.html</loc>
+    <loc>https://pascomjerico.com.br/sacramentos.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://pascomjerico.com.br/ministries.html</loc>
+    <loc>https://pascomjerico.com.br/ministerios.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -56,28 +56,28 @@
   </url>
 
   <url>
-    <loc>https://pascomjerico.com.br/blog.html</loc>
+    <loc>https://pascomjerico.com.br/artigos.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://pascomjerico.com.br/sermons.html</loc>
+    <loc>https://pascomjerico.com.br/homilias.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://pascomjerico.com.br/campaign.html</loc>
+    <loc>https://pascomjerico.com.br/campanhas.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://pascomjerico.com.br/gallery.html</loc>
+    <loc>https://pascomjerico.com.br/galeria.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -91,7 +91,7 @@
   </url>
 
   <url>
-    <loc>https://pascomjerico.com.br/contact.html</loc>
+    <loc>https://pascomjerico.com.br/contato.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
