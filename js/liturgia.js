@@ -537,7 +537,6 @@
     html += '<div style="flex:1;">';
     html += '<p style="margin:0 0 4px; font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; color:#999;">'
       + escHtml(data.data || '') + '</p>';
-    html += '<h3 style="margin:0 0 8px; font-size:1.4rem; color:#111;">' + escHtml(data.liturgia || '') + '</h3>';
     html += '</div>';
     html += '<span style="display:inline-flex; align-items:center; gap:6px; background:' + corStyle.badge + '; color:' + corStyle.text + '; font-size:.78rem; font-weight:700; padding: 4px 14px; border-radius:30px; text-transform:uppercase; letter-spacing:.08em; white-space:nowrap;">'
       + '<span style="width:8px;height:8px;border-radius:50%;background:' + corStyle.text + ';opacity:.6;display:inline-block;"></span>'
@@ -700,7 +699,6 @@
       + '<span class="pddia-badge-dot" style="background:' + corStyle.text + ';"></span>'
       + escHtml(cor)
       + '</span>'
-      + '<span class="pddia-celebracao">' + escHtml(data.liturgia || '') + '</span>'
       + '<span class="pddia-data">' + escHtml(data.data || '') + '</span>'
       + '</div>'
       + '<div class="pddia-divider"></div>'
