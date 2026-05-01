@@ -1,0 +1,33 @@
+# Dependências PHP (geradas via composer install)
+/vendor/
+
+# Ambiente local (contém segredos)
+.env
+.env.backup
+.env.production
+
+# Banco de dados SQLite local (use migrations + seeders)
+/database/database.sqlite
+/database/database.sqlite-journal
+
+# Cache e logs do Laravel
+/bootstrap/cache/*.php
+/storage/logs/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/testing/
+/storage/framework/views/
+
+# Build assets Node
+/node_modules/
+/public/hot
+/public/storage
+/public/build
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
