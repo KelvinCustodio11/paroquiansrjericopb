@@ -37,6 +37,9 @@ const PLAN = [
     { dataFile: 'homilias.json', collection: 'homilias', template: 'homilia.html', outDir: 'homilias', enrich: enrichHomilia },
 ];
 
+// Modo preview: node build-content.js --preview-stdin --type evento
+const PREVIEW_MODE = process.argv.includes('--preview-stdin');
+
 // =============================================================
 // Utils
 // =============================================================
@@ -290,8 +293,10 @@ function rewritePaths(html) {
 }
 
 // =============================================================
-// Loop principal
+// Loop principal + secoes dinamicas (pulado no modo preview)
 // =============================================================
+
+if (!PREVIEW_MODE) {
 
 let totalGerado = 0;
 
@@ -647,3 +652,39 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
 
     console.log('- Secoes dinamicas concluidas.\n');
 })();
+
+} // end if (!PREVIEW_MODE)
+
+// =============================================================
+// Modo preview: le JSON do stdin, renderiza 1 item, grava preview.html
+// =============================================================
+if (PREVIEW_MODE) {
+    const typeArg = process.argv.indexOf('--type');
+    const type = typeArg !== -1 ? process.argv[typeArg + 1] : 'evento';
+    const planEntry = PLAN.find(p => p.outDir === type);
+    if (!planEntry) {
+        console.error('[preview] --type invalido: ' + type + '. Use: evento, artigo ou homilia');
+        process.exit(1);
+    }
+    let inputData = '';
+    process.stdin.setEncoding('utf8');
+    process.stdin.on('data', chunk => { inputData += chunk; });
+    process.stdin.on('end', () => {
+        try {
+            const item = JSON.parse(inputData);
+            const tplPath = path.join(TPL, planEntry.template);
+            const tpl = fs.readFileSync(tplPath, 'utf8');
+            const enriched = planEntry.enrich(item);
+            let rendered = render(tpl, enriched);
+            rendered = expandPartials(rendered);
+            // preview.html fica na raiz do site — mesmos paths do template, sem rewrite
+            const outFile = path.join(ROOT, 'preview.html');
+            fs.writeFileSync(outFile, '<!-- PAROQUIA PREVIEW — NAO COMMITAR -->\n' + rendered, 'utf8');
+            console.log('OK');
+            process.exit(0);
+        } catch (e) {
+            console.error('[preview] Erro: ' + e.message);
+            process.exit(1);
+        }
+    });
+}

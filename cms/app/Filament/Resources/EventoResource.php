@@ -393,6 +393,12 @@ class EventoResource extends Resource
                 Tables\Filters\TernaryFilter::make('publicado'),
             ])
             ->actions([
+                Tables\Actions\Action::make('preview')
+                    ->label('Visualizar')
+                    ->icon('heroicon-o-eye')
+                    ->color('gray')
+                    ->url(fn (Evento $record): string => 'http://localhost:3000/eventos/' . $record->slug . '.html')
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
