@@ -219,43 +219,9 @@
                                         <div class="vision-mission-body">
                                             <p class="wow fadeInUp" data-wow-delay="0.25s">A Santa Missa é o centro da nossa vida paroquial. Todos são bem-vindos à mesa do Senhor. Confira os horários das celebrações eucarísticas na Igreja Matriz e nas capelas da paróquia.</p>
 
-                                            <div class="table-responsive wow fadeInUp" data-wow-delay="0.4s" style="margin-top: 24px;">
-                                                <table class="table table-bordered" style="background:#fff;">
-                                                    <thead style="background: var(--color-primary, #8B1A1A); color:#fff;">
-                                                        <tr>
-                                                            <th>Dia</th>
-                                                            <th>Horário</th>
-                                                            <th>Local</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Segunda a Sexta</td>
-                                                            <td>07h00</td>
-                                                            <td>Igreja Matriz</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Sábado</td>
-                                                            <td>07h00</td>
-                                                            <td>Igreja Matriz</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Sábado (Vigília)</td>
-                                                            <td>19h00</td>
-                                                            <td>Igreja Matriz</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Domingo</td>
-                                                            <td>07h00 e 19h00</td>
-                                                            <td>Igreja Matriz</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Domingo</td>
-                                                            <td>09h00</td>
-                                                            <td>Capelinha de São Sebastião</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                            <!-- Horários dinâmicos — lidos de data/horarios-missa.json -->
+                                            <div data-component="horarios-missa" class="wow fadeInUp" data-wow-delay="0.4s">
+                                                <p class="text-muted small">Carregando horários…</p>
                                             </div>
 
                                             <p class="wow fadeInUp" data-wow-delay="0.6s" style="margin-top: 12px; font-size: 0.9em; opacity: 0.8;">* Os horários podem ser alterados em datas festivas. Acompanhe nossas redes sociais para avisos.</p>
@@ -265,7 +231,7 @@
                                 <div class="col-lg-6">
                                     <div class="vision-mission-image">
                                         <figure class="image-anime reveal">
-                                            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1499097505928-42fd92ac09f1?w=700&q=80" alt="Celebração da Eucaristia">
+                                            <img loading="lazy" decoding="async" width="600" height="450" src="images/join-worship-img-1.jpg" alt="Celebração da Santa Missa na Paróquia Nossa Senhora dos Remédios">
                                         </figure>
                                     </div>
                                 </div>

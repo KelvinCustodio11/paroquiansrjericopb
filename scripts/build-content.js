@@ -255,3 +255,312 @@ for (const plan of PLAN) {
 }
 
 console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
+
+// =============================================================
+// Injecao de secoes dinamicas em index.html e eventos.html
+// Substitui o conteudo entre <!-- @section-start X --> e
+// <!-- @section-end X --> com HTML gerado a partir de eventos.json
+// =============================================================
+(function injectDynamicSections() {
+    const eventosDataPath = path.join(DATA, 'eventos.json');
+    if (!fs.existsSync(eventosDataPath)) {
+        console.log('\n- eventos.json ausente, pulando injecao de secoes dinamicas');
+        return;
+    }
+
+    const todos    = JSON.parse(fs.readFileSync(eventosDataPath, 'utf8')).eventos || [];
+    const visiveis = todos.filter(e => e.publicado !== false);
+
+    console.log(`\n- Injetando secoes dinamicas (${visiveis.length} evento(s) visivel(is))...`);
+
+    // ── helpers ────────────────────────────────────────────────
+
+    function localStr(local) {
+        if (!local) return '';
+        if (typeof local === 'string') return local;
+        const nome = local.nome || '';
+        const uf   = [local.cidade, local.estado].filter(Boolean).join('/');
+        return [nome, uf].filter(Boolean).join(' — ');
+    }
+
+    function imgPath(img) {
+        if (!img) return 'images/event-image.jpg';
+        return String(img).replace(/^\//, '');
+    }
+
+    function dataHoraStr(ev) {
+        const d = formatDateBR(ev.data_inicio);
+        const h = ev.hora_inicio ? ` — ${ev.hora_inicio}` : '';
+        return d + h;
+    }
+
+    /**
+     * Substitui o conteudo entre os marcadores @section-start/end.
+     * Idempotente: so grava se o conteudo mudou.
+     */
+    function injectSection(filePath, sectionName, content) {
+        const startMarker = `<!-- @section-start ${sectionName} -->`;
+        const endMarker   = `<!-- @section-end ${sectionName} -->`;
+        let html;
+        try { html = fs.readFileSync(filePath, 'utf8'); }
+        catch (_) { console.log(`  ! ${path.basename(filePath)}: arquivo nao encontrado`); return; }
+        const si = html.indexOf(startMarker);
+        const ei = html.indexOf(endMarker);
+        if (si === -1 || ei === -1 || si >= ei) {
+            console.log(`  ! ${path.basename(filePath)}: marcador "${sectionName}" nao encontrado`);
+            return;
+        }
+        const newHtml = html.slice(0, si + startMarker.length) + '\n' + content + '\n' + html.slice(ei);
+        if (newHtml === html) {
+            console.log(`  . ${path.basename(filePath)}: ${sectionName} (sem alteracoes)`);
+            return;
+        }
+        fs.writeFileSync(filePath, newHtml, 'utf8');
+        console.log(`  ✓ ${path.basename(filePath)}: ${sectionName}`);
+    }
+
+    /** Evento destaque: prefere destaque=true futuro, senão primeiro futuro, senão último */
+    function selecionarDestaque(lista) {
+        if (!lista.length) return null;
+        const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+        const futuros = lista.filter(e => {
+            const fim = e.data_fim || e.data_inicio;
+            return fim ? new Date(fim) >= hoje : true;
+        });
+        return futuros.find(e => e.destaque) || futuros[0] || lista[lista.length - 1];
+    }
+
+    /**
+     * Gera um bloco <div class="our-event"> completo com o padrao visual Avenix.
+     * reverseLayout=true coloca imagem a direita (order-lg-2/order-lg-1).
+     */
+    function ourEventHtml(ev, reverseLayout) {
+        const img   = escapeHtml(imgPath(ev.imagem_capa));
+        const tit   = escapeHtml(ev.titulo || '');
+        const label = escapeHtml(ev.categoria || 'próximo evento');
+        const dt    = escapeHtml(dataHoraStr(ev));
+        const loc   = escapeHtml(localStr(ev.local));
+        const res   = escapeHtml(ev.resumo || '');
+        const link  = `eventos/${escapeHtml(ev.slug)}.html`;
+        const colImg = reverseLayout ? 'col-lg-6 order-lg-2' : 'col-lg-6';
+        const colTxt = reverseLayout ? 'col-lg-6 order-lg-1' : 'col-lg-6';
+        const resHtml = res
+            ? `\n                    <div class="event-footer">\n                        <p class="wow fadeInUp" data-wow-delay="0.5s">${res}</p>\n                    </div>`
+            : '';
+        return `    <div class="our-event">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="${colImg}">
+                    <div class="event-image">
+                        <figure class="image-anime reveal">
+                            <img loading="lazy" decoding="async" src="${img}" onerror="this.src='images/event-image.jpg'" alt="${tit}">
+                        </figure>
+                    </div>
+                </div>
+                <div class="${colTxt}">
+                    <div class="event-content">
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">${label}</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">${tit}</h2>
+                        </div>
+                        <div class="event-body">
+                            <div class="event-item wow fadeInUp">
+                                <div class="icon-box"><i class="fa-solid fa-calendar-days"></i></div>
+                                <div class="event-item-content"><p>${dt}</p></div>
+                            </div>
+                            <div class="event-item wow fadeInUp" data-wow-delay="0.25s">
+                                <div class="icon-box"><i class="fa-solid fa-location-dot"></i></div>
+                                <div class="event-item-content"><p>${loc}</p></div>
+                            </div>
+                        </div>${resHtml}
+                        <div class="event-btn wow fadeInUp" data-wow-delay="0.75s">
+                            <a href="${link}" class="btn-default">ver programação completa</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+    }
+
+    const indexHtml  = path.join(ROOT, 'index.html');
+    const eventosHtml = path.join(ROOT, 'eventos.html');
+
+    // ── 1. index.html: our-event destaque ──────────────────────
+    {
+        const ev = selecionarDestaque(visiveis);
+        const html = ev ? ourEventHtml(ev, false)
+            : `    <div class="our-event">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="event-image">
+                        <figure class="image-anime reveal">
+                            <img loading="lazy" decoding="async" src="images/event-image.jpg" alt="">
+                        </figure>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="event-content">
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">próximo evento</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">Nenhum evento <span>agendado</span></h2>
+                        </div>
+                        <div class="event-btn wow fadeInUp" data-wow-delay="0.5s">
+                            <a href="eventos.html" class="btn-default">ver todos os eventos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+        injectSection(indexHtml, 'index:evento-destaque', html);
+    }
+
+    // ── 2. index.html: grade de eventos (.ministries-item) ─────
+    {
+        const fallbacks = ['images/campaign-img-1.jpg', 'images/campaign-img-3.jpg', 'images/campaign-img-2.jpg'];
+        const delays    = ['0.1s', '0.25s', '0.5s'];
+
+        let inner = '';
+        if (visiveis.length) {
+            inner = visiveis.slice(0, 3).map((ev, i) => {
+                const img  = escapeHtml(imgPath(ev.imagem_capa));
+                const tit  = escapeHtml(ev.titulo || '');
+                const link = `eventos/${escapeHtml(ev.slug)}.html`;
+                const sub  = escapeHtml([formatDateBR(ev.data_inicio), ev.hora_inicio, localStr(ev.local)].filter(Boolean).join(' — '));
+                const fb   = fallbacks[i] || fallbacks[0];
+                return `                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="${delays[i]}">
+                    <div class="ministries-item">
+                        <div class="ministries-image" data-cursor-text="Ver">
+                            <a href="${link}">
+                                <figure>
+                                    <img loading="lazy" decoding="async" src="${img}" onerror="this.src='${fb}'" alt="${tit}">
+                                </figure>
+                            </a>
+                        </div>
+                        <div class="ministries-content">
+                            <h3>${tit}</h3>
+                            <p>${sub}</p>
+                        </div>
+                        <div class="ministries-btn">
+                            <a href="${link}" class="readmore-btn"><img loading="lazy" decoding="async" src="images/arrow-white.svg" alt=""></a>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('\n');
+        } else {
+            inner = `                <div class="col-lg-12">
+                    <p class="text-center">Nenhum evento agendado no momento.</p>
+                </div>`;
+        }
+
+        const footer = `                <div class="col-lg-12">
+                    <div class="our-ministries-footer wow fadeInUp" data-wow-delay="0.75s">
+                        <p>Confira todos os eventos e novidades da nossa paróquia e participe das celebrações. <a href="eventos.html">Ver Todos os Eventos</a></p>
+                    </div>
+                </div>`;
+
+        const html = `            <div class="row">\n${inner}\n${footer}\n            </div>`;
+        injectSection(indexHtml, 'index:eventos-grade', html);
+    }
+
+    // ── 3. eventos.html: our-event destaques (até 2, lados alternados) ──
+    {
+        let html;
+        if (visiveis.length) {
+            html = visiveis.slice(0, 2).map((ev, i) => ourEventHtml(ev, i % 2 !== 0)).join('\n');
+        } else {
+            html = `    <div class="our-event">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="event-image">
+                        <figure class="image-anime reveal">
+                            <img loading="lazy" decoding="async" src="images/event-image.jpg" alt="">
+                        </figure>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="event-content">
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">próximos eventos</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">Nenhum evento <span>agendado</span></h2>
+                        </div>
+                        <div class="event-btn wow fadeInUp" data-wow-delay="0.5s">
+                            <a href="contato.html" class="btn-default">fale conosco</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+        }
+        injectSection(eventosHtml, 'eventos:destaques', html);
+    }
+
+    // ── 4. eventos.html: ticker ─────────────────────────────────
+    {
+        const aster = `<img loading="lazy" decoding="async" src="images/icon-asterisk.svg" alt="">`;
+        const spans = visiveis.length
+            ? visiveis.map(ev => `                    <span>${aster}${escapeHtml(ev.titulo)}</span>`).join('\n')
+            : `                    <span>${aster}Confira os próximos eventos da paróquia</span>`;
+        const block = `                <div class="scrolling-content">\n${spans}\n                </div>`;
+        injectSection(eventosHtml, 'eventos:ticker-content', `${block}\n${block}`);
+    }
+
+    // ── 5. eventos.html: grade de eventos (.campaign-item) ─────
+    {
+        const fallbacks = ['images/campaign-img-1.jpg', 'images/campaign-img-3.jpg', 'images/campaign-img-2.jpg'];
+        let cards;
+        if (visiveis.length) {
+            cards = visiveis.map((ev, i) => {
+                const img   = escapeHtml(imgPath(ev.imagem_capa));
+                const tit   = escapeHtml(ev.titulo || '');
+                const link  = `eventos/${escapeHtml(ev.slug)}.html`;
+                const res   = escapeHtml(ev.resumo || '');
+                const dt    = escapeHtml(formatDateBR(ev.data_inicio));
+                const hr    = escapeHtml(ev.hora_inicio || '');
+                const loc   = escapeHtml(localStr(ev.local));
+                const fb    = fallbacks[i % fallbacks.length];
+                const delay = i > 0 ? ` data-wow-delay="${(i * 0.25).toFixed(2)}s"` : '';
+                const resRow = res ? `\n                                <p>${res}</p>` : '';
+                const hrCell = hr ? `\n                                    <div class="skill-no">${hr}</div>` : '';
+                const locRow = loc
+                    ? `\n                                <div class="skill-data" style="margin-top:8px; margin-bottom:0;">\n                                    <div class="skill-title"><i class="fa-solid fa-location-dot"></i> &nbsp;${loc}</div>\n                                </div>`
+                    : '';
+                return `                <div class="col-lg-4 col-md-6">
+                    <div class="campaign-item wow fadeInUp"${delay}>
+                        <div class="campaign-image">
+                            <figure>
+                                <a href="${link}" class="image-anime" data-cursor-text="Ver">
+                                    <img loading="lazy" decoding="async" src="${img}" onerror="this.src='${fb}'" alt="${tit}">
+                                </a>
+                            </figure>
+                        </div>
+                        <div class="campaign-body">
+                            <div class="campaign-content">
+                                <h2>${tit}</h2>${resRow}
+                            </div>
+                            <div class="campaign-btn">
+                                <a href="${link}" class="read-more-btn">ver detalhes</a>
+                            </div>
+                            <div class="skillbar" style="pointer-events:none;">
+                                <div class="skill-data">
+                                    <div class="skill-title"><i class="fa-regular fa-calendar-days"></i> &nbsp;${dt}</div>${hrCell}
+                                </div>${locRow}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('\n');
+        } else {
+            cards = `                <div class="col-lg-12">
+                    <p class="text-center py-5">Nenhum evento agendado no momento. Volte em breve!</p>
+                </div>`;
+        }
+        injectSection(eventosHtml, 'eventos:grade', cards);
+    }
+
+    console.log('- Secoes dinamicas concluidas.\n');
+})();

@@ -1,23 +1,21 @@
 {
-  "_schema": "../schemas/agenda-pastoral.schema.json",
-  "_descricao": "Compromissos pastorais (reunioes, formacoes, visitas). Apenas itens com 'publico: true' aparecem no site.",
-  "compromissos": [
-    {
-      "titulo": "Reunião do Conselho Pastoral Paroquial",
-      "data": "2026-05-15",
-      "hora": "19:30",
-      "tipo": "reuniao",
-      "local": "Salão Paroquial",
-      "responsavel": "Pe. Pároco",
-      "publico": true
-    },
-    {
-      "titulo": "Formação de catequistas",
-      "data": "2026-05-22",
-      "hora": "14:00",
-      "tipo": "formacao",
-      "local": "Salão Paroquial",
-      "publico": true
-    }
-  ]
+    "compromissos": [
+        {
+            "titulo": "Reunião do Conselho Pastoral Paroquial",
+            "data": "2026-05-15",
+            "hora": "19:30",
+            "tipo": "reuniao",
+            "local": "Salão Paroquial",
+            "responsavel": "Pe. Pároco",
+            "publico": true
+        },
+        {
+            "titulo": "Formação de catequistas",
+            "data": "2026-05-22",
+            "hora": "14:00",
+            "tipo": "formacao",
+            "local": "Salão Paroquial",
+            "publico": true
+        }
+    ]
 }

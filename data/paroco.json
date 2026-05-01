@@ -1,13 +1,12 @@
 {
-  "_schema": "../schemas/paroco.schema.json",
-  "saudacao": "Padre",
-  "nome": "A definir",
-  "data_ordenacao": "1900-01-01",
-  "data_inicio_paroquia": "1900-01-01",
-  "biografia": "Biografia do pároco a ser preenchida. Inclua histórico de ordenação, paróquias anteriores e visão pastoral.",
-  "foto": "/images/uploads/demo/paroco.jpg",
-  "contato": {
-    "email": "contato@pascomjerico.com.br",
-    "telefone": "+55 83 3435-1020"
-  }
+    "nome": "A definir",
+    "saudacao": "Padre",
+    "data_ordenacao": "1900-01-01",
+    "data_inicio_paroquia": "1900-01-01",
+    "biografia": "Biografia do pároco a ser preenchida. Inclua histórico de ordenação, paróquias anteriores e visão pastoral.",
+    "foto": "images/uploads/demo/paroco.jpg",
+    "contato": {
+        "email": "contato@pascomjerico.com.br",
+        "telefone": "+55 83 3435-1020"
+    }
 }
