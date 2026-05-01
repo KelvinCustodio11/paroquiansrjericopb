@@ -1,0 +1,21 @@
+{
+    "ministerios": [
+        {
+            "slug": "pascom",
+            "nome": "PASCOM — Pastoral da Comunicação",
+            "descricao": "A Pastoral da Comunicação cuida da evangelização através das mídias digitais, redes sociais, site, transmissões e divulgação dos eventos paroquiais.",
+            "imagem": "images/uploads/ministerios/01KQGS85YYP8V4CBMGQQBYTPRQ.jpg",
+            "icone": "fa-solid fa-tower-broadcast",
+            "ativo": true,
+            "coordenador": {
+                "nome": "A definir",
+                "email": "contato@pascomjerico.com.br"
+            },
+            "encontros": {
+                "dia_semana": "Sábado",
+                "horario": "16:00",
+                "local": "Salão Paroquial"
+            }
+        }
+    ]
+}

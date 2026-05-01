@@ -1,0 +1,17 @@
+{
+    "eventos": [
+        {
+            "slug": "assembleia-pascom-2026",
+            "titulo": "Assembleia Diocesana da PASCOM 2026",
+            "data_inicio": "2026-05-10",
+            "data_fim": "2026-05-10",
+            "hora_inicio": "08:00",
+            "local": "Salão Paroquial",
+            "categoria": "pastoral",
+            "status": "agendado",
+            "imagem_capa": "images/uploads/events/assembleia-pascom-2026-capa.png",
+            "publicado": true,
+            "destaque": true
+        }
+    ]
+}
