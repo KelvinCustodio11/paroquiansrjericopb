@@ -72,6 +72,11 @@
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Pré-conexão a APIs/CDNs externas usadas em runtime -->
+<link rel="preconnect" href="https://liturgia.up.railway.app" crossorigin>
+<link rel="preconnect" href="https://pt.wikipedia.org" crossorigin>
+<link rel="preconnect" href="https://publication.evangelizo.ws" crossorigin>
+<link rel="preconnect" href="https://stm10.srvvox.com.br" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <!-- CSS Plugins -->
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -137,6 +142,7 @@
 </header>
 <!-- Header End -->
 <!-- @include-end partials/header.html -->
+<a id="main-content" tabindex="-1"></a>
 
     <!-- Page Header Start -->
 	<div class="page-header">
@@ -199,7 +205,7 @@
                             <div class="contact-info-item wow fadeInUp" data-wow-delay="0.25s">
                                 <!-- Icon Box Start -->
                                 <div class="icon-box">
-                                    <img src="images/icon-phone.svg" alt="">
+                                    <img loading="lazy" decoding="async" src="images/icon-phone.svg" alt="">
                                 </div>
                                 <!-- Icon Box End -->
 
@@ -216,7 +222,7 @@
                             <div class="contact-info-item wow fadeInUp" data-wow-delay="0.5s">
                                 <!-- Icon Box Start -->
                                 <div class="icon-box">
-                                    <img src="images/icon-mail.svg" alt="">
+                                    <img loading="lazy" decoding="async" src="images/icon-mail.svg" alt="">
                                 </div>
                                 <!-- Icon Box End -->
 
@@ -233,7 +239,7 @@
                             <div class="contact-info-item wow fadeInUp" data-wow-delay="0.75s">
                                 <!-- Icon Box Start -->
                                 <div class="icon-box">
-                                    <img src="images/icon-location.svg" alt="">
+                                    <img loading="lazy" decoding="async" src="images/icon-location.svg" alt="">
                                 </div>
                                 <!-- Icon Box End -->
 
