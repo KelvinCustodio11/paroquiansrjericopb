@@ -12,6 +12,18 @@ Thumbs.db
 images/uploads/**
 !images/uploads/**/.gitkeep
 
+# CMS — dependências geradas (não versionar)
+cms/vendor/
+cms/node_modules/
+cms/storage/
+cms/bootstrap/cache/
+cms/public/hot
+cms/public/build
+cms/public/storage
+cms/.env
+cms/database/database.sqlite
+cms/database/database.sqlite-journal
+
 # Logs
 *.log
 logs/
