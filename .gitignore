@@ -1,0 +1,44 @@
+# OS / editores
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-*
+
+# Logs
+*.log
+logs/
+
+# Sessões PHP / cache local do form
+sessions/
+form-rate-limit-*.json
+.cache/
+
+# Dependências (caso adote build)
+node_modules/
+vendor/
+composer.lock
+package-lock.json
+
+# Build output
+dist/
+build/
+.parcel-cache/
+
+# Variáveis sensíveis
+.env
+.env.*
+!.env.example
+
+# Chaves
+*.pem
+*.key
+*.crt
+
+# Backups
+*.bak
+*.orig
+*.tmp

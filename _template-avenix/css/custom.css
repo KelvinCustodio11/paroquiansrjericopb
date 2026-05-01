@@ -1,0 +1,6001 @@
+/* ----------------------------------------------------------------------------------------
+* Author        : Awaiken
+* Template Name : Avenix - Church HTML Template
+* File          : CSS File
+* Version       : 1.0
+* ---------------------------------------------------------------------------------------- */
+/* INDEX
+----------------------------------------------------------------------------------------
+01. Global Variables
+02. General css
+03. Header css
+04. Hero css
+05. Scrolling Ticker css
+06. About Us css
+07. Join Worship css
+08. Our Counter css
+09. Our Mission css
+10. Our Services css
+11. Service Ticker css
+12. Our Ministries css
+13. Our Sermons css
+14. Verse Church css
+15. CTA Box css
+16. Our Event css
+17. Donate Now css
+18. Latest Post css
+19. Subscribe Newsletter Css
+20. Footer css
+21. About us Page css
+22. Services Page css
+23. Service Single css
+24. Blog Archive css
+25. Blog Single css
+26. Page Sermons css
+27. Page Sermons Single css
+28. Page Campaign css
+29. Page Campaign Single css
+30. Page Ministries css
+31. Page Ministries Single css
+32. Page Pastor css
+33. Page Gallery css
+34. Contact us Page css
+35. 404 Page css
+36. Responsive css
+-------------------------------------------------------------------------------------- */
+
+/************************************/
+/*** 	 01. Global Variables	  ***/
+/************************************/	
+
+:root{
+	--primary-color			: #000000;
+	--secondary-color		: #FFF4F1;
+	--text-color			: #525252;
+	--accent-color			: #FE6035;
+	--white-color			: #FFFFFF;
+	--divider-color			: #FFFFFF26;
+	--dark-divider-color	: #E9E9E9;
+	--error-color			: rgb(230, 87, 87);
+	--default-font			: "Fira Sans Condensed", sans-serif;
+}
+
+/************************************/
+/*** 	   02. General css		  ***/
+/************************************/
+
+body{
+	font-family: var(--default-font);
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.6em;
+	background-color: var(--white-color);
+	color: var(--text-color);
+}
+
+p{
+	line-height: 1.6em;
+	margin-bottom: 1.6em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+	margin :0;
+	font-weight: 700;
+	line-height: 1.2em;
+	color: var(--primary-color);
+}
+
+figure{
+	margin: 0;
+}
+
+img{
+	max-width: 100%;
+}
+
+a{
+	text-decoration: none;
+}
+
+a:hover{
+	text-decoration: none;
+	outline: 0;
+}
+
+a:focus{
+	text-decoration: none;
+	outline: 0;
+}
+
+html,
+body{
+	width: 100%;
+	overflow-x: clip;
+}
+
+.container{
+	max-width: 1300px;
+}
+
+.container,
+.container-fluid,
+.container-lg,
+.container-md,
+.container-sm,
+.container-xl,
+.container-xxl,
+.mfp-container{
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.image-anime{
+	position: relative;
+	overflow: hidden;
+}
+
+.image-anime:after{
+	content: "";
+	position: absolute;
+    width: 200%;
+    height: 0%;
+    left: 50%;
+    top: 50%;
+    background-color: rgba(255,255,255,.3);
+    transform: translate(-50%,-50%) rotate(-45deg);
+    z-index: 1;
+}
+
+.image-anime:hover:after{
+    height: 250%;
+    transition: all 600ms linear;
+    background-color: transparent;
+}
+
+.reveal{
+	position: relative;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    visibility: hidden;
+    overflow: hidden;
+}
+
+.reveal img{
+    height: 100%;
+    width: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -webkit-transform-origin: left;
+    transform-origin: left;
+}
+
+.row{
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.row > *{
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+.row.no-gutters{
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.row.no-gutters > *{
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.btn-default{
+	position: relative;
+	display: inline-block;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.2em;
+	text-transform: capitalize;
+	background: var(--accent-color);
+	color: var(--white-color);
+	border-radius: 100px;
+	padding: 14px 70px 14px 20px;
+	border: none;
+	overflow: hidden;
+	z-index: 1;
+	transition: all 0.5s ease-in-out;
+}
+
+.btn-default:hover{
+	background-color: transparent;
+}
+
+.btn-default::before{
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: 0;
+	bottom: 0;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: var(--white-color);
+	background-image: url('../images/arrow-orange.svg');
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 12px auto;
+	transform: translate(-4px, -50%);
+	transition: all 0.4s ease-in-out;
+}
+
+.btn-default:hover:before{
+	transform: translate(-4px, -50%) rotate(45deg);
+	background-size: 12px auto;
+}
+
+.btn-default::after{ 
+	content: '';
+    display: block;
+    position: absolute;
+	top: 0;
+    left: 0;
+    bottom: 0;
+	width: 0;
+	height: 100%;
+	border-radius: 100px;
+    background: var(--primary-color);
+    transition: all 0.4s ease-in-out;
+	z-index: -1;
+}
+
+.btn-default:hover::after{
+	width: 100%;
+}
+
+.btn-default.btn-highlighted{
+	background-color: var(--white-color);
+	color: var(--accent-color);
+}
+
+.btn-default.btn-highlighted:hover{
+	background-color: transparent;
+}
+
+.btn-default.btn-highlighted:before{
+	background-color: var(--accent-color);
+	background-image: url('../images/arrow-white.svg');
+}
+
+.btn-default.btn-highlighted::after{
+	background-color: var(--primary-color);
+}
+
+.readmore-btn{
+	background-color: var(--accent-color);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.readmore-btn img{
+    max-width: 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+#magic-cursor{
+	position: absolute;
+    width: 10px !important;
+    height: 10px !important;
+    pointer-events: none;
+    z-index: 1000000;
+}
+
+#ball{
+	position: fixed;
+	display: block;
+	left: 0;
+	top: 0;
+	transform: translate(-50%, -50%);
+	width: 8px !important;
+	height: 8px !important;
+	background: var(--accent-color);
+	margin: 0;
+	border-radius: 50%;
+	pointer-events: none;
+	opacity:1 !important;
+}
+
+.preloader{
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1000;
+	background-color: var(--accent-color);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.loading-container,
+.loading{
+	height: 100px;
+	position: relative;
+	width: 100px;
+	border-radius: 100%;
+}
+
+.loading-container{
+	margin: 40px auto;
+}
+
+.loading{
+	border: 1px solid transparent;
+	border-color: transparent var(--white-color) transparent var(--white-color);
+	animation: rotate-loading 1.5s linear 0s infinite normal;
+	transform-origin: 50% 50%;
+}
+
+.loading-container:hover .loading,
+.loading-container .loading{
+	transition: all 0.5s ease-in-out;
+}
+
+#loading-icon{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	max-width: 66px;
+	transform: translate(-50%, -50%);
+}
+
+@keyframes rotate-loading{
+	0%{
+		transform: rotate(0deg);
+	}
+
+	100%{
+		transform: rotate(360deg);
+	}
+}
+
+.section-row{
+	margin-bottom: 60px;
+}
+
+.section-row .section-title{
+	width: 100%;
+	max-width: 720px;
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 0;
+}
+
+.section-btn{
+	text-align: end;
+}
+
+.section-title{
+	margin-bottom: 40px;
+}
+
+.section-title h3{
+	display: inline-block;
+	position: relative;
+	font-size: 16px;
+    font-weight: 600;
+	line-height: 1.2em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+	padding-left: 25px;
+    margin-bottom: 25px;
+}
+
+.section-title h3::before{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: url("../images/icon-sub-heading.svg") no-repeat;
+	background-position: left center;
+	background-size: cover;
+	width: 18px;
+	height: 18px;
+}
+
+.section-title h1{
+	font-size: 80px;
+	font-weight: 700;
+	line-height: 1.3em;
+	text-transform: uppercase;
+	margin-bottom: 0;
+}
+
+.section-title h2{
+	font-size: 44px;
+	font-weight: 700;
+	text-transform: uppercase;
+	margin-bottom: 0;
+}
+
+.section-title h1 span,
+.section-title h2 span{
+	color: var(--accent-color);
+}
+
+.section-title p{
+	margin-top: 25px;
+	margin-bottom: 0;
+}
+
+.help-block.with-errors ul{
+	margin: 0;
+	text-align: left;
+}
+
+.help-block.with-errors ul li{
+	color: var(--error-color);
+	font-weight: 500;
+	font-size: 14px;
+}
+
+/************************************/
+/**** 	   03. Header css		 ****/
+/************************************/
+
+header.main-header{
+	position: relative;
+	border-bottom: 1px solid var(--divider-color);
+	z-index: 100;
+}
+
+header.main-header .header-sticky{
+	position: relative;
+	top: 0;
+	z-index: 100;
+}
+
+header.main-header .header-sticky.hide{
+	transform: translateY(-100%);
+	transition: transform 0.3s ease-in-out;
+	border-radius: 0;
+}
+
+header.main-header .header-sticky.active{
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	border-radius: 0;
+    transform: translateY(0);
+	background: var(--primary-color);
+	border-bottom: 1px solid var(--divider-color);
+	backdrop-filter: blur(30px);
+}
+
+.navbar{
+	padding: 30px 0;
+	align-items: center;
+}
+
+.navbar-brand{
+	padding: 0;
+	margin: 0;
+}
+
+.main-menu .nav-menu-wrapper{
+	flex: 1;
+	text-align: center;
+}
+
+.main-menu .nav-menu-wrapper > ul{
+	align-items: center;
+	display: inline-flex;
+}
+
+.main-menu ul li{
+	margin: 0 5px;
+	position: relative;
+}
+
+.main-menu ul li a{
+	font-size: 16px;
+	font-weight: 500;
+	padding: 14px 15px !important;
+	color: var(--white-color);
+	text-transform: capitalize;
+	transition: all 0.3s ease-in-out;
+}
+
+.main-menu ul li.submenu > a:after{
+	content: '\f107';
+	font-family: 'FontAwesome';
+	font-weight: 900;
+	font-size: 14px;
+	margin-left: 8px;
+}
+
+.main-menu ul li a:hover,
+.main-menu ul li a:focus{
+	color: var(--accent-color);
+}
+
+.main-menu ul ul{
+	visibility: hidden;
+	opacity: 0;
+	transform: scaleY(0.8);
+	transform-origin: top;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	width: 220px;
+	border-radius: 20px;
+	position: absolute;
+	left: 0;
+	top: 100%;
+	background-color: var(--accent-color);
+	transition: all 0.3s ease-in-out;
+	text-align: left;
+}
+
+.main-menu ul li.submenu ul li.submenu > a:after{
+	content: '\f105';
+	float: right;
+}
+
+.main-menu ul li.submenu:first-child ul ul{
+    width: 250px;
+}
+
+.main-menu ul ul ul{
+	left: 100%;
+	top: 0;
+	text-align: left;
+}
+
+.main-menu ul ul li{
+	margin: 0;
+	padding: 0;
+}
+
+.main-menu ul ul li a{
+	color: var(--white-color);
+	padding: 6px 20px !important;
+	transition: all 0.3s ease-in-out;
+}
+
+.main-menu ul li:hover > ul{
+	visibility: visible;
+	opacity: 1;
+	transform: scaleY(1);
+    padding: 5px 0;
+}
+
+.main-menu ul ul li a:hover,
+.main-menu ul ul li a:focus{
+	color: var(--primary-color);
+	background-color: transparent;
+	padding: 6px 20px 6px 23px !important;
+}
+
+.main-menu ul li.highlighted-menu{
+    display: none;
+}
+
+.responsive-menu,
+.navbar-toggle{
+	display: none;
+}
+
+.responsive-menu{
+	top: 0;
+	position: relative;
+}
+
+.slicknav_btn{
+	background: var(--accent-color);
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 38px;
+	height: 38px;
+	margin: 0;
+	border-radius: 0 0 10px 0;
+}
+
+.slicknav_icon .slicknav_icon-bar{
+	display: block;
+	width: 100%;
+	height: 3px;
+	width: 22px;
+	background-color: var(--white-color);
+	border-radius: 6px;
+	margin: 4px auto !important;
+	transition: all 0.1s ease-in-out;
+}
+
+.slicknav_icon .slicknav_icon-bar:first-child{
+	margin-top: 0 !important;
+}
+
+.slicknav_icon .slicknav_icon-bar:last-child{
+	margin-bottom: 0 !important;
+}
+
+.navbar-toggle a.slicknav_btn.slicknav_open .slicknav_icon span.slicknav_icon-bar:nth-child(1){
+    transform: rotate(-45deg) translate(-5px, 5px);
+}
+
+.navbar-toggle a.slicknav_btn.slicknav_open .slicknav_icon span.slicknav_icon-bar:nth-child(2){
+    opacity: 0;
+}
+
+.navbar-toggle a.slicknav_btn.slicknav_open .slicknav_icon span.slicknav_icon-bar:nth-child(3){
+    transform: rotate(45deg) translate(-5px, -5px);
+}
+
+.slicknav_menu{
+	position: absolute;
+    width: 100%;
+	padding: 0;
+	background: var(--accent-color);
+	border-radius: 0 0 50px 0;
+}
+
+.slicknav_menu ul{
+	margin: 5px 0;
+}
+
+.slicknav_menu ul ul{
+	margin: 0;
+}
+
+.slicknav_nav .slicknav_row,
+.slicknav_nav li a{
+	position: relative;
+	font-size: 16px;
+	font-weight: 500;
+	text-transform: capitalize;
+	padding: 10px 20px;
+	color: var(--white-color);
+	line-height: normal;
+	margin: 0;
+	border-radius: 0 !important;
+	transition: all 0.3s ease-in-out;
+}
+
+.slicknav_nav a:hover,
+.slicknav_nav a:focus,
+.slicknav_nav .slicknav_row:hover{
+	background-color: transparent;
+	color: var(--primary-color);
+}
+
+.slicknav_menu ul ul li a{
+    padding: 10px 20px 10px 30px;
+}
+
+.slicknav_arrow{
+	font-size: 0 !important;
+}
+
+.slicknav_arrow:after{
+	content: '\f107';
+	font-family: 'FontAwesome';
+	font-weight: 900;
+	font-size: 12px;
+	margin-left: 8px;
+	color: var(--white-color);
+	position: absolute;
+	right: 15px;
+    top: 15px;
+	transition: all 0.3s ease-out;
+}
+
+.slicknav_open > a .slicknav_arrow:after{
+    transform: rotate(-180deg);
+	color: var(--primary-color);
+}
+
+/************************************/
+/***        04. Hero css	      ***/
+/************************************/
+
+.hero{
+	position: relative;
+	background: var(--primary-color) url('../images/hero-bg.jpg') no-repeat;
+	background-position: center center;
+	background-size: cover;
+	min-height: 100vh;
+	overflow: hidden;
+	padding: 250px 0;
+	margin-top: -118px;
+}
+
+.hero::before{
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: var(--primary-color);
+	opacity: 60%;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+}
+
+.hero-video .hero-bg-video{
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.hero-video .hero-bg-video::before{
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: var(--primary-color);
+	opacity: 40%;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+
+.hero-video .hero-bg-video video{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.hero.hero-slider{
+	background: none;
+	padding: 0;
+}
+
+.hero-slider-layout .hero-slide{
+	position: relative;
+	min-height: 100vh;
+    padding: 250px 0;
+}
+
+.hero.hero-slider:before{
+	display: none;
+}
+
+.hero.hero-slider .hero-slider-layout{
+	position: relative;
+	z-index: 2;
+}
+
+.hero-slider-layout .hero-slide::before{
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	background-color: var(--primary-color);
+	opacity: 60%;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+
+.hero.hero-slider .hero-slider-layout .hero-slide .hero-slider-image{
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+}
+
+.hero.hero-slider .hero-slider-layout .hero-slide .hero-slider-image img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.hero.hero-slider .hero-slider-layout .hero-slide .hero-content{
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	max-width: 1100px;
+	margin: 0 auto;
+}
+
+.hero-slider-layout .hero-pagination{
+	position: absolute;
+	text-align: center;
+	z-index: 2;
+    bottom: 130px;
+}
+
+.hero-slider-layout .hero-pagination .swiper-pagination-bullet{
+    width: 12px;
+    height: 12px;
+    background: var(--white-color);
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+    margin: 0 5px;
+}
+
+.hero-slider-layout .hero-pagination .swiper-pagination-bullet-active{
+    background-color: var(--accent-color);
+}
+
+.hero-content{
+	position: relative;
+	width: 100%;
+	max-width: 1100px;
+	margin: 0 auto;
+	text-align: center;
+	z-index: 2;
+}
+
+.hero-content .section-title h1{
+	color: var(--white-color);
+}
+
+.hero-content .section-title p{
+	width: 100%;
+	max-width: 640px;
+	margin: 0 auto;
+	margin-top: 20px;
+	color: var(--white-color);
+}
+
+.hero-content-body .btn-default.btn-highlighted{
+	margin-left: 30px;
+}
+
+.down-arrow a{
+	position: absolute;
+	top: auto;
+	left: 50%;
+	bottom: 30px;
+	width: 30px;
+	height: 50px;
+	border: 2px solid var(--white-color);
+	border-radius: 100px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transform: translate(-50%);
+	animation: jumpInfinite 1.5s infinite;
+	transition: all 0.3s ease-in-out;
+	z-index: 2;
+}
+
+.down-arrow a:hover{
+	border-color: var(--accent-color);
+}
+
+.down-arrow a i{
+	font-size: 20px;
+	color: var(--white-color);
+	transition: all 0.3s ease-in-out;
+}
+
+.down-arrow a:hover i{
+	color: var(--accent-color);
+}
+  
+@keyframes jumpInfinite{
+	0%{
+		margin-bottom: 0;
+	}
+	50%{
+		margin-bottom: 20px;
+	}
+	100%{
+		margin-bottom: 0;
+	}
+}
+
+/************************************/
+/***  05. Scrolling Ticker css    ***/
+/************************************/
+
+.our-scrolling-ticker{
+	background-color: var(--accent-color);
+	padding: 30px 0;
+}
+
+.our-scrolling-ticker .scrolling-ticker-box{
+	--gap: 40px;
+	position: relative;
+	display: flex;
+	overflow: hidden;
+	user-select: none;
+	gap: var(--gap);
+	align-items: center;
+}
+
+.our-scrolling-ticker .scrolling-content{
+	flex-shrink: 0;
+	display: flex;
+	gap: var(--gap);
+	min-width: 100%;
+	animation: scroll 24s linear infinite;
+}
+
+.our-scrolling-ticker .scrolling-content span{
+	display: inline-block;
+	font-size: 26px;
+	font-weight: 700;
+	color: var(--white-color);
+	vertical-align: middle;
+}
+
+.our-scrolling-ticker .scrolling-content span img{
+	width: 100%;
+	max-width: 30px;
+	margin-right: 40px;
+}
+
+@keyframes scroll{
+	from{
+		transform: translateX(0);
+	}
+
+	to{
+		transform: translateX(calc(-100% - var(--gap)));
+	}
+}
+
+/************************************/
+/***       06. About Us css	      ***/
+/************************************/
+
+.about-us{
+	padding: 100px 0;
+}
+
+.about-image{
+	position: relative;
+	padding-top: 110px;
+}
+
+.about-img-1{
+	width: 390px;
+}
+
+.about-img-2 figure,
+.about-img-1 figure{
+	display: block;
+	border-radius: 0 0 100px 0;
+}
+
+.about-img-1 img{
+	aspect-ratio: 1 / 1.34;
+	object-fit: cover;
+	border-radius: 0 0 100px 0;
+}
+
+.about-img-2{
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.about-img-2 img{
+	aspect-ratio: 1 / 1.18;
+	object-fit: cover;
+	border: 8px solid var(--white-color);
+	border-radius: 0 0 100px 0;
+}
+
+.about-content{
+	margin-left: 30px;
+}
+
+.about-us-body{
+	margin-bottom: 40px;
+}
+
+.about-content-body{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.about-list-item{
+    width: calc(50% - 15px);
+    display: flex;
+    align-items: center;
+}
+
+.about-list-item .icon-box{
+    position: relative;
+    background-color: var(--secondary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-right: 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+.about-list-item .icon-box::before{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--accent-color);
+    top: 0;
+    left: 0;
+    transform: scale(0);
+    transition: all 0.4s ease-in-out;
+    border-radius: 50%;
+}
+
+.about-list-item:hover .icon-box:before{
+    transform: scale(1);
+}
+
+.about-list-item .icon-box img{
+    position: relative;
+    max-width: 24px;
+    z-index: 1;
+    transition: all 0.3s ease-in-out;
+}
+
+.about-list-item:hover .icon-box img{
+    filter: brightness(0) invert(1);
+}
+
+.about-list-item-content{
+    width: calc(100% - 55px);
+}
+
+.about-list-item-content h3{
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+/************************************/
+/***     07. Join Worship css	  ***/
+/************************************/
+
+.join-worship{
+	background-color: var(--secondary-color);
+	padding: 100px 0;
+}
+
+.join-worship .section-title{
+	max-width: 450px;
+}
+
+.highlighted-worship-item{
+	position: relative;
+	overflow: hidden;
+}
+
+.highlighted-worship-image a{
+	display: block;
+	cursor: none;
+	border-radius: 0px 0px 100px 0px;
+}
+
+.highlighted-worship-image a img{
+	width: 100%;
+	aspect-ratio: 1/ 0.88;
+	object-fit: cover;
+	border-radius: 0px 0px 100px 0px;
+}
+
+.highlighted-worship-body{
+	position: absolute;
+	background-color: var(--white-color);
+	border-radius: 0px 0px 60px 0px;
+	bottom: 30px;
+	left: 30px;
+	right: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px;
+	z-index: 1;
+}
+
+.highlighted-worship-content h3{
+	font-size: 28px;
+	font-weight: 600;
+	text-transform: capitalize;
+	margin-bottom: 10px;
+}
+
+.highlighted-worship-content p{
+	margin: 0;
+}
+
+.highlighted-worship-btn{
+	margin-left: 10px;
+}
+
+.highlighted-worship-body:hover .highlighted-worship-btn .readmore-btn{
+	background-color: var(--primary-color);
+}
+
+.highlighted-worship-body:hover .highlighted-worship-btn .readmore-btn img{
+	transform: rotate(45deg);
+}
+
+.worship-item{
+	display: flex;
+	align-items: center;
+	margin-bottom: 30px;
+}
+
+.worship-item:last-child{
+	margin-bottom: 0;
+}
+
+.worship-image{
+	width: 50%;
+}
+
+.worship-image a{
+	display: block;
+	cursor: none;
+	border-radius: 0px 0px 50px 0px;
+}
+
+.worship-image img{
+	width: 100%;
+	aspect-ratio: 1 / 0.55;
+	object-fit: cover;
+	border-radius: 0px 0px 50px 0px;
+}
+
+.worship-body{
+	width: calc(100% - 50%);
+	margin-left: 30px;
+}
+
+.worship-content{
+	margin-bottom: 25px;
+}
+
+.worship-content h3{
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+	margin-bottom: 10px;
+}
+
+.worship-content p{
+	margin: 0;
+}
+
+.worship-btn .readmore-btn{
+	width: 34px;
+	height: 34px;
+}
+
+.worship-btn .readmore-btn img{
+	max-width: 10px;
+}
+
+.worship-item:hover .worship-btn .readmore-btn{
+	background-color: var(--primary-color);
+}
+
+.worship-item:hover .worship-btn .readmore-btn img{
+	transform: rotate(45deg);
+}
+
+/************************************/
+/***     08. Our Counter css	  ***/
+/************************************/
+
+.our-counter{
+	background-image: linear-gradient(180deg, var(--secondary-color) 35%, var(--white-color) 35%);
+}
+
+.counter-box{
+	background-color: var(--accent-color);
+	border-radius: 0 0 100px 0;
+	padding: 40px 15px;
+}
+
+.counter-item{
+	border-right: 1px solid var(--divider-color);
+	text-align: center;
+	padding-right: 30px;
+}
+
+.counter-box .col-lg-3:last-child .counter-item{
+	border: none;
+	padding-right: 0;
+}
+
+.counter-title{
+	margin-bottom: 20px;
+}
+
+.counter-title h2{
+	font-size: 56px;
+	color: var(--white-color);
+}
+
+.counter-content h3{
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+	color: var(--white-color);
+	margin-bottom: 20px;
+}
+
+.counter-content p{
+	color: var(--white-color);
+	margin: 0;
+}
+
+/************************************/
+/***     09. Our Mission css	  ***/
+/************************************/
+
+.our-mission{
+	padding: 100px 0;
+}
+
+.mission-content-body{
+	margin-bottom: 40px;
+}
+
+.mission-content-body h3{
+	font-size: 18px;
+	font-weight: 500;
+	margin-bottom: 25px;
+}
+
+.mission-content-body p{
+	border-left: 2px solid var(--accent-color);
+	padding-left: 15px;
+	margin-bottom: 0;
+}
+
+.mission-image{
+	position: relative;
+}
+
+.mission-img{
+	text-align: right;
+	padding: 0 0 80px 80px;
+}
+
+.mission-img figure{
+	width: 100%;
+	border-radius: 0 0 100px 0;
+}
+
+.mission-img img{
+	width: 100%;
+	aspect-ratio: 1 / 1.1;
+	object-fit: cover;
+	border-radius: 0 0 100px 0;
+}
+
+.mission-life-circle{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+.mission-life-circle img{
+	border: 14px solid var(--white-color);
+	border-radius: 50%;
+	animation: liferotate 30s infinite linear;
+}
+
+@keyframes liferotate{
+	from{
+		transform: rotate(0deg);
+	  }
+	to{
+		transform: rotate(360deg);
+	}
+}
+
+/************************************/
+/***     10. Our Services css	  ***/
+/************************************/
+
+.our-services{
+	background-color: var(--secondary-color);
+	padding: 100px 0 70px;
+}
+
+.service-item{
+	position: relative;
+	background-color: var(--white-color);
+	border-radius: 0 0 50px 0;
+	padding: 30px 25px;
+	height: calc(100% - 30px);
+	margin-bottom: 30px;
+	overflow: hidden;
+}
+
+.service-item:before{
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    background-color: var(--accent-color);
+    border-radius: 500px 500px 0 0;
+    transition: all 0.4s ease-in-out;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+	opacity: 0;
+}
+
+.service-item:hover:before{
+    top: 0;
+	border-radius: 0;
+	opacity: 1;
+}
+
+.service-item .icon-box{
+    position: relative;
+    background-color: var(--secondary-color);
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 25px;
+    transition: all 0.3s ease-in-out;
+	z-index: 1;
+}
+
+.service-item:hover .icon-box{
+	background-color: transparent;
+}
+
+.service-item .icon-box::before{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    top: 0;
+    left: 0;
+    transform: scale(0);
+    transition: all 0.4s ease-in-out;
+    border-radius: 50%;
+}
+
+.service-item:hover .icon-box:before{
+    transform: scale(1);
+}
+
+.service-item .icon-box img{
+    position: relative;
+    max-width: 34px;
+    transition: all 0.3s ease-in-out;
+	z-index: 1;
+}
+
+.service-item:hover .icon-box img{
+    filter: brightness(0) invert(1);
+}
+
+.service-body{
+	position: relative;
+	border-bottom: 1px solid var(--dark-divider-color);
+	margin-bottom: 25px;
+	padding-bottom: 25px;
+	transition: all 0.3s ease-in-out;
+	z-index: 1;
+}
+
+.service-item:hover .service-body{
+	border-color: var(--divider-color);
+}
+
+.service-body p{
+	margin: 0;
+	transition: all 0.3s ease-in-out;
+}
+
+.service-item:hover .service-body p{
+	color: var(--white-color);
+}
+
+.service-footer{
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	z-index: 1;
+}
+
+.service-content h3{
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+	transition: all 0.3s ease-in-out;
+}
+
+.service-item:hover .service-content h3{
+	color: var(--white-color);
+}
+
+.service-btn .readmore-btn{
+    width: 34px;
+    height: 34px;
+}
+
+.service-btn .readmore-btn img{
+	max-width: 10px;
+}
+
+.service-item:hover .service-btn .readmore-btn{
+	background-color: var(--primary-color);
+}
+
+.service-item:hover .service-btn .readmore-btn img{
+	transform: rotate(45deg);
+}
+
+/******************************************/
+/****     11. Service Ticker css  	   ****/
+/******************************************/
+
+.service-ticker{
+	background-color: var(--secondary-color);
+}
+
+.service-ticker .scrolling-ticker-box{
+	--gap: 30px;
+	position: relative;
+	display: flex;
+	overflow: hidden;
+	user-select: none;
+	gap: var(--gap);
+	margin-bottom: -16px;
+}
+
+.service-ticker .scrolling-content{
+	flex-shrink: 0;
+	display: flex;
+	gap: var(--gap);
+	min-width: 100%;
+	animation: scroll 80s linear infinite;
+}
+
+.service-ticker .scrolling-content span{
+	display: inline-flex;
+	align-items: center;
+	text-transform: uppercase;
+	font-size: 100px;
+	line-height: 1em;
+	font-weight: 700;
+	color: transparent;
+	-webkit-text-stroke-width: 1px;
+    stroke-width: 1px;
+    -webkit-text-stroke-color: var(--accent-color);
+    stroke: var(--accent-color);
+	opacity: 50%;
+}
+
+.service-ticker .scrolling-content span img{
+	width: 100%;
+	max-width: 45px;
+	margin-right: 30px;
+}
+
+@keyframes scroll{
+	from{
+		transform: translateX(0);
+	}
+
+	to{
+		transform: translateX(calc(-100% - var(--gap)));
+	}
+}
+
+/************************************/
+/***     12. Our Ministries css	  ***/
+/************************************/
+
+.our-ministries{
+	background: linear-gradient(180deg, var(--accent-color) 68%, var(--white-color) 32%);
+	padding: 100px 0 50px;
+}
+
+.our-ministries .section-title h2 span,
+.our-ministries .section-title h3{
+	color: var(--white-color);
+}
+
+.our-ministries .section-title h3::before{
+	filter: brightness(0) invert(1);
+}
+
+.ministries-item{
+	position: relative;
+	border-radius: 0 0 100px 0;
+	overflow: hidden;
+	height: calc(100% - 30px);
+	margin-bottom: 30px;
+}
+
+.ministries-image a{
+	position: relative;
+	cursor: none;
+}
+
+.ministries-image a::before{
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	background: linear-gradient(360deg, rgba(0, 0, 0, 0) 22.58%, rgba(4, 4, 1, 0.49) 88.72%);
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+}
+
+.ministries-image a img{
+	width: 100%;
+	aspect-ratio: 1 / 1.3;
+	object-fit: cover;
+	border-radius: 0 0 100px 0;
+	transition: all 0.5s ease-in-out;
+	z-index: 0;
+}
+
+.ministries-item:hover .ministries-image a img{
+    transform: scale(1.1);
+}
+
+.ministries-content{
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	z-index: 2;
+}
+
+.ministries-content h3{
+	font-size: 20px;
+	font-weight: 600;
+	text-transform: capitalize;
+	color: var(--white-color);
+}
+
+.ministries-btn{
+	position: absolute;
+	bottom: 50px;
+	right: 50px;
+	z-index: 2;
+}
+
+.ministries-item:hover .ministries-btn .readmore-btn{
+	background-color: var(--primary-color);
+}
+
+.ministries-item:hover .ministries-btn .readmore-btn img{
+	transform: rotate(45deg);
+}
+
+.our-ministries-footer{
+	text-align: center;
+	width: 100%;
+	max-width: 610px;
+	margin: 0 auto;
+	margin-top: 30px;
+}
+
+.our-ministries-footer p{
+	margin: 0;
+}
+
+.our-ministries-footer p a{
+	font-weight: 700;
+	color: var(--accent-color);
+	text-transform: capitalize;	
+	text-decoration: underline;
+	transition: all 0.3s ease-in-out;
+}
+
+.our-ministries-footer p a:hover{
+	color: var(--primary-color);
+}
+
+/************************************/
+/***     13. Our Sermons css	  ***/
+/************************************/
+
+.our-sermons{
+	padding: 50px 0 70px;
+}
+
+.sermons-item{
+	overflow: hidden;
+	border-radius: 0 0 80px 0;
+	height: calc(100% - 30px);
+	margin-bottom: 30px;
+}
+
+.sermons-image{
+	position: relative;
+}
+
+.sermons-image a{
+	display: block;
+	cursor: none;
+}
+
+.sermons-image figure a img{
+	width: 100%;
+	aspect-ratio: 1 / 0.72;
+	object-fit: cover;
+	transition: all 0.5s ease-in-out;
+}
+
+.sermons-item:hover .sermons-image figure a img{
+    transform: scale(1.1);
+}
+
+.sermons-meta{
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	background-color: var(--accent-color);
+	border-radius: 0 0 20px 0;
+	text-align: center;
+	width: 50px;
+	height: 50px;
+	padding: 5px 10px;
+}
+
+.sermons-meta h3{
+	font-size: 20px;
+	line-height: 1.1em;
+	color: var(--white-color);
+}
+
+.sermons-meta p{
+	font-size: 14px;
+	line-height: 1.2em;
+	color: var(--white-color);
+	text-transform: capitalize;
+	margin: 0;
+}
+
+.sermons-audio-icon{
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	opacity: 0;
+	visibility: hidden;
+	z-index: 1;
+	transition: all 0.4s ease-in-out;
+}
+
+.sermons-item:hover .sermons-audio-icon{
+	opacity: 1;
+	visibility: visible;
+}
+
+.sermons-audio-icon img{
+	max-width: 110px;
+}
+
+.sermons-body{
+	background-color: var(--secondary-color);
+	border-radius: 0 0 80px 0;
+	padding: 30px;
+}
+
+.sermons-title{
+	border-bottom: 1px solid var(--dark-divider-color);
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+}
+
+.sermons-title h2{
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+}
+
+.sermons-list ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.sermons-list ul li{
+	text-transform: capitalize;
+	margin-bottom: 15px;
+}
+
+.sermons-list ul li:last-child{
+	margin-bottom: 0;
+}
+
+.sermons-list ul li i{
+	font-size: 16px;
+	color: var(--accent-color);
+	margin-right: 10px;
+}
+
+.sermons-list ul li i.fa-tag{
+	transform: rotate(90deg);
+}
+
+.sermons-list ul li span{
+	font-weight: 500;
+	color: var(--primary-color);
+}
+
+/************************************/
+/***     14. Verse Church css	  ***/
+/************************************/
+
+.verse-church{
+	background: var(--secondary-color) url('../images/verse-church-bg.png') no-repeat;
+	background-position: right center;
+	background-size: contain;
+	padding: 100px 0;
+}
+
+.verse-church-btn{
+	position: relative;
+}
+
+.verse-church-content .section-title{
+	margin-bottom: 50px;
+}
+
+.verse-church-content .section-title p{
+	color: var(--primary-color);
+}
+
+.verse-church-btn::before{
+	content: '';
+	position: absolute;
+	bottom: 0;
+	right: 50%;
+	transform: translateX(50%);
+	background: url('../images/arrow-move-orange-.svg') no-repeat;
+	background-position: right center;
+	background-size: auto;
+	width: 135px;
+	height: 80px;
+	animation: versearrowmoveobjects 3s infinite linear alternate;
+}
+
+@keyframes versearrowmoveobjects{
+	50%{
+		right: 56%;
+	}
+}
+
+/************************************/
+/***       15. CTA Box css	      ***/
+/************************************/
+
+.cta-box{
+	background-color: var(--accent-color);
+	padding: 50px 0;
+}
+
+.cta-box-content{
+	position: relative;
+	z-index: 1;
+}
+
+.cta-box-content .section-title{
+	margin: 0;
+}
+
+.cta-box-content .section-title h2{
+	color: var(--white-color);
+}
+
+.cta-box-btn{
+	position: relative;
+	text-align: right;
+}
+
+.cta-box-btn::before{
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	transform: translate(-50%, 50%);
+	background: url('../images/arrow-move-white-.svg') no-repeat;
+	background-position: left center;
+	background-size: auto;
+	width: 130px;
+	height: 80px;
+	animation: ctaarrowmoveobjects 3s infinite linear alternate;
+	z-index: 0;
+}
+
+@keyframes ctaarrowmoveobjects{
+	50%{
+		left: 40px;
+	}
+}
+
+/************************************/
+/***      16. Our Event css	      ***/
+/************************************/
+
+.our-event{
+	padding: 100px 0;
+}
+
+.event-image figure{
+	border-radius: 0 0 150px 0;
+}
+
+.event-image img{
+	aspect-ratio: 1 / 1.1;
+	object-fit: cover;
+	border-radius: 0 0 150px 0;
+}
+
+.event-content{
+	margin-left: 30px;
+}
+
+.event-body{
+	margin-bottom: 40px;
+}
+
+.event-item{
+	display: flex;
+	align-items: center;
+	margin-bottom: 25px;
+}
+
+.event-item:last-child{
+	margin-bottom: 0;
+}
+
+.event-item .icon-box{
+	position: relative;
+    background-color: var(--secondary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-right: 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+.event-item .icon-box::before{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--accent-color);
+    top: 0;
+    left: 0;
+    transform: scale(0);
+    transition: all 0.4s ease-in-out;
+    border-radius: 50%;
+}
+
+.event-item:hover .icon-box:before{
+    transform: scale(1);
+}
+
+.event-item .icon-box i{
+    position: relative;
+    font-size: 20px;
+	color: var(--accent-color);
+    z-index: 1;
+    transition: all 0.3s ease-in-out;
+}
+
+.event-item:hover .icon-box i{
+    color: var(--white-color);
+}
+
+.event-item-content{
+	width: calc(100% - 55px);
+}
+
+.event-item-content p{
+	font-weight: 500;
+	margin: 0;
+}
+
+.event-footer{
+	margin-bottom: 40px;
+}
+
+.event-footer p{
+	margin: 0;
+}
+
+/************************************/
+/***      17. Donate Now css	  ***/
+/************************************/
+
+.donate-now{
+	background: url('../images/donate-now-bg.jpg') no-repeat;
+	background-position: center center;
+	background-size: cover;
+	padding: 100px 0;
+}
+
+.video-play-button{
+	position: relative;
+	z-index: 1;
+}
+
+.video-play-button a{
+	position: relative;
+	background-color: var(--accent-color);
+	border-radius: 100%;
+	width: 74px;
+	height: 74px;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: none;
+}
+
+.video-play-button a:before{
+	content: '';
+	position: absolute;
+	top: -30%;
+	left: -30%;
+	width: 160%;
+	height: 160%;
+	border: 50px solid var(--dark-divider-color);
+	border-radius: 50%;
+	transform: scale(0.6);
+	z-index: -1;
+	animation: border-zooming 1.2s infinite linear;
+}
+
+.video-play-button a:after{
+	content: '';
+	position: absolute;
+	top: -30%;
+	left: -30%;
+	width: 160%;
+	height: 160%;
+	border: 50px solid var(--dark-divider-color);
+	border-radius: 50%;
+	transform: scale(0.6);
+	z-index: -1;
+	animation: border-zooming 1.2s infinite linear;
+	animation-delay: .3s;
+}
+
+@keyframes border-zooming{
+	100%{
+		transform: scale(1);
+		opacity: 0;
+	}
+}
+
+.video-play-button a i{
+	font-size: 30px;
+	color: var(--white-color);
+}
+
+.donate-box{
+	background-color: var(--white-color);
+	border-radius: 0 0 50px 0;
+	padding: 40px;
+}
+
+.donate-value-box{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 30px;
+}
+
+.donate-form .donate-value{
+	width: calc(33.33% - 6.66px);
+}
+
+.donate-form .form-control{
+	background-color: transparent;
+	color: var(--primary-color);
+	border: 1px solid var(--dark-divider-color);
+	border-radius: 0 0 20px 0;
+	font-weight: 500;
+	box-shadow: none;
+	outline: none;
+	padding: 20px;
+}
+
+.donate-form .form-control::placeholder{
+	color: var(--primary-color);
+	font-weight: 500;
+}
+
+.donate-form .donate-value input{
+	position: absolute;
+	left: -9999px;
+}
+
+.donate-form .donate-value label{
+	display: flex;
+	align-items: center;
+	justify-content: left;
+	position: relative;
+	font-weight: 500;
+	line-height: 1.2em;
+	background-color: var(--secondary-color);
+	color: var(--primary-color);
+	border-radius: 0 0 20px 0;
+	padding: 20px;
+	transition: all 0.3s ease-in-out;
+	cursor: pointer;
+	overflow: hidden;
+}
+
+.donate-form .donate-value input[type="radio"]:focus+label,
+.donate-form .donate-value input[type="radio"]:checked+label{
+	background-color: var(--accent-color);
+	color: var(--white-color);
+}
+
+.donate-form .form-group-btn{
+	text-align: center;
+}
+
+/************************************/
+/***      18. Latest Post css	  ***/
+/************************************/
+
+.our-blog{
+	padding: 100px 0 70px;
+}
+
+.blog-item{
+	height: calc(100% - 30px);
+	margin-bottom: 30px;
+	z-index: 1;
+}
+
+.blog-item .post-featured-image{
+	border-radius: 0 0 80px 0;
+	overflow: hidden;
+	margin-bottom: 30px;
+}
+
+.blog-item .post-featured-image a{
+	position: relative;
+	display: block;
+	cursor: none;
+	overflow: hidden;
+}
+
+.blog-item .post-featured-image a::before{
+	content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: var(--primary-color);
+	opacity: 30%;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.blog-item .post-featured-image img{
+	aspect-ratio: 1 / 0.75;
+	object-fit: cover;
+	border-radius: 0 0 80px 0;
+	transition: all 0.5s ease-in-out;
+}
+
+.blog-item:hover .post-featured-image img{
+	transform: scale(1.1);
+}
+
+.post-item-body{
+	width: 100%;
+	max-width: 335px;
+	margin-bottom: 15px;
+}
+
+.post-item-body h2{
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 1.5em;
+	text-transform: capitalize;
+	margin-bottom: 20px;
+}
+
+.post-item-body h2 a{
+	color: inherit;
+}
+
+.post-item-footer a.read-more-btn{
+	position: relative;
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+	color: var(--accent-color);
+	padding-right: 50px;
+	transition: 0.5s ease-in-out;
+}
+
+.post-item-footer a.read-more-btn::after{
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: 0;
+    bottom: 0;
+    background-image: url("../images/arrow-white.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+	background-size: 12px auto;
+	background-color: var(--accent-color);
+	border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    transition: 0.4s ease-in-out;
+}
+
+.post-item-footer a.read-more-btn:hover::after{
+	transform: rotate(45deg);
+	background-color: var(--primary-color);
+}
+
+.post-item-footer a.read-more-btn:hover{
+	color: var(--primary-color);
+}
+
+/************************************/
+/*** 19. Subscribe Newsletter Css ***/
+/************************************/
+
+.subscribe-newsletter{
+	position: relative;
+	background: url('../images/subscribe-newsletter-bg.jpg') no-repeat;
+	background-position: center center;
+	background-size: cover;
+	padding: 100px 0;
+}
+
+.subscribe-newsletter::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 60.5%);
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.subscribe-newsletter .section-row{
+	position: relative;
+	z-index: 1;
+}
+
+.subscribe-newsletter .section-title p,
+.subscribe-newsletter .section-title h2{
+	color: var(--white-color);
+}
+
+.subscribe-newsletter-form{
+	position: relative;
+	width: 100%;
+	max-width: 480px;
+	margin: 0 auto;
+	z-index: 1;
+}
+
+.subscribe-newsletter-form .form-group{
+	width: 100%;
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.subscribe-newsletter-form .form-group .form-control{
+	width: 100%;
+	padding: 18px 20px;
+	background: var(--white-color);
+	color: var(--primary-color);
+	font-weight: 500;
+	border: none;
+	border-radius: 100px;
+	box-shadow: none;
+}
+
+.subscribe-newsletter-form .form-group .form-control::placeholder{
+	font-weight: 500;
+	color: var(--primary-color);
+}
+
+.subscribe-newsletter-form .form-group .subscribe-btn{
+	content: '';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+	font-weight: 700;
+	text-transform: capitalize;
+	background-color: var(--accent-color);
+	color: var(--white-color);
+	border-radius: 100px;
+	padding: 14px 25px;
+	border: none;
+	transition: all 0.3s ease-in-out;
+}
+
+.subscribe-newsletter-form .form-group .subscribe-btn:hover{
+	background-color: var(--primary-color);
+}
+
+/************************************/
+/***   		20. Footer css        ***/
+/************************************/
+
+.main-footer{
+	padding: 100px 0 0;
+	background: var(--primary-color);
+}
+
+.about-footer{
+	width: 100%;
+	max-width: 305px;
+}
+
+.footer-logo{
+	margin-bottom: 25px;
+}
+
+.footer-logo img{
+	max-width: 220px;
+}
+
+.about-footer-content{
+	margin-bottom: 25px;
+}
+
+.about-footer-content p{
+	color: var(--white-color);
+	margin: 0;
+}
+
+.footer-social-links ul{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.footer-social-links ul li{
+	display: inline-flex;
+	margin-right: 20px;
+}
+
+.footer-social-links ul li:last-child{
+	margin-right: 0;
+}
+
+.footer-social-links ul li a i{
+	color: var(--white-color);
+	font-size: 24px;
+	transition: all 0.3s ease-in-out;
+}
+
+.footer-social-links ul li:hover a i{
+	color: var(--accent-color);
+}
+
+.footer-links h3,
+.footer-contact h3{
+	font-size: 20px;
+	text-transform: capitalize;
+	color: var(--white-color);
+	margin-bottom: 25px;
+}
+
+.footer-links ul{
+	margin: 0;
+	padding: 0;
+	padding-left: 20px;
+}
+
+.footer-links ul li{
+	text-transform: capitalize;
+	margin-bottom: 10px;
+}
+
+.footer-links ul li:last-child{
+	margin-bottom: 0;
+}
+
+.footer-links ul li::marker{
+	color: var(--accent-color);
+}
+
+.footer-links ul li a{
+	color: var(--white-color);
+	transition: all 0.3s ease-in-out;
+}
+
+.footer-links ul li:hover a{
+	color: var(--accent-color);
+}
+
+.footer-contact-details .footer-info-box{
+	position: relative;
+	padding-left: 40px;
+    margin-bottom: 25px;
+}
+
+.footer-contact-details .footer-info-box:last-child{
+	margin-bottom: 0;
+}
+
+.footer-info-box .icon-box{
+	position: absolute;
+	top: -2px;
+	left: 0;
+}
+
+.footer-info-box .icon-box img{
+	max-width: 24px;
+}
+
+.footer-info-box-content p{
+	color: var(--white-color);
+	margin-bottom: 0;
+}
+
+.footer-copyright{
+	border-top: 1px solid var(--divider-color);
+	padding: 40px 0;
+	margin-top: 40px;
+}
+
+.footer-copyright-text p{
+	color: var(--white-color);
+	margin: 0;
+}
+
+.footer-privacy-policy ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-align: end;
+}
+
+.footer-privacy-policy ul li{
+	display: inline-block;
+	margin-right: 40px;
+}
+
+.footer-privacy-policy ul li:last-child{
+	margin-right: 0;
+}
+
+.footer-privacy-policy ul li a{
+	color: var(--white-color);
+	text-transform: capitalize;
+	transition: all 0.3s ease-in-out;
+}
+
+.footer-privacy-policy ul li:hover a{
+	color: var(--accent-color);
+}
+
+/************************************/
+/***     21. About us Page css	  ***/
+/************************************/
+
+.page-header{
+	position: relative;
+	background: url('../images/page-header-bg.jpg') no-repeat;
+	background-position: center center;
+	background-size: cover;
+	padding: 190px 0 100px;
+	margin-top: -118px;
+}
+
+.page-header::before{
+	content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-color);
+    opacity: 50%;
+    width: 100%;
+    height: 100%;
+}
+
+.page-header-box{
+	position: relative;
+	text-align: center;
+	z-index: 1;
+}
+
+.page-header-box h1{
+	font-size: 80px;
+    font-weight: 700;
+	text-transform: uppercase;
+	text-align: center;
+	color: var(--white-color);
+	margin-bottom: 25px;
+}
+
+.page-header-box h1 span{
+	color: var(--white-color);
+}
+
+.page-header-box ol{
+	margin: 0;
+	display: inline-flex;
+	justify-content: center;
+	background-color: var(--white-color);
+	border-radius: 0 0 20px 0;
+	padding: 10px 20px;
+}
+
+.page-header-box ol li.breadcrumb-item{
+	font-size: 16px;
+	font-weight: 500;
+	color: var(--primary-color);
+	text-transform: capitalize;
+}
+
+.page-header-box ol li.breadcrumb-item.active{
+	color: var(--accent-color);
+}
+
+.page-header-box ol li.breadcrumb-item a{
+    color: inherit;
+}
+
+.page-header-box ol .breadcrumb-item+.breadcrumb-item::before{
+    color: var(--primary-color);
+}
+
+.page-about-us .about-content-body{
+    margin-bottom: 0px;
+}
+
+.vision-mission{
+	background-color: var(--secondary-color);
+	padding: 100px 0;
+}
+
+.vision-mission .section-row .section-title{
+	max-width: 965px;
+}
+
+.vision-mission-nav{
+	margin-bottom: 50px;
+	text-align: center;
+}
+
+.vision-mission-nav .nav-tabs{
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	display: inline-flex;
+	background-color: var(--white-color);
+	border-radius: 100px;
+	border: none;
+	padding: 15px;
+}
+
+.vision-mission-nav ul li{
+	margin-right: 25px;
+}
+
+.vision-mission-nav ul li:last-child{
+	margin-right: 0;
+}
+
+.vision-mission-nav ul li .nav-link{
+	background-color: var(--secondary-color);
+	color: var(--primary-color);
+	border-radius: 100px;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.1em;
+	text-transform: capitalize;
+	border: none;
+	padding: 15px 30px;
+	transition: all 0.4s ease-in-out;
+}
+
+.vision-mission-nav ul li .nav-link:hover{
+	border: none;
+}
+
+.vision-mission-nav ul li .nav-link.active{
+	background-color: var(--accent-color);
+	color: var(--white-color);
+	border: none;
+}
+
+.vision-mission-content .section-title{
+	width: 100%;
+	max-width: 480px;
+}
+
+.vision-mission-body h3{
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 25px;
+    line-height: 1.6em;
+}
+
+.vision-mission-body p{
+	margin: 0;
+}
+
+.vision-mission-image{
+	margin-left: 30px;
+}
+
+.vision-mission-image figure{
+    width: 100%;
+    border-radius: 0 0 100px 0;
+}
+
+.vision-mission-image img{
+    width: 100%;
+    aspect-ratio: 1 / 1.1;
+    object-fit: cover;
+    border-radius: 0 0 100px 0;
+}
+
+.what-we-do{
+	padding: 100px 0 70px;
+}
+
+.what-we-item{
+	position: relative;
+	text-align: center;
+	height: calc(100% - 30px);
+	margin-bottom: 30px;
+	padding: 25px;
+}
+
+.what-we-item::before{
+	content: '';
+	position: absolute;
+	right: -15px;
+	top: 50%;
+	transform: translateY(-50%);
+	border-right: 1px solid var(--dark-divider-color);
+	width: 1px;
+	height: 200px;
+}
+
+.what-we-do .col-lg-4:last-child .what-we-item::before{
+	border: none;
+}
+
+.what-we-item .icon-box{
+	margin-bottom: 40px;
+}
+
+.what-we-item .icon-box img{
+	max-width: 80px;
+}
+
+.what-we-content h3{
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+	margin-bottom: 25px;
+}
+
+.what-we-content p{
+	margin: 0;
+}
+
+.our-team{
+	background: linear-gradient(180deg, var(--accent-color) 68%, var(--white-color) 32%);
+	padding: 100px 0 20px;
+}
+
+.our-team .section-row .section-title h3::before{
+	filter: brightness(0) invert(1);
+}
+
+.our-team .section-row .section-title h3,
+.our-team .section-row .section-title h2 span{
+	color: var(--white-color);
+}
+
+.team-member-item{
+	position: relative;
+	height: calc(100% - 30px);
+	margin-bottom: 30px;
+	z-index: 1;
+}
+
+.team-image{
+    position: relative;
+    overflow: hidden;
+	border-radius: 0 0 80px 0;
+	margin-bottom: 20px;
+	z-index: 1;
+}
+
+.team-image img{
+	width: 100%;
+	aspect-ratio: 1/1.22;
+	object-fit: cover;
+	border-radius: 0 0 80px 0;
+	transition: all 0.5s ease-in-out;
+}
+
+.team-member-item:hover .team-image img{
+    transform: scale(1.1);
+}
+
+.team-social-icon{
+	position: absolute;
+    left: 20px;
+    bottom: 0;
+	margin: 0 auto; 
+	line-height: 1em;
+	transform: translateY(100%);
+	text-align: center;
+	z-index: 1;
+    transition: all 0.5s ease-in-out;
+}
+
+.team-member-item:hover .team-social-icon{
+	left: 20px;
+	bottom: 20px;
+	transform: translateY(0);
+}
+
+.team-social-icon ul{
+	display: inline-block;
+	list-style: none;
+	line-height: normal;
+	margin: 0;
+	background-color: var(--white-color);
+	border-radius: 0 0 20px 0;
+	padding: 12px;
+	overflow: hidden;
+}
+
+.team-social-icon ul li{
+	position: relative;
+	display: inline-block;
+    text-align: center;
+    margin-right: 15px;
+	z-index: 1;
+}
+
+.team-social-icon ul li:last-child{
+	margin-right: 0;
+}
+
+.team-social-icon ul li a{
+    display: block;
+}
+
+.team-social-icon ul li a i{
+    color: var(--accent-color);
+    font-size: 18px;
+	transition: all 0.3s ease-in-out;
+}
+
+.team-social-icon ul li a:hover i{
+	color: var(--primary-color);
+}
+
+.team-content{
+	text-align: left;
+}
+
+.team-content h3{
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+	margin-bottom: 10px;
+}
+
+.team-content p{
+	text-transform: capitalize;
+	margin: 0;
+}
+
+.pastors-message{
+	padding: 50px 0 100px;
+}
+
+.pastors-image{
+	margin-right: 30px;
+}
+
+.pastors-image figure{
+	border-radius: 0 0 150px  0;
+	overflow: hidden;
+}
+
+.pastors-image img{
+	width: 100%;
+	aspect-ratio: 1 / 1.1;
+	object-fit: cover;
+	border-radius: 0 0 150px  0;
+}
+
+.pastors-content-body{
+	margin-bottom: 40px;
+}
+
+.pastors-content-body h3{
+	font-size: 18px;
+	font-weight: 500;
+	margin-bottom: 25px;
+}
+
+.pastors-content-body p{
+	border-left: 2px solid var(--accent-color);
+    padding-left: 15px;
+    margin-bottom: 0;
+}
+
+.pastors-signature-img{
+	margin-bottom: 10px;
+}
+
+.pastors-signature-img img{
+	max-width: 170px;
+}
+
+.pastors-signature-content p{
+	font-size: 18px;
+	text-transform: capitalize;
+	color: var(--primary-color);
+	margin: 0;
+}
+
+.core-value{
+	background-color: var(--secondary-color);
+	padding: 100px 0;
+}
+
+.core-value-faqs-accordion .accordion-item{
+	position: relative;
+	background: none;
+	border-bottom: 1px solid var(--dark-divider-color);
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+.core-value-faqs-accordion .accordion-item:last-child{
+	border: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.core-value-faqs-accordion .accordion-item .accordion-button{
+	font-size: 20px;
+	font-weight: 500;
+	border: none;
+	box-shadow: none;
+	padding: 10px 30px 10px 0px;
+	position: relative;
+	transition: all 0.3s ease-in-out;
+}
+
+.core-value-faqs-accordion .accordion-button:not(.collapsed){
+    color: var(--accent-color);
+}
+
+.core-value-faqs-accordion .accordion-item .accordion-button::after,
+.core-value-faqs-accordion .accordion-item .accordion-button.collapsed::after{
+	content: '\f068';
+    font-family: "Font Awesome 6 Free";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    bottom: auto;
+    transform: translate(0px, -10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 20px;
+	color: var(--accent-color);
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+	transition: all 0.3s ease-in-out;
+}
+
+.core-value-faqs-accordion .accordion-item .accordion-button.collapsed::after{
+	content: '\f067';
+	color: var(--primary-color);
+}
+
+.core-value-faqs-accordion .accordion-item .accordion-collapse .accordion-body{
+	padding: 5px 30px 10px 0px;
+}
+
+.core-value-faqs-accordion .accordion-item .accordion-collapse .accordion-body p{
+	margin: 0;
+}
+
+.core-value-slider{
+	position: relative;
+	margin-left: 30px;
+}
+
+.core-value-slider-img{
+	border-radius: 0 0 100px 0;
+	overflow: hidden;
+}
+
+.core-value-slider-img img{
+	width: 100%;
+	aspect-ratio: 1 / 0.95;
+    object-fit: cover;
+	border-radius: 0 0 100px 0;
+}
+
+.core-value-btn{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: left;
+	z-index: 1;
+}
+
+.core-value-btn .core-value-button-next,
+.core-value-btn .core-value-button-prev{
+	position: relative;
+	width: 48px;
+	height: 48px;
+	background-color: var(--accent-color);
+	transition: all 0.4s ease-in-out;
+}
+
+.core-value-btn .core-value-button-next:hover,
+.core-value-btn .core-value-button-prev:hover{
+	background-color: var(--primary-color);
+}
+
+.core-value-btn .core-value-button-next::before,
+.core-value-btn .core-value-button-prev::before{
+	content: '';
+	position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url("../images/arrow-white.svg") no-repeat center center;
+    background-size: 14px auto;
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease-in-out;
+}
+
+.core-value-btn .core-value-button-prev::before{
+	transform: rotate(225deg);
+}
+
+/************************************/
+/***     22. Page Services css	  ***/
+/************************************/
+
+.page-services{
+	padding: 100px 0 70px;
+}
+
+.page-services .service-item{
+	border: 1px solid var(--dark-divider-color);
+}
+
+/************************************/
+/***    23. Services Single css	  ***/
+/************************************/
+
+.page-service-single{
+	padding: 100px 0;
+}
+
+.service-single-content{
+	margin-right: 30px;
+}
+
+.service-single-slider{
+	margin-bottom: 40px;
+}
+
+.service-single-btn{
+	position: absolute;
+	bottom: 0;
+	top: 0;
+	left: 40px;
+	right: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	z-index: 1;
+}
+
+.service-single-btn .service-single-button-next,
+.service-single-btn .service-single-button-prev{
+	position: relative;
+	width: 48px;
+	height: 48px;
+	background-color: var(--accent-color);
+	transition: all 0.4s ease-in-out;
+}
+
+.service-single-btn .service-single-button-next:hover,
+.service-single-btn .service-single-button-prev:hover{
+	background-color: var(--primary-color);
+}
+
+.service-single-btn .service-single-button-next::before,
+.service-single-btn .service-single-button-prev::before{
+	content: '';
+	position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url("../images/arrow-white.svg") no-repeat center center;
+    background-size: 14px auto;
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease-in-out;
+}
+
+.service-single-btn .service-single-button-prev::before{
+	transform: rotate(225deg);
+}
+
+.service-slider-image{
+	border-radius: 0 0 100px 0;
+	overflow: hidden;
+}
+
+.service-slider-image img{
+	border-radius: 0 0 100px 0;
+	overflow: hidden;
+	aspect-ratio: 1 / 0.6;
+    object-fit: cover;
+}
+
+.service-featured-image figure{
+	display: block;
+	border-radius: 30px;
+}
+
+.service-featured-image img{
+	border-radius: 30px;
+}
+
+.service-entry{
+	border-bottom: 1px solid var(--dark-divider-color);
+	padding-bottom: 40px;
+	margin-bottom: 40px;
+}
+
+.service-entry h2{
+	font-size: 44px;
+	text-transform: uppercase;
+	margin-bottom: 20px;
+}
+
+.service-entry h3{
+	font-size: 20px;
+	text-transform: capitalize;
+	margin-bottom: 20px;
+}
+
+.service-entry p{
+	margin-bottom: 20px;
+}
+
+.service-entry p:last-child{
+	margin-bottom: 0px;
+}
+
+.service-entry ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+
+.service-entry ul li{
+	position: relative;
+    width: 100%;
+	color: var(--primary-color);
+	font-size: 18px;
+	font-weight: 500;
+	text-transform: capitalize;
+	padding-left: 30px;
+}
+
+.service-entry ul li:before{
+	content: '\f058';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--accent-color);
+    display: inline-block;
+    line-height: normal;
+    position: absolute;
+    top: 2px;
+    left: 0;
+}
+
+.service-single-faqs .section-title{
+	margin-bottom: 20px;
+}
+
+.service-sidebar{
+	position: sticky;
+	top: 20px;
+}
+
+.service-catagery-list{
+	background-color: var(--secondary-color);
+	border-radius: 0 0 50px 0;
+	padding: 30px;
+	margin-bottom: 40px;
+}
+
+.service-catagery-list h3{
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+	margin-bottom: 30px;
+}
+
+.service-catagery-list ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.service-catagery-list ul li{
+	border-bottom: 1px solid var(--dark-divider-color);
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+}
+
+.service-catagery-list ul li:last-child{
+	border: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.service-catagery-list ul li a{
+	display: block;
+    position: relative;
+    color: var(--text-color);
+	text-transform: capitalize;
+	transition: all 0.3s ease-in-out;
+}
+
+.service-catagery-list ul li:hover a{
+	color: var(--accent-color);
+}
+
+.service-catagery-list ul li a::after{
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0px;
+	transform: translate(0px, -50%);
+	background-image: url('../images/arrow-orange.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 12px auto;
+	width: 12px;
+	height: 12px;
+    transition: all 0.3s ease-in-out;
+}
+
+.service-catagery-list ul li:hover a::after{
+	transform: translate(0px, -50%) rotate(45deg);
+}
+
+.sidebar-cta-box{
+	position: relative;
+	background: var(--accent-color) url('../images/sidebar-cta-bg-1.svg') no-repeat;
+	background-position: top left;
+	background-size: auto;
+	border-radius: 0 0 50px 0;
+	text-align: center;
+	padding: 40px 65px;
+}
+
+.sidebar-cta-box::before{
+	content: '';
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background: url('../images/sidebar-cta-bg-2.svg') no-repeat;
+	background-position: bottom right;
+	background-size: auto;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+}
+
+.cta-contact-item .icon-box{
+	position: relative;
+	background-color: var(--divider-color);
+	border-radius: 50%;
+	width: 90px;
+	height: 90px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto;
+	margin-bottom: 30px;
+	z-index: 1;
+}
+
+.cta-contact-item .icon-box img{
+	max-width: 50px;
+}
+
+.cta-contact-content{
+	position: relative;
+	margin-bottom: 30px;
+	z-index: 1;
+}
+
+.cta-contact-content h2{
+	font-size: 34px;
+	font-weight: 500;
+	color: var(--white-color);
+	margin-bottom: 20px;
+}
+
+.cta-contact-content p{
+	color: var(--white-color);
+	margin: 0;
+}
+
+.cta-contact-btn{
+	position: relative;
+	z-index: 1;
+}
+
+/************************************/
+/***      24. Blog Archive css	  ***/
+/************************************/
+
+.page-blog{
+	padding: 100px 0;
+}
+
+.page-blog .blog-item{
+	height: calc(100% - 40px);
+	margin-bottom: 40px;
+}
+
+/************************************/
+/***      25. Blog Single css	  ***/
+/************************************/
+
+.page-single-post{
+	padding: 100px 0;
+}
+
+.post-single-meta ol li.breadcrumb-item{
+	font-size: 18px;
+}
+
+.post-single-meta ol li i{
+    font-size: 18px;
+    color: var(--accent-color);
+    margin-right: 5px;
+}
+
+.post-image{
+	position: relative;
+	margin-bottom: 30px;
+}
+
+.post-image figure{
+	display: block;
+}
+
+.post-image figure,
+.post-image img{
+	aspect-ratio: 1 / 0.50;
+	object-fit: cover;
+	border-radius: 0 0 100px 0;
+}
+
+.post-content{
+	width: 100%;
+	max-width: 1100px;
+	margin: 0 auto;
+}
+
+.post-entry{
+	border-bottom: 1px solid var(--dark-divider-color);
+	padding-bottom: 30px;
+    margin-bottom: 30px;
+}
+
+.post-entry:after{
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.post-entry a{
+    color: var(--accent-color);
+}
+
+.post-entry h1,
+.post-entry h2,
+.post-entry h3,
+.post-entry h4,
+.post-entry h5,
+.post-entry h6{
+	margin: 0 0 0.6em;
+}
+
+.post-entry h1{
+	font-size: 54px;
+}
+
+.post-entry h2{
+	font-size: 44px;
+}
+
+.post-entry h3{
+	font-size: 40px;
+}
+
+.post-entry h4{
+	font-size: 30px;
+}
+
+.post-entry h5{
+	font-size: 24px;
+}
+
+.post-entry h6{
+	font-size: 18px;
+}
+
+.post-entry p{
+	margin-bottom: 20px;
+}
+
+.post-entry p:last-child{
+	margin-bottom: 0;
+}
+
+.post-entry p strong{
+	color: var(--primary-color);
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.post-entry ol{
+    margin: 0 0 30px;
+}
+
+.post-entry ol li{
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.post-entry ul{
+	padding: 0;
+	margin: 20px 0 20px;
+	padding-left: 20px;
+}
+
+.post-entry ul li{
+	font-size: 18px;
+    font-weight: 500;
+    color: var(--primary-color);
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.post-entry ul li:last-child{
+	margin-bottom: 0;
+}
+
+.post-entry ul ul,
+.post-entry ul ol,
+.post-entry ol ol,
+.post-entry ol ul{
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+.post-entry ul ul li:last-child,
+.post-entry ul ol li:last-child,
+.post-entry ol ol li:last-child,
+.post-entry ol ul li:last-child{
+    margin-bottom: 0;
+}
+
+.post-entry blockquote{
+	background: var(--secondary-color) url(../images/icon-blockquote.svg) no-repeat 35px 40px;
+    background-size: 45px;
+    border-radius: 0 0 50px 0;
+    padding: 30px 30px 30px 100px;
+    margin-bottom: 30px;
+}
+
+.post-entry blockquote p{
+	color: var(--primary-color);
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.4em;
+}
+
+.post-entry blockquote p:last-child{
+	margin-bottom: 0;
+}
+
+.tag-links{
+	font-size: 22px;
+	font-weight: 600;
+	color: var(--primary-color);
+	display: inline-block;
+}
+
+.post-tags .tag-links a{
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: capitalize;
+    background-color: var(--accent-color);
+    color: var(--white-color);
+	border-radius: 0 0 20px 0;
+    padding: 8px 20px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+	transition: all 0.3s ease-in-out;
+}
+
+.post-tags .tag-links a:hover{
+	background: var(--primary-color);
+}
+
+.post-social-sharing{
+    text-align: right;
+}
+
+.post-social-sharing ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.post-social-sharing ul li{
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.post-social-sharing ul li:last-child{
+	margin-right: 0;
+}
+
+.post-social-sharing ul li a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+	background-color: var(--accent-color);
+    color: var(--white-color);
+	border-radius: 0 0 16px 0;
+    width: 38px;
+    height: 38px;
+    transition: all 0.3s ease-in-out;
+}
+
+.post-social-sharing ul li:hover a{
+	background-color: var(--primary-color);
+}
+
+.post-social-sharing ul li a i{
+    font-size: 18px;
+    color: inherit;
+    transition: all 0.3s ease-in-out;
+}
+
+.post-social-sharing ul li:hover a i{
+    color: var(--secondry-color);
+}
+
+/************************************/
+/***    26. Page Sermons css	  ***/
+/************************************/
+
+.page-sermons{
+	padding: 100px 0;
+}
+
+.page-pagination{
+    margin-top: 30px;
+    text-align: center;
+}
+
+.page-pagination ul{
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+.page-pagination ul li a,
+.page-pagination ul li span{
+    display: flex;
+    text-decoration: none;
+    justify-content: center;
+    align-items: center;
+    background: var(--secondary-color);
+    color: var(--accent-color);
+	border-radius: 0 0 16px 0;
+    width: 40px;
+    height: 40px;
+    margin: 0 5px;
+    font-weight: 700;
+	line-height: 1em;
+    transition: all 0.3s ease-in-out;
+}
+
+.page-pagination ul li.active a, 
+.page-pagination ul li a:hover{
+    background: var(--accent-color);
+	color: var(--white-color);
+}
+
+/************************************/
+/*** 27. Page Sermons Single css  ***/
+/************************************/
+
+.page-sermons-single{
+	padding: 100px 0;
+}
+
+.sermons-single-content{
+	margin-right: 30px;
+}
+
+.sermons-audio-player{
+	background-color: var(--accent-color);
+	padding: 30px;
+}
+
+.sermons-audio-player .plyr__controls{
+	background-color: var(--divider-color);
+	width: 100%;
+	padding: 11px;
+	border-radius: 44px;
+}
+
+.sermons-audio-player .plyr__control,
+.sermons-audio-player .plyr__controls__item.plyr__time--current.plyr__time,
+.sermons-audio-player .plyr__controls__item.plyr__control{
+	background-color: transparent;
+	color: var(--white-color);
+}
+
+.sermons-audio-player .plyr__control:hover{
+	background-color: transparent;
+}
+
+.sermons-audio-player .plyr__progress__buffer{
+	background-color: var(--white-color);
+}
+
+.sermons-audio-player .plyr--full-ui input[type=range]{
+	color: var(--primary-color);
+}
+
+.plyr--audio .plyr__control:focus-visible,
+.plyr--audio .plyr__control:hover,
+.plyr--audio .plyr__control[aria-expanded=true]{
+	background-color: transparent;
+}
+
+.plyr__menu__container [role=menu]{
+	background-color: var(--primary-color);
+}
+
+.sermons-featured-image{
+	margin-bottom: 40px;
+}
+
+.sermons-featured-image img{
+    border-radius: 0 0 100px 0;
+    overflow: hidden;
+    aspect-ratio: 1 / 0.6;
+    object-fit: cover;
+}
+
+.sermons-entry{
+	border-bottom: 1px solid var(--dark-divider-color);
+	padding-bottom: 40px;
+	margin-bottom: 40px;
+}
+
+.sermons-entry h2{
+	font-size: 44px;
+	text-transform: uppercase;
+	margin-bottom: 20px;
+}
+
+.sermons-entry p{
+	margin-bottom: 20px;
+}
+
+.sermons-entry p:last-child{
+	margin: 0;
+}
+
+.sermons-social-sharing{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.sermons-social-sharing-title h3{
+	font-size: 24px;
+	text-transform: capitalize;
+}
+
+.sermons-social-sharing-list{
+	text-align: right;
+}
+
+.sermons-social-sharing-list ul{
+	list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sermons-social-sharing-list ul li{
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.sermons-social-sharing-list ul li:last-child{
+	margin-right: 0;
+}
+
+.sermons-social-sharing-list ul li a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: var(--accent-color);
+    color: var(--white-color);
+    border-radius: 0 0 16px 0;
+    width: 38px;
+    height: 38px;
+    transition: all 0.3s ease-in-out;
+}
+
+.sermons-social-sharing-list ul li:hover a{
+    background-color: var(--primary-color);
+}
+
+.sermons-social-sharing-list ul li a i{
+    font-size: 18px;
+    color: inherit;
+    transition: all 0.3s ease-in-out;
+}
+
+.sermons-sidebar{
+	position: sticky;
+	top: 20px;
+}
+
+.about-sermons-sidebar{
+	background-color: var(--secondary-color);
+	border-radius: 0 0 50px 0;
+	padding: 40px;
+}
+
+.about-sermons-title{
+	margin-bottom: 40px;
+}
+
+.about-sermons-title h3{
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+}
+
+.about-sermons-item{
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid var(--dark-divider-color);
+	padding-bottom: 30px;
+	margin-bottom: 30px;
+}
+
+.about-sermons-item:last-child{
+	border: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.about-sermons-item .icon-box{
+	background-color: var(--accent-color);
+	border-radius: 0 0 20px 0;
+	width: 50px;
+	height: 50px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 20px;
+	transition: all 0.3s ease-in-out;
+}
+
+.about-sermons-item:hover .icon-box{
+	background-color: var(--primary-color);
+}
+
+.about-sermons-item .icon-box i{
+	font-size: 24px;
+	color: var(--white-color);
+}
+
+.about-sermons-item .icon-box i.fa-tag{
+	transform: rotate(90deg);
+}
+
+.about-sermons-content{
+	width: calc(100% - 70px);
+}
+
+.about-sermons-content h3{
+	font-size: 16px;
+	font-weight: 500;
+	text-transform: capitalize;
+	margin-bottom: 5px;
+}
+
+.about-sermons-content p{
+	text-transform: capitalize;
+	margin: 0;
+}
+
+/************************************/
+/***    28. Page Campaign css	  ***/
+/************************************/
+
+.page-campaign{
+	padding: 100px 0;
+}
+
+.campaign-item{
+	height: calc(100% - 30px);
+	margin-bottom: 30px;
+}
+
+.campaign-image a{
+	display: block;
+    cursor: none;
+}
+
+.campaign-image a img{
+    width: 100%;
+    aspect-ratio: 1 / 0.65;
+    object-fit: cover;
+    transition: all 0.5s ease-in-out;
+}
+
+.campaign-item:hover .campaign-image a img{
+    transform: scale(1.1);
+}
+
+.campaign-body{
+	background-color: var(--white-color);
+	border: 1px solid var(--dark-divider-color);
+	border-top: none;
+    border-radius: 0 0 50px 0;
+    padding: 30px;
+}
+
+.campaign-content{
+	margin-bottom: 20px;
+}
+
+.campaign-content h2{
+	font-size: 20px;
+    font-weight: 500;
+    text-transform: capitalize;
+	margin-bottom: 10px;
+}
+
+.campaign-content p{
+	margin: 0;
+}
+
+.campaign-btn{
+	border-bottom: 1px solid var(--dark-divider-color);
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+}
+
+.campaign-btn a.read-more-btn{
+    position: relative;
+    font-size: 20px;
+    font-weight: 500;
+    text-transform: capitalize;
+    color: var(--accent-color);
+    padding-right: 50px;
+    transition: 0.5s ease-in-out;
+}
+
+.campaign-btn a.read-more-btn:hover{
+    color: var(--primary-color);
+}
+
+.campaign-btn a.read-more-btn::after{
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: 0;
+    bottom: 0;
+    background-image: url(../images/arrow-white.svg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 12px auto;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    transition: 0.4s ease-in-out;
+}
+
+.campaign-btn a.read-more-btn:hover::after{
+    transform: rotate(45deg);
+    background-color: var(--primary-color);
+}
+
+.skillbar .skill-data{
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 15px;
+}
+
+.skillbar .skill-data .skill-title{	
+	font-size: 16px;
+	font-weight: 400;
+	text-transform: capitalize;
+}
+
+.skillbar .skill-data .skill-title span{
+	font-weight: 600;
+	color: var(--primary-color);
+}
+
+.skillbar .skill-data .skill-no{
+	font-size: 16px;
+	font-weight: 400;
+	margin-left: 20px;
+}
+
+.skillbar .skill-data .skill-no span{
+	font-weight: 600;
+	color: var(--primary-color);
+}
+
+.skillbar .skill-progress{
+	width: 100%;
+	height: 10px;
+	background: var(--secondary-color);
+	border-radius: 99px;
+	position: relative;
+}
+
+.skillbar .skill-progress .count-bar{
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	background-color: var(--accent-color);
+	border-radius: 99px;
+}
+
+/************************************/
+/*** 29. Page Campaign Single css ***/
+/************************************/
+
+.page-campaign-single{
+	padding: 100px 0;
+}
+
+.campaign-single-content{
+	margin-right: 30px;
+}
+
+.campaign-featured-image figure{
+	display: block;
+}
+
+.campaign-featured-image img{
+    overflow: hidden;
+    aspect-ratio: 1 / 0.6;
+    object-fit: cover;
+}
+
+.campaign-donate-box{
+	border: 1px solid var(--dark-divider-color);
+	border-radius: 0 0 100px 0;
+	border-top: none;
+	margin-bottom: 40px;
+}
+
+.campaign-donate-box .skills-progress-bar{
+	padding: 40px;
+}
+
+.campaign-donate-content{
+	background-color: var(--accent-color);
+	border-radius: 0 0 100px 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 30px;
+	padding: 25px 60px;
+}
+
+.campaign-donate-item{
+	width: calc(33.33% - 20px);
+	border-right: 1px solid var(--divider-color);
+}
+
+.campaign-donate-item:last-child{
+	border: none;
+}
+
+.campaign-donate-item h3{
+	font-size: 34px;
+	font-weight: 500;
+	color: var(--white-color);
+	margin-bottom: 10px;
+}
+
+.campaign-donate-item p{
+	font-size: 20px;
+	color: var(--white-color);
+	text-transform: capitalize;
+	margin: 0;
+}
+
+.campaign-entry{
+	border-bottom: 1px solid var(--dark-divider-color);
+    padding-bottom: 10px;
+    margin-bottom: 40px;
+}
+
+.campaign-entry h2{
+	font-size: 44px;
+	text-transform: uppercase;
+	margin-bottom: 20px;
+}
+
+.campaign-entry h3{
+	font-size: 20px;
+	text-transform: capitalize;
+	margin-bottom: 20px;
+}
+
+.campaign-entry p{
+	margin-bottom: 20px;
+}
+
+.campaign-entry p:last-child{
+	margin-bottom: 0px;
+}
+
+.campaign-entry ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	margin-bottom: 30px;
+}
+
+.campaign-entry ul li{
+	position: relative;
+    width: calc(50% - 10px);
+	color: var(--primary-color);
+	font-size: 18px;
+	font-weight: 500;
+	text-transform: capitalize;
+	padding-left: 30px;
+}
+
+.campaign-entry ul li:before{
+	content: '\f058';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--accent-color);
+    display: inline-block;
+    line-height: normal;
+    position: absolute;
+    top: 2px;
+    left: 0;
+}
+
+.campaign-gallery{
+	margin-bottom: 30px;
+}
+
+.campaign-gallery a{
+	cursor: none;
+}
+
+.campaign-gallery figure{
+	border-radius: 0 0 40px 0;
+}
+
+.campaign-gallery img{
+	aspect-ratio: 1 / 1.1;
+	object-fit: cover;
+	border-radius: 0 0 40px 0;
+}
+
+.campaign-single-faqs{
+	border-bottom: 1px solid var(--dark-divider-color);
+	margin-bottom: 40px;
+	padding-bottom: 40px;
+}
+
+.campaign-single-faqs .section-title{
+	margin-bottom: 20px;
+}
+
+.campaign-single-sidebar{
+	position: sticky;
+	top: 20px;
+	background-color: var(--secondary-color);
+	border-radius: 0 0 50px 0;
+	padding: 30px;
+}
+
+.campaign-sidebar-title{
+	margin-bottom: 25px;
+}
+
+.campaign-sidebar-title h3{
+	font-size: 24px;
+	text-transform: capitalize;
+	margin-bottom: 15px;
+}
+
+.campaign-sidebar-title h3 span{
+	color: var(--accent-color);
+}
+
+.campaign-sidebar-title p{
+	margin: 0;
+}
+
+.campaign-donate-value{
+	margin-bottom: 40px;
+}
+
+.campaign-donate-form .form-group .form-control{
+    background-color: var(--white-color);
+    color: var(--primary-color);
+    border: 1px solid var(--dark-divider-color);
+    border-radius: 0 0 20px 0;
+    font-weight: 500;
+    box-shadow: none;
+    outline: none;
+	border: none;
+    padding: 10px;
+}
+
+.campaign-donate-form .form-group .form-control::placeholder{
+	font-size: 14px;
+}
+
+.campaign-donate-value .donate-value-box{
+	margin-bottom: 0;
+}
+
+.campaign-donate-form .donate-value{
+    width: calc(33.33% - 6.66px);
+}
+
+.campaign-donate-form .donate-value input{
+    position: absolute;
+    left: -9999px;
+}
+
+.campaign-donate-form .donate-value label{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    position: relative;
+    font-weight: 500;
+    line-height: 1.2em;
+    background-color: var(--white-color);
+    color: var(--primary-color);
+    border-radius: 0 0 20px 0;
+    padding: 10px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.campaign-donate-form .donate-value input[type="radio"]:focus+label,
+.campaign-donate-form .donate-value input[type="radio"]:checked+label{
+    background-color: var(--accent-color);
+    color: var(--white-color);
+}
+
+.donate-payment-method{
+	margin-bottom: 40px;
+}
+
+.payment-method-title{
+	margin-bottom: 25px;
+}
+
+.payment-method-title h3{
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+}
+
+.donate-payment-type{
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 30px;
+}
+
+.donate-payment-method .payment-method{
+	width: calc(50% - 15px);
+}
+
+.donate-payment-method .payment-method input{
+	color: var(--accent-color);
+}
+
+.donate-payment-method .payment-method label{
+	text-transform: capitalize;
+}
+
+.donar-personal-info{
+	margin-bottom: 40px;
+}
+
+.donar-personal-form-account{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.donar-personal-create-account{
+	display: flex;
+	align-items: center;
+}
+
+.donar-personal-create-account label{
+	font-size: 12px;
+	line-height: normal;
+	text-transform: capitalize;
+	margin-left: 5px;
+}
+
+.donar-personal-login-account p{
+	font-size: 12px;
+	text-transform: capitalize;
+	margin: 0;
+}
+
+.donar-personal-login-account p a{
+	font-weight: 500;
+	color: var(--accent-color);
+}
+
+/************************************/
+/***    30. Page Ministries css   ***/
+/************************************/
+
+.page-ministries{
+	padding: 100px 0;
+}
+
+/**************************************/
+/*** 31. Page Ministries Single css ***/
+/**************************************/
+
+.page-ministry-single{
+	padding: 100px 0;
+}
+
+.ministry-single-content{
+	margin-right: 20px;
+}
+
+.ministry-single-slider{
+	margin-bottom: 30px;
+}
+
+.ministry-slider-image{
+    border-radius: 0 0 100px 0;
+    overflow: hidden;
+}
+
+.ministry-slider-image img{
+	width: 100%;
+	border-radius: 0 0 100px 0;
+    overflow: hidden;
+    aspect-ratio: 1 / 0.6;
+    object-fit: cover;
+}
+
+.ministry-single-slider .swiper-pagination{
+    position: relative;
+    text-align: center;
+    bottom: 40px;
+}
+
+.ministry-single-slider .swiper-pagination .swiper-pagination-bullet{
+	height: 12px;
+	width: 12px;
+	border-radius: 50%;
+	background-color: var(--white-color);
+	opacity: 1;
+	margin: 0px 4px;
+}
+
+.ministry-single-slider .swiper-pagination .swiper-pagination-bullet-active{
+	background-color: var(--accent-color);
+	opacity: 1;
+}
+
+.ministry-entry{
+	border-bottom: 1px solid var(--dark-divider-color);
+	padding-bottom: 40px;
+	margin-bottom: 40px;
+}
+
+.ministry-entry h2{
+	font-size: 44px;
+	text-transform: uppercase;
+	margin-bottom: 20px;
+}
+
+.ministry-entry h3{
+	font-size: 20px;
+	text-transform: capitalize;
+	margin-bottom: 20px;
+}
+
+.ministry-entry p{
+	margin-bottom: 20px;
+}
+
+.ministry-entry p:last-child{
+	margin-bottom: 0px;
+}
+
+.ministry-entry ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+.ministry-entry ul li{
+	position: relative;
+    width: calc(25% - 15px);
+	color: var(--primary-color);
+	font-size: 18px;
+	font-weight: 500;
+	text-transform: capitalize;
+	padding-left: 30px;
+}
+
+.ministry-entry ul li:before{
+	content: '\f058';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--accent-color);
+    display: inline-block;
+    line-height: normal;
+    position: absolute;
+    top: 2px;
+    left: 0;
+}
+
+.ministry-entry-img-1 figure,
+.ministry-entry-img-2 figure{
+    display: block;
+}
+
+.ministry-entry-img-1 img,
+.ministry-entry-img-2 img{
+    aspect-ratio: 1 / 0.71;
+    object-fit: cover;
+    border-radius: 0 0 50px 0;
+}
+
+.ministry-single-sidebar{
+	position: sticky;
+	top: 20px;
+	background-color: var(--secondary-color);
+	border-radius: 0 0 50px 0;
+	padding: 30px;
+}
+
+.ministry-single-box{
+	border-bottom: 1px solid var(--dark-divider-color);
+	padding-bottom: 25px;
+	margin-bottom: 25px;
+}
+
+.ministry-single-box:last-child{
+	border-bottom: none;
+	padding-bottom: 0;
+	margin-bottom: 0;
+}
+
+.ministry-single-info{
+	display: flex;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.ministry-single-info .icon-box{
+	margin-right: 15px;
+}
+
+.ministry-single-info .icon-box i{
+	font-size: 24px;
+	color: var(--accent-color);
+}
+
+.ministry-single-info-content{
+	width: calc(100% - 39px);
+}
+
+.ministry-single-info-content h3{
+	font-size: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+}
+
+.ministry-single-info-list ul{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.ministry-single-info-list ul li{
+	margin-bottom: 10px;
+}
+
+.ministry-single-info-list ul li:last-child{
+	margin-bottom: 0;
+}
+
+/************************************/
+/***     32. Page Pastor css       ***/
+/************************************/
+
+.page-team{
+	padding: 100px 0 70px;
+}
+
+/************************************/
+/***     33. Page Gallery css     ***/
+/************************************/
+
+.page-gallery{
+	padding: 100px 0 70px;
+}
+
+.page-gallery-box .photo-gallery{
+	height: calc(100% - 30px);
+	margin-bottom: 30px;
+}
+
+.page-gallery-box .photo-gallery a{
+	cursor: none;
+}
+
+.page-gallery-box .photo-gallery figure{
+	border-radius: 0 0 100px 0;
+}
+
+.page-gallery-box .photo-gallery img{
+	aspect-ratio: 1 / 0.97;
+	object-fit: cover;
+	border-radius: 0 0 100px 0;
+}
+
+/************************************/
+/***    34. Contact us Page css   ***/
+/************************************/
+
+.page-contact-us{
+	padding: 100px 0;
+}
+
+.contact-information{
+	margin-right: 50px;
+}
+
+.contact-info-item{
+	border: 1px solid var(--dark-divider-color);
+	border-radius:  0 0 50px 0;
+	display: flex;
+	align-items: center;
+	margin-bottom: 25px;
+	padding: 15px 20px;
+}
+
+.contact-info-item:last-child{
+	margin-bottom: 0;
+}
+
+.contact-info-item .icon-box{
+	margin-right: 20px;
+}
+
+.contact-info-item .icon-box img{
+	max-width: 34px;
+}
+
+.contact-info-content{
+	width: calc(100% - 54px);
+}
+
+.contact-info-content p{
+	text-transform: capitalize;
+	margin-bottom: 5px;
+}
+
+.contact-info-content h3{
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.contact-us-form{
+	background-color: var(--secondary-color);
+	border-radius: 0 0 100px 0;
+	padding: 50px;
+}
+
+.contact-us-form .form-control{
+	padding: 15px;
+	font-size: 16px;
+	background-color: var(--white-color);
+	border: none;
+	border-bottom: 1px solid var(--divider-color);
+	border-radius: 0;
+	color: var(--primary-color);
+	box-shadow: none;
+	outline: none;
+}
+
+.contact-us-form .form-control::placeholder{
+	color: var(--primary-color);
+	text-transform: capitalize;
+}
+
+.google-map .container-fluid{
+	padding: 0;
+}
+
+.google-map-iframe{
+	width: 100%;
+	height: 700px;
+}
+
+.google-map-iframe iframe{
+	width: 100%;
+	height: 700px;
+	filter: grayscale(100%);
+	transition: all 0.3s ease-in-out;
+}
+
+.google-map-iframe iframe:hover{
+	filter: grayscale(0);
+}
+
+/************************************/
+/***       35. 404 Page css       ***/
+/************************************/
+
+.error-page{
+	padding: 100px 0;
+}
+
+.error-page-image{
+	text-align: center;
+	margin-bottom: 60px;
+}
+
+.error-page .error-page-content{
+	text-align: center;
+}
+
+.error-page-content-heading{
+	margin-bottom: 30px;
+}
+
+.error-page-content-heading h2{
+	font-size: 44px;
+}
+
+.error-page-content-heading h2 span{
+	color: var(--accent-color);
+}
+
+/************************************/
+/***     36. responsive css       ***/
+/************************************/
+
+@media only screen and (max-width: 1024px){
+
+	.navbar{
+        padding: 20px 0px;
+    }
+	
+	.main-menu ul li{
+		margin: 0;
+	}
+}
+
+@media only screen and (max-width: 991px){
+
+	.slicknav_nav li,
+	.slicknav_nav ul{
+        display: block;
+    }
+
+	.responsive-menu,
+    .navbar-toggle{
+        display: block;
+    }
+
+    .header-btn .btn-default{
+        display: none;
+    }
+
+	.readmore-btn{
+		width: 40px;
+		height: 40px;
+	}
+
+	.readmore-btn img{
+		max-width: 12px;
+	}
+
+	.section-row{
+		margin-bottom: 40px;
+	}
+
+	.section-row .section-title{
+		max-width: 100%;
+	}
+
+	.section-title{
+		margin-bottom: 30px;
+	}
+
+	.section-title h3{
+		margin-bottom: 15px;
+	}
+
+	.section-title h1{
+		font-size: 60px;
+	}
+
+	.section-title h2{
+		font-size: 36px;
+	}
+
+	.section-title p{
+		margin-top: 15px;
+	}
+
+	.section-btn{
+        text-align: left;
+        margin-top: 20px;
+    }
+
+	.hero{
+		padding: 150px 0;
+		margin-top: -85px;
+		min-height: 100%;
+	}
+
+	.hero-slider-layout .hero-slide{
+		position: relative;
+		min-height: 100%;
+		padding: 150px 0;
+	}
+
+	.hero-slider-layout .hero-pagination{
+		bottom: 110px;
+	}
+
+	.our-scrolling-ticker{
+		padding: 20px 0;
+	}
+
+	.our-scrolling-ticker .scrolling-ticker-box{
+		--gap: 30px;
+	}
+
+	.our-scrolling-ticker .scrolling-content span{
+		font-size: 22px;
+	}
+
+	.our-scrolling-ticker .scrolling-content span img{
+		width: 100%;
+		max-width: 26px;
+		margin-right: 30px;
+	}
+
+	.about-us{
+		padding: 50px 0;
+	}
+
+	.about-image{
+		width: 100%;
+		max-width: 650px;
+		margin: 0 auto;
+		margin-bottom: 30px;
+	}
+
+	.about-content{
+		margin-left: 0px;
+	}
+
+	.about-content-body{
+		margin-bottom: 30px;
+	}
+
+	.join-worship{
+		padding: 50px 0;
+	}
+
+	.join-worship .section-title{
+		max-width: 350px;
+	}
+
+	.highlighted-worship-item{
+		margin-bottom: 30px;
+	}
+
+	.highlighted-worship-image a img{
+		aspect-ratio: 1 / 0.78;
+	}
+
+	.highlighted-worship-body{
+		padding: 15px;
+	}
+
+	.highlighted-worship-content h3{
+		font-size: 24px;
+	}
+
+	.worship-image{
+		width: 40%;
+	}
+
+	.worship-body{
+		width: calc(100% - 40%);
+	}
+
+	.worship-content{
+		margin-bottom: 20px;
+	}
+
+	.our-counter{
+		padding: 0 15px;
+	}
+
+	.counter-box{
+		border-radius: 0 0 50px 0;
+		padding: 40px 0px 10px;
+	}
+
+	.counter-item{
+		margin-bottom: 30px;
+		padding-right: 20px;
+	}
+
+	.counter-box .col-lg-3:nth-child(2n + 2) .counter-item{
+		border: none;
+		padding-right: 0;
+	}
+
+	.counter-title{
+		margin-bottom: 15px;
+	}
+
+	.counter-title h2{
+		font-size: 46px;
+	}
+
+	.counter-content h3{
+		margin-bottom: 15px;
+	}
+
+	.our-mission{
+		padding: 50px 0;
+	}
+
+	.mission-content{
+		margin-bottom: 30px;
+	}
+
+	.mission-content-body{
+		margin-bottom: 30px;
+	}
+
+	.mission-img{
+		padding: 0 0 70px 70px;
+	}
+
+	.mission-img img{
+		aspect-ratio: 1 / 0.98;
+	}
+
+	.mission-life-circle img{
+		max-width: 160px;
+	}
+
+	.our-services{
+		padding: 50px 0 20px;
+	}
+
+	.service-item{
+		padding: 25px 20px;
+	}
+
+	.service-item .icon-box{
+		width: 60px;
+		height: 60px;
+		margin-bottom: 20px;
+	}
+
+	.service-item .icon-box img{
+		max-width: 30px;
+	}
+
+	.service-body{
+		margin-bottom: 20px;
+		padding-bottom: 20px;
+	}
+
+	.service-ticker .scrolling-ticker-box{
+		--gap: 20px;
+		margin-bottom: -12px;
+	}
+
+	.service-ticker .scrolling-content span{
+		font-size: 80px;
+	}
+
+	.service-ticker .scrolling-content span img{
+		max-width: 40px;
+		margin-right: 20px;
+	}
+
+	.our-ministries{
+		padding: 50px 0 25px;
+	}
+
+	.ministries-item,
+	.ministries-image a img{
+		border-radius: 0 0 50px 0;
+	}
+
+	.our-ministries-footer{
+		margin-top: 10px;
+	}
+
+	.ministries-btn{
+		bottom: 30px;
+		right: 30px;
+	}
+
+	.our-sermons{
+		padding: 25px 0 20px;
+	}
+
+	.sermons-item{
+		border-radius: 0 0 50px 0;
+	}
+
+	.sermons-meta h3{
+		font-size: 18px;
+	}
+
+	.sermons-body{
+		border-radius: 0 0 50px 0;
+		padding: 20px;
+	}
+
+	.sermons-list ul li{
+		font-size: 14px;
+	}
+
+	.sermons-list ul li i{
+		font-size: 14px;
+	}
+
+	.verse-church{
+		background-size: 75% auto;
+		padding: 50px 0;
+	}
+
+	.verse-church-content .section-title{
+		margin-bottom: 30px;
+	}
+
+	.cta-box-btn::before{
+		bottom: -30px;
+	}
+
+	.our-event{
+		padding: 50px 0;
+	}
+
+	.event-image{
+		text-align: center;
+		margin-bottom: 30px;
+	}
+
+	.event-image img{
+		aspect-ratio: 1 / 0.95;
+	}
+
+	.event-content{
+		margin-left: 0px;
+	}
+
+	.event-body{
+		margin-bottom: 30px;
+	}
+
+	.event-footer{
+		margin-bottom: 30px;
+	}
+
+	.donate-now{
+		padding: 50px 0;
+	}
+
+	.video-play-button a{
+        width: 64px;
+        height: 64px;
+    }
+
+	.video-play-button a i{
+        font-size: 24px;
+    }
+
+	.donate-box{
+		padding: 30px;
+	}
+
+	.donate-form .form-control{
+		padding: 15px 20px;
+	}
+
+	.donate-form .donate-value label{
+		padding: 15px;
+	}
+
+	.our-blog{
+		padding: 50px 0 20px;
+	}
+
+	.blog-item .post-featured-image{
+		margin-bottom: 20px;
+	}
+
+	.post-item-body{
+		max-width: 100%;
+	}
+
+	.post-item-footer a.read-more-btn{
+		font-size: 18px;
+		padding-right: 40px;
+	}
+
+	.post-item-footer a.read-more-btn::after{
+		background-size: 10px auto;
+		width: 30px;
+		height: 30px;
+	}
+
+	.subscribe-newsletter{
+		padding: 50px 0;
+	}
+
+	.main-footer{
+		padding: 50px 0 0;
+	}
+
+	.about-footer{
+		max-width: 100%;
+		margin-bottom: 40px;
+	}
+
+	.about-footer-content,
+	.footer-logo{
+		margin-bottom: 20px;
+	}
+
+	.footer-social-links ul li a i{
+		font-size: 22px;
+	}
+
+	.footer-links h3,
+	.footer-contact h3{
+		margin-bottom: 20px;
+	}
+
+	.footer-contact-details .footer-info-box{
+		padding-left: 35px;
+		margin-bottom: 20px;
+	}
+
+	.footer-copyright{
+		padding: 20px 0;
+	}
+
+	.footer-privacy-policy ul li{
+		margin-right: 20px;
+	}
+
+	.page-header{
+		padding: 130px 0 50px;
+		margin-top: -85px;
+	}
+	
+	.page-header-box h1{
+		font-size: 60px;
+		margin-bottom: 15px;
+	}
+
+	.page-header-box ol{
+		padding: 8px 15px;
+	}
+
+	.vision-mission{
+		padding: 50px 0;
+	}
+
+	.vision-mission-nav{
+		margin-bottom: 30px;
+	}
+
+	.vision-mission-nav .nav-tabs{
+		padding: 10px;
+	}
+
+	.vision-mission-nav ul li{
+		margin-right: 20px;
+	}
+
+	.vision-mission-nav ul li .nav-link{
+		padding: 12px 20px;
+	}
+
+	.vision-mission-content{
+		margin-bottom: 30px;
+	}
+
+	.vision-mission-content .section-title{
+		max-width: 100%;
+	}
+
+	.vision-mission-body h3{
+		margin-bottom: 20px;
+	}
+
+	.vision-mission-image{
+		text-align: center;
+		margin-left: 0px;
+	}
+
+	.vision-mission-image img{
+		aspect-ratio: 1 / 0.80;
+	}
+
+	.what-we-do{
+		padding: 50px 0 20px;
+	}
+
+	.what-we-item{
+		padding: 15px;
+	}
+
+	.what-we-item .icon-box{
+		margin-bottom: 30px;
+	}
+
+	.what-we-item .icon-box img{
+		max-width: 70px;
+	}
+
+	.what-we-content h3{
+		margin-bottom: 20px;
+	}
+
+	.our-team{
+		background: linear-gradient(180deg, var(--accent-color) 32%, var(--white-color) 32%);
+		padding: 50px 0 20px;
+	}
+
+	.team-image img{
+		aspect-ratio: 1 / 1.1;
+	}
+
+	.pastors-message{
+		padding: 20px 0 50px;
+	}
+
+	.pastors-image{
+		margin-right: 0px;
+		margin-bottom: 30px;
+	}
+
+	.pastors-image img{
+		aspect-ratio: 1 / 0.9;
+	}
+
+	.pastors-content-body{
+		margin-bottom: 30px;
+	}
+
+	.pastors-signature-img img{
+		max-width: 150px;
+	}
+
+	.core-value{
+		padding: 50px 0;
+	}
+
+	.service-single-faqs{
+		margin-bottom: 30px;
+	}
+
+	.core-value-slider{
+		margin-left: 0px;
+	}
+	
+	.core-value-slider-img img{
+		aspect-ratio: 1 / 0.8;
+	}
+
+	.page-services{
+		padding: 50px 0 20px;
+	}
+
+	.page-service-single{
+		padding: 50px 0;
+	}
+
+	.service-single-content{
+		margin-right: 0px;
+		margin-bottom: 30px;
+	}
+
+	.service-single-btn{
+		left: 20px;
+		right: 20px;
+	}
+
+	.service-single-slider{
+		margin-bottom: 30px;
+	}
+
+	.service-entry{
+		padding-bottom: 30px;
+		margin-bottom: 30px;
+	}
+
+	.service-entry h2{
+		font-size: 36px;
+	}
+
+	.service-catagery-list{
+		padding: 20px;
+		margin-bottom: 30px;
+	}
+
+	.service-catagery-list h3{
+		margin-bottom: 20px;
+	}
+
+	.sidebar-cta-box{
+		padding: 30px;
+	}
+
+	.cta-contact-item .icon-box{
+		width: 70px;
+		height: 70px;
+		margin-bottom: 20px;
+	}
+
+	.cta-contact-item .icon-box img{
+		max-width: 40px;
+	}
+
+	.cta-contact-content h2{
+		font-size: 30px;
+		margin-bottom: 15px;
+	}
+
+	.cta-contact-content{
+		margin-bottom: 20px;
+	}
+
+	.page-blog{
+		padding: 50px 0;
+	}
+
+	.page-single-post{
+		padding: 50px 0;
+	}
+
+	.post-image{
+		margin-bottom: 20px;
+	}
+
+	.post-entry blockquote{
+		background: var(--secondary-color) url('../images/icon-blockquote.svg') no-repeat 30px 35px;
+        background-size: 45px;
+        padding: 25px 25px 25px 90px;
+        margin-bottom: 20px;
+	}
+
+	.post-entry blockquote p{
+		font-size: 18px;
+	}
+
+	.post-entry h2{
+		font-size: 36px;
+	}
+
+	.post-entry ul li{
+		font-size: 16px;
+	}
+
+	.post-tag-links{
+		padding: 0 0px;
+	}
+
+	.post-tags{
+		margin-bottom: 10px;
+	}
+
+	.post-social-sharing ul{
+		text-align: left;
+	}
+
+	.post-tags .tag-links a{
+		font-size: 16px;
+		padding: 8px 15px;
+	}
+
+	.page-sermons{
+		padding: 50px 0;
+	}
+
+	.page-pagination{
+		margin-top: 10px;
+	}
+
+	.page-sermons-single{
+		padding: 50px 0;
+	}
+
+	.page-sermons-single .row{
+		flex-direction: column-reverse;
+	}
+
+	.sermons-single-content{
+		margin-right: 0;
+	}
+
+	.sermons-audio-player{
+		padding: 20px 15px;
+	}
+
+	.sermons-featured-image{
+		margin-bottom: 30px;
+	}
+
+	.sermons-entry{
+		padding-bottom: 30px;
+		margin-bottom: 30px;
+	}
+
+	.sermons-entry h2{
+		font-size: 36px;
+	}
+
+	.sermons-social-sharing-title h3{
+		font-size: 22px;
+	}
+
+	.about-sermons-sidebar{
+		padding: 30px;
+		margin-bottom: 30px;		
+	}
+
+	.about-sermons-title{
+		margin-bottom: 30px;
+	}
+
+	.about-sermons-item{
+		padding-bottom: 20px;
+		margin-bottom: 20px;
+	}
+
+	.page-campaign{
+		padding: 50px 0;
+	}
+
+	.campaign-body{
+		padding: 20px;
+	}
+
+	.campaign-btn a.read-more-btn{
+        font-size: 18px;
+        padding-right: 40px;
+    }
+
+	.campaign-btn a.read-more-btn::after{
+        background-size: 10px auto;
+        width: 30px;
+        height: 30px;
+    }
+
+	.page-campaign-single{
+		padding: 50px 0;
+	}
+
+	.campaign-single-content{
+		margin-right: 0;
+		margin-bottom: 30px;
+	}
+
+	.campaign-donate-box .skills-progress-bar{
+		padding: 20px;
+	}
+
+	.campaign-donate-box{
+		margin-bottom: 30px;
+	}
+
+	.campaign-donate-content{
+		padding: 20px 40px;
+	}
+
+	.campaign-donate-item h3{
+		font-size: 30px;
+		margin-bottom: 5px;
+	}
+
+	.campaign-donate-item p{
+		font-size: 18px;
+	}
+
+	.campaign-entry{
+		margin-bottom: 30px;
+	}
+
+	.campaign-entry h2{
+		font-size: 36px;
+	}
+
+	.campaign-gallery img{
+		aspect-ratio: 1 / 0.8;
+	}
+
+	.campaign-single-faqs{
+		margin-bottom: 30px;
+		padding-bottom: 30px;
+	}
+
+	.campaign-sidebar-title{
+		margin-bottom: 20px;
+	}
+
+	.campaign-donate-value{
+		margin-bottom: 30px;
+	}
+
+	.donate-payment-method{
+		margin-bottom: 30px;
+	}
+
+	.payment-method-title{
+		margin-bottom: 20px;
+	}
+
+	.donar-personal-info{
+		margin-bottom: 30px;
+	}
+
+	.page-ministries{
+		padding: 50px 0;
+	}
+
+	.page-ministry-single{
+		padding: 50px 0;
+	}
+
+	.ministry-single-content{
+		margin-right: 0px;
+		margin-bottom: 30px;
+	}
+
+	.ministry-entry{
+		padding-bottom: 30px;
+		margin-bottom: 30px;
+	}
+
+	.ministry-entry h2{
+		font-size: 36px;
+	}
+
+	.ministry-entry ul li{
+		width: calc(33.33% - 13.33px);
+	}
+
+	.ministry-entry-img-1 img,
+	.ministry-entry-img-2 img{
+		aspect-ratio: 1 / 0.65;
+	}
+
+	.ministry-single-box{
+		padding-bottom: 20px;
+		margin-bottom: 20px;
+	}
+
+	.page-team{
+		padding: 50px 0 20px;
+	}
+
+	.page-gallery{
+		padding: 50px 0 20px;
+	}
+
+	.page-gallery-box .photo-gallery figure,
+	.page-gallery-box .photo-gallery img{
+		aspect-ratio: 1 / 0.8;
+		border-radius: 0 0 50px 0;
+	}
+
+	.page-contact-us{
+		padding: 50px 0;
+	}
+
+	.contact-information{
+		margin-right: 0px;
+		margin-bottom: 30px;
+	}
+
+	.contact-us-form{
+		padding: 40px;
+	}
+
+	.google-map-iframe,
+	.google-map-iframe iframe{
+		height: 500px;
+	}
+
+	.error-page{
+		padding: 50px 0;
+	}
+	
+	.error-page-image{
+		margin-bottom: 30px;
+	}
+
+	.error-page-content-heading{
+		margin-bottom: 20px;
+	}
+	
+	.error-page-content-heading h2{
+		font-size: 36px;
+	}
+
+}
+
+@media only screen and (max-width: 767px){
+
+	.section-row{
+        margin-bottom: 30px;
+    }
+
+	.section-title h1{
+		font-size: 40px;
+	}
+
+	.section-title h2{
+		font-size: 28px;
+	}
+
+	.hero-content-body .btn-default.btn-highlighted{
+        margin-left: 0px;
+        margin-top: 15px;
+    }
+
+	.our-scrolling-ticker{
+        padding: 15px 0;
+    }
+
+	.our-scrolling-ticker .scrolling-ticker-box{
+        --gap: 20px;
+    }
+
+	.our-scrolling-ticker .scrolling-content span{
+        font-size: 20px;
+    }
+
+	.our-scrolling-ticker .scrolling-content span img{
+        max-width: 22px;
+        margin-right: 20px;
+    }
+
+	.about-image{
+        max-width: 100%;
+		padding-top: 50px;
+    }
+
+	.about-img-1{
+		width: 250px;
+	}
+
+	.about-img-2{
+		width: 200px;
+	}
+
+	.about-img-2 figure,
+	.about-img-1 figure,
+	.about-img-2 img,
+	.about-img-1 img{
+		border-radius: 0 0 50px 0;
+	}
+
+	.about-content-body{
+		gap: 20px;
+	}
+
+	.about-list-item{
+		width: 100%;
+	}
+
+	.highlighted-worship-body{
+		bottom: 20px;
+		left: 20px;
+		right: 20px;
+		border-radius: 0px 0px 25px 0px;
+		padding: 10px;
+	}
+
+	.highlighted-worship-image a,
+	.highlighted-worship-image a img{
+        aspect-ratio: 1 / 0.98;
+		border-radius: 0px 0px 50px 0px;
+    }
+
+	.highlighted-worship-content h3{
+        font-size: 20px;
+    }
+
+	.worship-image a,
+	.worship-image img{
+		aspect-ratio: 1 / 0.98;
+		border-radius: 0px 0px 25px 0px;
+	}
+
+	.worship-body{
+		margin-left: 20px;
+	}
+
+	.worship-content{
+        margin-bottom: 10px;
+    }
+
+	.worship-content h3{
+		font-size: 18px;
+		font-weight: 500;
+		text-transform: capitalize;
+		margin-bottom: 5px;
+	}
+
+	.worship-btn .readmore-btn{
+		width: 30px;
+		height: 30px;
+	}
+
+	.counter-item{
+		border-right: none;
+		padding-right: 0px;
+	}
+
+	.counter-title{
+        margin-bottom: 10px;
+    }
+
+	.counter-title h2{
+        font-size: 36px;
+    }
+
+	.counter-content h3{
+		font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+	.mission-img{
+        padding: 0 0 60px 60px;
+    }
+
+	.mission-img figure,
+	.mission-img img{
+        aspect-ratio: 1 / 1.15;
+		border-radius: 0 0 50px 0;
+    }
+
+	.mission-life-circle img{
+        max-width: 140px;
+    }
+
+	.service-content h3{
+		font-size: 18px;
+	}
+
+	.service-ticker .scrolling-ticker-box{
+        margin-bottom: -9px;
+    }
+
+	.service-ticker .scrolling-content span{
+        font-size: 60px;
+    }
+
+	.ministries-image a img{
+		aspect-ratio: 1 / 1.2;
+	}
+
+	.ministries-content h3{
+		font-size: 18px;
+	}
+
+	.sermons-title h2{
+		font-size: 18px;
+	}
+
+	.sermons-list ul li{
+		margin-bottom: 10px;
+	}
+
+	.verse-church{
+		position: relative;
+        background-size: cover;
+    }
+
+	.verse-church::before{
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		background-color: var(--white-color);
+		opacity: 50%;
+		width: 100%;
+		height: 100%;
+	}
+
+	.verse-church-content{
+		position: relative;
+		z-index: 1;
+	}
+
+	.verse-church-btn::before{
+		right: 0;
+		transform: translateX(0%);
+	}
+
+	@keyframes versearrowmoveobjects{
+		50%{
+			right: 8%;
+		}
+	}
+
+	.cta-box-content .section-title{
+		margin-bottom: 30px;
+	}
+
+	.cta-box-btn{
+		text-align: left;
+	}
+
+	.cta-box-btn::before{
+		display: none;
+	}
+
+	.event-image figure,
+	.event-image img{
+        aspect-ratio: 1 / 1.15;
+		border-radius: 0 0 100px 0;
+    }
+
+	.event-item{
+		margin-bottom: 20px;
+	}
+
+	.video-play-button{
+		margin: 30px 0 50px;
+	}
+
+	.donate-box{
+        padding: 20px;
+    }
+
+	.blog-item .post-featured-image,
+	.blog-item .post-featured-image img{
+		border-radius: 0 0 50px 0;
+	}
+
+	.post-item-body h2{
+		font-size: 18px;
+		margin-bottom: 15px;
+	}
+
+	.post-item-footer a.read-more-btn{
+        font-size: 16px;
+        padding-right: 35px;
+    }
+
+	.post-item-footer a.read-more-btn::after{
+		top: -2px;
+        background-size: 8px auto;
+        width: 24px;
+        height: 24px;
+    }
+
+	.footer-links{
+		margin-bottom: 40px;
+	}
+
+	.footer-links h3,
+	.footer-contact h3{
+		font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+	.footer-copyright-text{
+		text-align: center;
+		margin-bottom: 10px;
+	}
+
+	.footer-privacy-policy ul{
+		text-align: center;
+	}
+
+	.page-header-box h1{
+		font-size: 40px;
+	}
+
+	.page-header-box ol{
+		padding: 6px 10px;
+	}
+
+	.vision-mission-nav .nav-tabs{
+        justify-content: center;
+    }
+
+	.vision-mission-nav ul li{
+        margin-right: 5px;
+    }
+
+	.vision-mission-nav ul li .nav-link{
+		font-size: 14px;
+        padding: 10px 15px;
+    }
+
+	.vision-mission-image figure,
+	.vision-mission-image img{
+		border-radius: 0 0 50px 0;
+	}
+
+	.what-we-item .icon-box{
+        margin-bottom: 20px;
+    }
+
+	.what-we-item .icon-box img{
+		max-width: 60px;
+	}
+
+	.what-we-content h3{
+		font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+	.our-team{
+		background-image: linear-gradient(180deg, var(--accent-color) 20%, var(--white-color) 20%);
+	}
+
+	.team-content h3{
+		font-size: 18px;
+		margin-bottom: 6px;
+	}
+
+	.pastors-image figure,
+	.pastors-image img{
+        aspect-ratio: 1 / 1.1;
+		border-radius: 0 0 100px 0;
+    }
+
+	.pastors-signature-img img{
+        max-width: 130px;
+    }
+
+	.core-value-faqs-accordion .accordion-item .accordion-button{
+		font-size: 18px;
+	}
+
+	.core-value-slider-img,
+	.core-value-slider-img img{
+        aspect-ratio: 1 / 0.95;		
+		border-radius: 0 0 50px 0;
+    }
+
+	.core-value-btn .core-value-button-next,
+	.core-value-btn .core-value-button-prev{
+		width: 40px;
+		height: 40px;
+	}
+
+	.service-slider-image img{
+		aspect-ratio: 1 / 0.8;
+		border-radius: 0 0 50px 0;
+	}
+
+	.service-single-btn .service-single-button-next,
+	.service-single-btn .service-single-button-prev{
+		position: relative;
+		width: 40px;
+		height: 40px;
+	}
+
+	.service-entry h2{
+        font-size: 28px;
+    }
+
+	.service-entry h3{
+        font-size: 18px;
+    }
+
+	.service-entry ul{
+        display: block;
+    }
+
+	.service-entry ul li{
+		width: 100%;
+		font-size: 16px;
+		margin-bottom: 15px;
+	}
+
+	.service-entry ul li:last-child{
+		margin-bottom: 0;
+	}
+
+	.service-entry ul li:before{
+		font-size: 18px;
+		top: 4px;
+	}
+
+	.service-catagery-list h3{
+        margin-bottom: 18px;
+    }
+
+	.cta-contact-content h2{
+        font-size: 26px;
+    }
+
+	.post-single-meta ol li i{
+        font-size: 18px;
+    }
+
+	.post-image figure,
+	.post-image img{
+		aspect-ratio: 1 / 0.70;
+		border-radius: 0 0 50px 0;
+	}
+
+	.post-entry blockquote{
+		background: var(--secondary-color) url(../images/icon-blockquote.svg) no-repeat 20px 20px;
+        background-size: 35px;
+        padding: 55px 20px 20px 20px;
+	}
+	
+	.post-entry h2{
+		font-size: 28px;
+	}
+
+	.tag-links{
+		font-size: 20px;
+	}
+
+	.sermons-featured-image img{
+		aspect-ratio: 1 / 0.8;
+	}
+
+	.sermons-entry h2{
+        font-size: 28px;
+    }
+
+	.sermons-social-sharing{
+		display: block;
+	}
+
+	.sermons-social-sharing-title{
+		margin-bottom: 20px;
+	}
+
+	.sermons-social-sharing-list{
+		text-align: left;
+	}
+
+	.sermons-social-sharing-title h3{
+        font-size: 20px;
+    }
+
+	.about-sermons-sidebar{
+        padding: 20px;
+    }
+
+	.about-sermons-title h3{
+		font-size: 18px;
+	}
+
+	.about-sermons-item .icon-box{
+		width: 45px;
+		height: 45px;
+		margin-right: 15px;
+	}
+
+	.about-sermons-item .icon-box i{
+		font-size: 20px;
+	}
+
+	.about-sermons-content{
+		width: calc(100% - 55px);
+	}
+
+	.campaign-content h2{
+		font-size: 18px;
+	}
+
+	.campaign-btn a.read-more-btn{
+        font-size: 16px;
+        padding-right: 35px;
+    }
+
+	.campaign-btn a.read-more-btn::after{
+        top: -2px;
+        background-size: 8px auto;
+        width: 24px;
+        height: 24px;
+    }
+
+	.campaign-donate-content{
+        padding: 10px 20px;
+    }
+
+	.campaign-featured-image img{
+		aspect-ratio: 1 / 0.8;
+	}
+
+	.campaign-donate-content{
+		border-radius: 0 0 50px 0;
+		gap: 20px;
+	}
+
+	.campaign-donate-item{
+		width: calc(33.33% - 13.33px);
+	}
+
+	.campaign-donate-item h3{
+        font-size: 26px;
+    }
+
+	.campaign-donate-item p{
+        font-size: 16px;
+    }
+
+	.campaign-entry h2{
+        font-size: 28px;
+    }
+
+	.campaign-entry ul{
+        display: block;
+    }
+
+	.campaign-entry ul li{
+		width: 100%;
+		font-size: 16px;
+		margin-bottom: 15px;
+		padding-left: 25px;
+	}
+
+	.campaign-entry ul li:last-child{
+		margin-bottom: 0;
+	}
+
+	.campaign-entry ul li:before{
+		font-size: 18px;
+		top: 4px;
+	}
+
+	.campaign-single-sidebar{
+		padding: 20px;
+	}
+
+	.campaign-sidebar-title h3{
+		font-size: 22px;
+		margin-bottom: 10px;
+	}
+
+	.payment-method-title h3{
+		font-size: 18px;
+	}
+
+	.ministry-slider-image,
+	.ministry-slider-image img{
+		aspect-ratio: 1 / 0.8;
+		border-radius: 0 0 50px 0;
+	}
+
+	.ministry-entry h2{
+        font-size: 28px;
+    }
+
+	.ministry-entry ul li{
+        width: calc(50% - 10px);
+		font-size: 16px;
+		padding-left: 25px;
+    }
+
+	.ministry-entry ul li:before{
+		font-size: 18px;
+		top: 4px;
+	}
+
+	.ministry-entry-img-1{
+		margin-bottom: 20px;
+	}
+
+	.ministry-single-sidebar{
+		padding: 20px;
+	}
+
+	.ministry-single-info{
+		margin-bottom: 15px;
+	}
+
+	.ministry-single-info .icon-box i{
+		font-size: 20px;
+	}
+
+	.ministry-single-info-content{
+		width: calc(100% - 35px);
+	}
+
+	.ministry-single-info-content h3{
+		font-size: 18px;
+	}
+
+	.contact-info-item{
+		margin-bottom: 20px;
+		padding: 10px;
+	}
+
+	.contact-us-form{
+        padding: 30px 20px;
+    }
+
+	.google-map-iframe,
+	.google-map-iframe iframe{
+        height: 400px;
+    }
+
+	.error-page-content-heading h2{
+		font-size: 28px;
+	}
+}

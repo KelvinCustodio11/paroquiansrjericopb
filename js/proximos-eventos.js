@@ -53,7 +53,7 @@
             imagem:      'images/uploads/events/mes-de-maio-2026-capa.jpeg',
             imagemAlt:   'Mês de Maio com Maria 2026',
             fallback:    'images/event-image.jpg',
-            link:        'evento-single.html',
+            link:        'evento-detalhe.html',
             btnTexto:    'ver programação completa'
         },
         {

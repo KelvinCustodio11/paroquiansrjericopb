@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ministerio",
+  "type": "object",
+  "required": ["slug", "nome", "descricao"],
+  "properties": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "nome": { "type": "string" },
+    "descricao": { "type": "string", "minLength": 30 },
+    "coordenador": {
+      "type": "object",
+      "properties": {
+        "nome": { "type": "string" },
+        "telefone": { "type": "string" },
+        "email": { "type": "string", "format": "email" }
+      }
+    },
+    "encontros": {
+      "type": "object",
+      "properties": {
+        "dia_semana": { "type": "string" },
+        "horario": { "type": "string" },
+        "local": { "type": "string" }
+      }
+    },
+    "imagem": { "type": "string" },
+    "icone": { "type": "string", "description": "classe Font Awesome, ex.: fa-solid fa-music" },
+    "ativo": { "type": "boolean" }
+  }
+}

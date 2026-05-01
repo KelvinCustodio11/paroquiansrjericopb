@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgendaPastoral",
+  "type": "object",
+  "required": ["compromissos"],
+  "properties": {
+    "compromissos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["titulo", "data", "tipo"],
+        "properties": {
+          "titulo": { "type": "string" },
+          "data": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+          "hora": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+          "tipo": { "type": "string", "enum": ["reuniao", "formacao", "visita", "celebracao", "evento", "outro"] },
+          "local": { "type": "string" },
+          "responsavel": { "type": "string" },
+          "publico": { "type": "boolean", "description": "true = aparece no site; false = uso interno" },
+          "observacao": { "type": "string" }
+        }
+      }
+    }
+  }
+}
