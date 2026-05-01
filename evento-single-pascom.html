@@ -72,6 +72,11 @@
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Pré-conexão a APIs/CDNs externas usadas em runtime -->
+<link rel="preconnect" href="https://liturgia.up.railway.app" crossorigin>
+<link rel="preconnect" href="https://pt.wikipedia.org" crossorigin>
+<link rel="preconnect" href="https://publication.evangelizo.ws" crossorigin>
+<link rel="preconnect" href="https://stm10.srvvox.com.br" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <!-- CSS Plugins -->
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -137,6 +142,7 @@
 </header>
 <!-- Header End -->
 <!-- @include-end partials/header.html -->
+<a id="main-content" tabindex="-1"></a>
 	<!-- Page Header -->
 	<div class="page-header">
 		<div class="container">
@@ -169,7 +175,7 @@
                         <!-- Imagem de Capa -->
                         <div class="campaign-featured-image wow fadeInUp">
                             <figure>
-                                <img src="images/uploads/events/assembleia-pascom-2026-capa.png"
+                                <img loading="lazy" decoding="async" src="images/uploads/events/assembleia-pascom-2026-capa.png"
                                      onerror="this.src='images/event-image.jpg'"
                                      alt="Assembleia Forânea da PASCOM 2026">
                             </figure>
@@ -453,7 +459,7 @@
             <div class="col-lg-4">
                 <div class="about-footer">
                     <div class="footer-logo">
-                        <img src="images/footer-logo.png" alt="Paróquia Nossa Senhora dos Remédios" style="max-height:60px;" width="180" height="60">
+                        <img src="images/footer-logo.png" alt="Paróquia Nossa Senhora dos Remédios" width="200" height="102" style="height:auto;max-height:80px;width:auto;">
                     </div>
                     <div class="about-footer-content">
                         <p>A Paróquia Nossa Senhora dos Remédios é uma comunidade de fé comprometida com o amor a Deus e ao próximo.</p>
