@@ -31,6 +31,25 @@
     } catch (e) { return null; }
   }
 
+  /* Fallback: retorna o cache mais recente (de qualquer dia) quando a API
+   * principal falha. Usado para evitar tela em branco quando a API
+   * https://liturgia.up.railway.app cai ou demora demais. */
+  function getStaleCache() {
+    try {
+      var newest = null;
+      var newestKey = null;
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf(STORAGE_KEY_PREFIX) === 0) {
+          if (!newestKey || k > newestKey) { newestKey = k; }
+        }
+      }
+      if (!newestKey) return null;
+      var raw = localStorage.getItem(newestKey);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
   function saveToCache(data) {
     try {
       var key = todayKey();
@@ -75,7 +94,14 @@
           if (attempts < 3) {
             setTimeout(doFetch, 2500);
           } else {
-            onError();
+            /* Fallback final: tenta cache antigo (mesmo de outro dia)
+             * para nao deixar a UI em branco quando a API cai. */
+            var stale = getStaleCache();
+            if (stale && validateData(stale)) {
+              onSuccess(stale);
+            } else {
+              onError();
+            }
           }
         });
     }

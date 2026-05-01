@@ -149,9 +149,28 @@
             'sup, .mw-editsection, .reference, .references, ' +
             '.reflist, .navbox, .infobox, .sistersitebox, ' +
             '.hatnote, .ambox, .tmbox, .ombox, .fmbox, ' +
-            'table, .thumb, .gallery, .noprint, style, script, [role="note"]'
+            'table, .thumb, .gallery, .noprint, style, script, iframe, object, embed, [role="note"]'
         );
         toRemove.forEach(function (el) { if (el.parentNode) el.parentNode.removeChild(el); });
+
+        // Hardening: remove atributos perigosos (event handlers, javascript:, data: em src)
+        var all = tmp.querySelectorAll('*');
+        all.forEach(function (el) {
+            for (var i = el.attributes.length - 1; i >= 0; i--) {
+                var attr = el.attributes[i];
+                var name = attr.name.toLowerCase();
+                var val  = (attr.value || '').trim().toLowerCase();
+                if (name.indexOf('on') === 0) {
+                    el.removeAttribute(attr.name);
+                    continue;
+                }
+                if ((name === 'href' || name === 'src' || name === 'xlink:href') &&
+                    (val.indexOf('javascript:') === 0 || val.indexOf('vbscript:') === 0 ||
+                     val.indexOf('data:text/html') === 0)) {
+                    el.removeAttribute(attr.name);
+                }
+            }
+        });
 
         // Converte todos os links em texto simples (sem links externos)
         var links = tmp.querySelectorAll('a');

@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches: [main, developer, production, "chore/**", "feat/**", "fix/**"]
+  pull_request:
+    branches: [main, developer, production]
+
+jobs:
+  validate:
+    name: Validate data, build content & partials
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate JSON data against schemas
+        run: node scripts/validate-data.js
+
+      - name: Build content (eventos / artigos / homilias)
+        run: node scripts/build-content.js
+
+      - name: Build partials (header / footer / scripts)
+        run: node build.js
+
+      - name: Verify generated files are committed (no drift)
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Arquivos gerados estao fora de sincronia. Rode 'npm run all' localmente e comite."
+            git status --porcelain
+            git --no-pager diff
+            exit 1
+          fi
+
+      - name: Smoke test — serve + curl key pages
+        run: |
+          python3 -m http.server 8000 >/tmp/serve.log 2>&1 &
+          SP=$!
+          sleep 1
+          fail=0
+          for u in index.html contato.html eventos.html data/horarios-missa.json data/agenda-pastoral.json data/eventos.json; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:8000/$u")
+            echo "GET /$u -> $code"
+            [ "$code" = "200" ] || fail=1
+          done
+          kill $SP 2>/dev/null || true
+          exit $fail
+
+  audit:
+    name: Auditoria estatica (links + a11y minimos)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar target=_blank sem rel=noopener
+        run: |
+          if grep -rPn 'target="_blank"(?![^>]*\brel=)' \
+              --include="*.html" \
+              --exclude-dir=_template-avenix \
+              --exclude-dir=_template-paroquia \
+              --exclude-dir=node_modules \
+              . ; then
+            echo "::error::Links com target=_blank sem rel=noopener detectados (risco de tabnabbing)."
+            exit 1
+          fi
+
+      - name: Verificar HTML lang=pt-br
+        run: |
+          for f in $(find . -maxdepth 2 -name "*.html" \
+              -not -path "./_template-avenix/*" \
+              -not -path "./_template-paroquia/*" \
+              -not -path "./templates/*" \
+              -not -path "./node_modules/*"); do
+            if ! grep -qE '<html[^>]+lang="pt-br"' "$f"; then
+              echo "::warning file=$f::Falta lang=\"pt-br\" no <html>"
+            fi
+          done
+
+      - name: Verificar paginas com title vazio
+        run: |
+          for f in $(find . -maxdepth 2 -name "*.html" \
+              -not -path "./_template-avenix/*" \
+              -not -path "./_template-paroquia/*" \
+              -not -path "./templates/*" \
+              -not -path "./node_modules/*"); do
+            if grep -qE '<title>\s*</title>' "$f"; then
+              echo "::error file=$f::<title> vazio"
+              exit 1
+            fi
+          done

@@ -12,11 +12,13 @@
 
 # Cache e logs do Laravel
 /bootstrap/cache/*.php
+/storage/
+!/storage/app/
+!/storage/app/public/
+/storage/app/public/*
+!/storage/app/public/.gitkeep
+/storage/framework/
 /storage/logs/
-/storage/framework/cache/
-/storage/framework/sessions/
-/storage/framework/testing/
-/storage/framework/views/
 
 # Build assets Node
 /node_modules/

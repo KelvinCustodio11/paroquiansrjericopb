@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HorariosMissa",
+  "type": "object",
+  "required": ["igrejas"],
+  "properties": {
+    "igrejas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nome", "horarios"],
+        "properties": {
+          "slug": { "type": "string" },
+          "nome": { "type": "string" },
+          "endereco": { "type": "string" },
+          "bairro": { "type": "string" },
+          "tipo": { "type": "string", "enum": ["matriz", "capela", "comunidade"] },
+          "horarios": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["dia_semana", "hora"],
+              "properties": {
+                "dia_semana": { "type": "string", "enum": ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"] },
+                "hora": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+                "tipo_celebracao": { "type": "string", "enum": ["missa", "novena", "adoracao", "terco", "outro"] },
+                "observacao": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "paroquiansrjericopb",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site Paróquia Nossa Senhora dos Remédios — Jericó/PB",
+  "scripts": {
+    "build": "node build.js",
+    "build:content": "node scripts/build-content.js",
+    "seo": "node scripts/seo-fill.js",
+    "validate-data": "node scripts/validate-data.js",
+    "migrate-partials": "node scripts/migrate-to-partials.js",
+    "all": "npm run validate-data && npm run build:content && npm run build && npm run seo"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
