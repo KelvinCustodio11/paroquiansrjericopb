@@ -125,28 +125,66 @@ function renderSection(tpl, ctx) {
 // =============================================================
 
 function enrichEvento(item) {
+    // Normaliza imagem_capa: aceita string ou objeto {url, alt}
+    const imgCapa = (typeof item.imagem_capa === 'string')
+        ? { url: item.imagem_capa ? '/' + item.imagem_capa.replace(/^\/+/, '') : '', alt: item.titulo || '' }
+        : (item.imagem_capa || { url: '', alt: '' });
+
+    // Normaliza local: aceita string simples ou objeto {nome, endereco, cidade, estado}
+    const local = (typeof item.local === 'string')
+        ? { nome: item.local, endereco: '', bairro: '', cidade: 'Jericó', estado: 'PB', pais: 'BR' }
+        : (item.local || {});
+
+    // Aceita hora_inicio ou horario_inicio (compatibilidade)
+    const horarioInicio = item.horario_inicio || item.hora_inicio || '';
+    const horarioFim    = item.horario_fim    || item.hora_fim    || '';
+
+    // descricao_completa: aceita conteudo ou descricao_completa
+    const descricaoCompleta = item.descricao_completa || item.conteudo || '';
+
+    // descricao_curta: aceita resumo ou descricao_curta
+    const descricaoCurta = item.descricao_curta || item.resumo || '';
+
     return Object.assign({}, item, {
+        imagem_capa:           imgCapa,
+        local:                 local,
+        horario_inicio:        horarioInicio,
+        horario_fim:           horarioFim,
+        descricao_completa:    descricaoCompleta,
+        descricao_curta:       descricaoCurta,
         data_inicio_formatada: formatDateBR(item.data_inicio),
-        data_fim_formatada: formatDateBR(item.data_fim),
+        data_fim_formatada:    formatDateBR(item.data_fim),
         inscricao_obrigatoria: item.inscricao && item.inscricao.obrigatoria,
-        local_mapa_url: item.local && item.local.mapa && item.local.mapa.google_maps_url,
-        programacao: (item.programacao && item.programacao.length > 0) ? { items: item.programacao } : null,
+        local_mapa_url:        local && local.mapa && local.mapa.google_maps_url,
+        programacao:           (item.programacao && item.programacao.length > 0) ? { items: item.programacao } : null,
     });
 }
 
 function enrichArtigo(item) {
+    // Normaliza imagem_capa: aceita string ou objeto {url, alt}
+    const imgCapa = (typeof item.imagem_capa === 'string')
+        ? { url: item.imagem_capa ? '/' + item.imagem_capa.replace(/^\/+/, '') : '', alt: item.titulo || '' }
+        : (item.imagem_capa || { url: '', alt: '' });
+
     return Object.assign({}, item, {
-        data_publicacao_formatada: formatDateBR(item.data_publicacao),
-        data_atualizacao_or_publicacao: item.data_atualizacao || item.data_publicacao,
+        imagem_capa:                     imgCapa,
+        data_publicacao_formatada:       formatDateBR(item.data_publicacao),
+        data_atualizacao_or_publicacao:  item.data_atualizacao || item.data_publicacao,
         tags_list: (item.tags && item.tags.length > 0) ? { items: item.tags } : null,
     });
 }
 
 function enrichHomilia(item) {
+    // Normaliza imagem_capa: aceita string ou objeto {url}
+    const imgCapaUrl = (typeof item.imagem_capa === 'string')
+        ? (item.imagem_capa ? '/' + item.imagem_capa.replace(/^\/+/, '') : '')
+        : (item.imagem_capa && item.imagem_capa.url ? item.imagem_capa.url : '');
+
     return Object.assign({}, item, {
-        data_formatada: formatDateBR(item.data),
+        imagem_capa_url:             imgCapaUrl,
+        data_formatada:              formatDateBR(item.data),
         leitura_evangelho_referencia: item.leitura_evangelho && item.leitura_evangelho.referencia,
-        transcricao_or_resumo: item.transcricao || `<p>${escapeHtml(item.resumo)}</p>`,
+        transcricao_or_resumo:       item.transcricao || `<p>${escapeHtml(item.resumo)}</p>`,
     });
 }
 
