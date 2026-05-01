@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\IconPickerField;
 use App\Filament\Resources\EventoResource\Pages;
 use App\Models\Evento;
 use Filament\Forms;
@@ -260,9 +261,11 @@ class EventoResource extends Resource
                                     Forms\Components\TextInput::make('hora')
                                         ->label('Horário')
                                         ->placeholder('Ex: 9h00'),
-                                    Forms\Components\TextInput::make('icone')
-                                        ->label('Ícone FA (sem fa-solid)')
-                                        ->placeholder('Ex: fa-calendar-days'),
+                                    IconPickerField::make('icone')
+                                        ->label('Ícone'),
+                                Forms\Components\Placeholder::make('icone_hint_prog')
+                                        ->label('')
+                                        ->content(''),
                                 ]),
                                 Forms\Components\TextInput::make('titulo')
                                     ->label('Título do item')
@@ -301,9 +304,8 @@ class EventoResource extends Resource
                         Forms\Components\Repeater::make('sidebar_items')
                             ->label('Itens de informação')
                             ->schema([
-                                Forms\Components\TextInput::make('icone')
-                                    ->label('Ícone FA')
-                                    ->placeholder('Ex: fa-calendar-days')
+                                IconPickerField::make('icone')
+                                    ->label('Ícone')
                                     ->required(),
                                 Forms\Components\TextInput::make('titulo')
                                     ->label('Rótulo')

@@ -24,7 +24,7 @@
       }
     },
     "imagem": { "type": "string" },
-    "icone": { "type": "string", "description": "classe Font Awesome, ex.: fa-solid fa-music" },
+    "icone": { "type": "string", "description": "classe Font Awesome sem 'fa-solid', ex.: fa-music" },
     "ativo": { "type": "boolean" }
   }
 }
