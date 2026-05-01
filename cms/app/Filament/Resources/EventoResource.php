@@ -143,6 +143,210 @@ class EventoResource extends Resource
                         Forms\Components\Toggle::make('publicado')->label('Publicado'),
                         Forms\Components\Toggle::make('destaque')->label('Destaque na home'),
                     ]),
+
+                Forms\Components\Section::make('Barra de Estatísticas (opcional)')
+                    ->description('Exibe 3 números/valores em destaque abaixo da imagem de capa. Deixe vazio para usar a data/horário/categoria automaticamente.')
+                    ->collapsed()
+                    ->schema([
+                        Forms\Components\Repeater::make('stats_bar')
+                            ->label('Itens da barra')
+                            ->schema([
+                                Forms\Components\TextInput::make('valor')
+                                    ->label('Valor / Número')
+                                    ->required()
+                                    ->placeholder('Ex: 31, 19h, Maio'),
+                                Forms\Components\TextInput::make('legenda')
+                                    ->label('Legenda')
+                                    ->required()
+                                    ->placeholder('Ex: Dias De Celebração'),
+                            ])
+                            ->columns(2)
+                            ->maxItems(3)
+                            ->reorderable(false)
+                            ->columnSpanFull(),
+                    ]),
+
+                Forms\Components\Section::make('Tópicos em Destaque (opcional)')
+                    ->description('Lista de itens exibidos com ícone de check-verde, em 2 colunas, após o texto principal.')
+                    ->collapsed()
+                    ->schema([
+                        Forms\Components\Repeater::make('topicos_destaque')
+                            ->label('Tópicos')
+                            ->simple(
+                                Forms\Components\TextInput::make('topico')
+                                    ->placeholder('Ex: Terço e Ladainha de Nossa Senhora')
+                                    ->required()
+                            )
+                            ->columnSpanFull(),
+                        Forms\Components\Textarea::make('texto_pos_topicos')
+                            ->label('Parágrafo de conclusão (após os tópicos)')
+                            ->rows(3)
+                            ->columnSpanFull(),
+                    ]),
+
+                Forms\Components\Section::make('Galeria de Fotos (opcional)')
+                    ->description('Exibida abaixo dos tópicos. Deixe vazio para ocultar a seção.')
+                    ->collapsed()
+                    ->schema([
+                        Forms\Components\TextInput::make('galeria_titulo')
+                            ->label('Título (parte inicial)')
+                            ->placeholder('Ex: Momentos'),
+                        Forms\Components\TextInput::make('galeria_titulo_destaque')
+                            ->label('Título (parte em destaque/cor)')
+                            ->placeholder('Ex: do Mês Mariano'),
+                        Forms\Components\TextInput::make('galeria_subtitulo')
+                            ->label('Subtítulo (acima do título, em letras pequenas)')
+                            ->placeholder('Ex: galeria de fotos')
+                            ->columnSpanFull(),
+                        Forms\Components\Repeater::make('galeria_imagens')
+                            ->label('Imagens')
+                            ->schema([
+                                Forms\Components\FileUpload::make('url')
+                                    ->label('Imagem')
+                                    ->disk('site_static')
+                                    ->directory('images/uploads/events')
+                                    ->visibility('public')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                    ->maxSize(3072)
+                                    ->required()
+                                    ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
+                                        if (is_string($state) && $state !== '') {
+                                            $component->state([ltrim($state, '/')]);
+                                        } elseif (! is_array($state)) {
+                                            $component->state([]);
+                                        }
+                                    })
+                                    ->dehydrateStateUsing(function ($state): ?string {
+                                        if (is_array($state)) {
+                                            $val = reset($state);
+                                            return $val !== false ? ltrim((string) $val, '/') : null;
+                                        }
+                                        return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
+                                    }),
+                                Forms\Components\TextInput::make('alt')
+                                    ->label('Texto alternativo (alt)')
+                                    ->required()
+                                    ->placeholder('Ex: Abertura do Mês Mariano'),
+                            ])
+                            ->columns(2)
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Programação / Agenda (opcional)')
+                    ->description('Accordion com horários e atividades. Deixe vazio para ocultar.')
+                    ->collapsed()
+                    ->schema([
+                        Forms\Components\TextInput::make('programacao_titulo')
+                            ->label('Título da seção (parte inicial)')
+                            ->placeholder('Ex: Datas e'),
+                        Forms\Components\TextInput::make('programacao_titulo_destaque')
+                            ->label('Título (parte em destaque/cor)')
+                            ->placeholder('Ex: Celebrações Especiais'),
+                        Forms\Components\TextInput::make('programacao_subtitulo')
+                            ->label('Subtítulo (acima do título)')
+                            ->placeholder('Ex: programação completa')
+                            ->columnSpanFull(),
+                        Forms\Components\Repeater::make('programacao')
+                            ->label('Itens do accordion')
+                            ->schema([
+                                Forms\Components\Grid::make(3)->schema([
+                                    Forms\Components\TextInput::make('slug')
+                                        ->label('Slug (ID único)')
+                                        ->required()
+                                        ->placeholder('Ex: abertura'),
+                                    Forms\Components\TextInput::make('hora')
+                                        ->label('Horário')
+                                        ->placeholder('Ex: 9h00'),
+                                    Forms\Components\TextInput::make('icone')
+                                        ->label('Ícone FA (sem fa-solid)')
+                                        ->placeholder('Ex: fa-calendar-days'),
+                                ]),
+                                Forms\Components\TextInput::make('titulo')
+                                    ->label('Título do item')
+                                    ->required()
+                                    ->columnSpanFull()
+                                    ->placeholder('Ex: Abertura e Acolhida'),
+                                Forms\Components\Textarea::make('descricao')
+                                    ->label('Descrição')
+                                    ->rows(3)
+                                    ->columnSpanFull(),
+                                Forms\Components\Grid::make(3)->schema([
+                                    Forms\Components\TextInput::make('local_display')
+                                        ->label('Local (exibição)'),
+                                    Forms\Components\TextInput::make('horario_display')
+                                        ->label('Horário (exibição)'),
+                                    Forms\Components\TextInput::make('publico_display')
+                                        ->label('Público (exibição)'),
+                                ]),
+                                Forms\Components\Toggle::make('aberto')
+                                    ->label('Aberto por padrão')
+                                    ->hint('Marque apenas 1 item'),
+                            ])
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Sidebar — Informações do Evento (opcional)')
+                    ->description('Substitui os itens automáticos da sidebar. Deixe vazio para usar data/horário/local automaticamente.')
+                    ->collapsed()
+                    ->schema([
+                        Forms\Components\Textarea::make('sidebar_descricao')
+                            ->label('Texto introdutório da sidebar')
+                            ->rows(2)
+                            ->columnSpanFull()
+                            ->placeholder('Ex: Tudo o que você precisa saber para participar do evento.'),
+                        Forms\Components\Repeater::make('sidebar_items')
+                            ->label('Itens de informação')
+                            ->schema([
+                                Forms\Components\TextInput::make('icone')
+                                    ->label('Ícone FA')
+                                    ->placeholder('Ex: fa-calendar-days')
+                                    ->required(),
+                                Forms\Components\TextInput::make('titulo')
+                                    ->label('Rótulo')
+                                    ->placeholder('Ex: Período')
+                                    ->required(),
+                                Forms\Components\TextInput::make('valor')
+                                    ->label('Valor')
+                                    ->placeholder('Ex: 1º a 31 de Maio de 2025')
+                                    ->required(),
+                            ])
+                            ->columns(3)
+                            ->columnSpanFull(),
+                    ]),
+
+                Forms\Components\Section::make('Sidebar — Marcos / Timeline (opcional)')
+                    ->description('Barras de progresso na sidebar que mostram datas ou etapas do evento.')
+                    ->collapsed()
+                    ->schema([
+                        Forms\Components\Repeater::make('sidebar_milestones')
+                            ->label('Marcos')
+                            ->schema([
+                                Forms\Components\TextInput::make('titulo')
+                                    ->label('Título (em negrito/cor)')
+                                    ->required()
+                                    ->placeholder('Ex: Abertura'),
+                                Forms\Components\TextInput::make('complemento')
+                                    ->label('Complemento (após o título)')
+                                    ->placeholder('Ex: — 1º de Maio'),
+                                Forms\Components\TextInput::make('valor')
+                                    ->label('Valor (direita)')
+                                    ->required()
+                                    ->placeholder('Ex: 19h'),
+                                Forms\Components\TextInput::make('progresso')
+                                    ->label('Progresso (%)')
+                                    ->numeric()
+                                    ->minValue(0)
+                                    ->maxValue(100)
+                                    ->default(100)
+                                    ->suffix('%'),
+                            ])
+                            ->columns(4)
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 

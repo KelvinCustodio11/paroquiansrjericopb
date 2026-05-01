@@ -62,39 +62,129 @@
 		</div>
 	</div>
 
-	<section class="sermons-single py-5">
+	<!-- Page Sermons Single Start -->
+	<div class="page-sermons-single">
 		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-lg-9">
-					<article class="sermon">
-						<div class="sermon-meta small text-muted mb-4">
-							<span><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i> {{data_formatada}}</span>
-							<span class="ms-3"><i class="fa-solid fa-user me-1" aria-hidden="true"></i> {{celebrante}}</span>
-							<span class="ms-3"><i class="fa-solid fa-church me-1" aria-hidden="true"></i> {{ocasiao}}</span>
-						</div>
+			<div class="row">
 
-						{{#leitura_evangelho_referencia}}
-						<blockquote class="evangelho border-start border-4 ps-3 my-4 fst-italic">
-							<p class="mb-1">{{leitura_evangelho.texto}}</p>
-							<footer class="small">— {{leitura_evangelho.referencia}}</footer>
-						</blockquote>
-						{{/leitura_evangelho_referencia}}
+				<!-- Coluna Principal (8 col) -->
+				<div class="col-lg-8">
+					<div class="sermons-single-content">
 
+						<!-- Player de Áudio (opcional) -->
 						{{#audio_url}}
-						<audio controls preload="none" class="w-100 mb-4">
-							<source src="{{audio_url}}" type="audio/mpeg">
-							Seu navegador não suporta o player de áudio.
-						</audio>
+						<div class="sermons-audio-player">
+							<audio id="player" controls preload="none">
+								<source src="..{{audio_url}}" type="audio/mpeg">
+								Seu navegador não suporta o player de áudio.
+							</audio>
+						</div>
 						{{/audio_url}}
 
-						<div class="sermon-content">
-							{{transcricao_or_resumo}}
+						<!-- Imagem de Capa (opcional) -->
+						{{#imagem_capa_url}}
+						<div class="sermons-featured-image">
+							<figure class="image-anime reveal">
+								<img src="..{{imagem_capa_url}}" alt="{{titulo}}" loading="eager">
+							</figure>
 						</div>
-					</article>
+						{{/imagem_capa_url}}
+
+						<!-- Trecho do Evangelho (opcional) -->
+						{{#leitura_evangelho_referencia}}
+						<div class="sermons-entry">
+							<blockquote class="wow fadeInUp" data-wow-delay="0.1s">
+								<p>{{leitura_evangelho.texto}}</p>
+								<cite>— {{leitura_evangelho.referencia}}</cite>
+							</blockquote>
+						</div>
+						{{/leitura_evangelho_referencia}}
+
+						<!-- Conteúdo da Homilia -->
+						<div class="sermons-entry">
+							{{{transcricao_or_resumo}}}
+						</div>
+
+						<!-- Compartilhar -->
+						<div class="sermons-social-sharing wow fadeInUp" data-wow-delay="0.5s">
+							<div class="sermons-social-sharing-title">
+								<h3>Compartilhar esta Homilia:</h3>
+							</div>
+							<div class="sermons-social-sharing-list">
+								<ul>
+									<li>
+										<a href="https://www.facebook.com/sharer/sharer.php?u=https://pascomjerico.com.br/homilias/{{slug}}.html"
+										   target="_blank" rel="noopener noreferrer" aria-label="Compartilhar no Facebook">
+											<i class="fa-brands fa-facebook-f"></i>
+										</a>
+									</li>
+									<li>
+										<a href="https://www.instagram.com/pascomremedios.jerico"
+										   target="_blank" rel="noopener noreferrer" aria-label="Instagram da Paróquia">
+											<i class="fa-brands fa-instagram"></i>
+										</a>
+									</li>
+									<li>
+										<a href="https://wa.me/?text={{titulo}}+—+https://pascomjerico.com.br/homilias/{{slug}}.html"
+										   target="_blank" rel="noopener noreferrer" aria-label="Compartilhar no WhatsApp">
+											<i class="fa-brands fa-whatsapp"></i>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+					</div>
 				</div>
+				<!-- Fim Coluna Principal -->
+
+				<!-- Sidebar (4 col) -->
+				<div class="col-lg-4">
+					<div class="sermons-sidebar wow fadeInUp" data-wow-delay="0.25s">
+						<div class="about-sermons-sidebar">
+
+							<div class="about-sermons-title">
+								<h3>sobre a homilia</h3>
+							</div>
+
+							<div class="about-sermons-item">
+								<div class="icon-box"><i class="fa-solid fa-user"></i></div>
+								<div class="about-sermons-content">
+									<h3>celebrante</h3>
+									<p>{{celebrante}}</p>
+								</div>
+							</div>
+
+							<div class="about-sermons-item">
+								<div class="icon-box"><i class="fa-solid fa-calendar-days"></i></div>
+								<div class="about-sermons-content">
+									<h3>data</h3>
+									<p>{{data_formatada}}</p>
+								</div>
+							</div>
+
+							<div class="about-sermons-item">
+								<div class="icon-box"><i class="fa-solid fa-tag"></i></div>
+								<div class="about-sermons-content">
+									<h3>tempo litúrgico</h3>
+									<p>{{ocasiao}}</p>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="mt-4 wow fadeInUp" data-wow-delay="0.5s">
+							<a href="../homilias.html" class="read-more-btn">ver todas as homilias</a>
+						</div>
+
+					</div>
+				</div>
+				<!-- Fim Sidebar -->
+
 			</div>
 		</div>
-	</section>
+	</div>
+	<!-- Page Sermons Single End -->
 
 </main>
 
