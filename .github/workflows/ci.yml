@@ -59,12 +59,12 @@ jobs:
 
       - name: Verificar target=_blank sem rel=noopener
         run: |
-          if grep -rEn 'target="_blank"(?![^>]*\brel=)' \
+          if grep -rPn 'target="_blank"(?![^>]*\brel=)' \
               --include="*.html" \
               --exclude-dir=_template-avenix \
               --exclude-dir=_template-paroquia \
               --exclude-dir=node_modules \
-              -P . ; then
+              . ; then
             echo "::error::Links com target=_blank sem rel=noopener detectados (risco de tabnabbing)."
             exit 1
           fi
