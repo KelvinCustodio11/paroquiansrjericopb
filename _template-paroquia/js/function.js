@@ -303,7 +303,7 @@
 
 	function formSuccess(){
 		$contactform[0].reset();
-		submitMSG(true, "Message Sent Successfully!")
+		submitMSG(true, "Mensagem Enviada com Sucesso!")
 	}
 
 	function submitMSG(valid, msg){
