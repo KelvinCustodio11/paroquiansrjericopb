@@ -107,7 +107,7 @@ function renderSection(tpl, ctx) {
     });
 
     // Substitui {{var}} com escape (mas pula campos que sabemos serem HTML)
-    const RAW_FIELDS = new Set(['conteudo', 'descricao_completa', 'transcricao', 'transcricao_or_resumo']);
+    const RAW_FIELDS = new Set(['conteudo', 'descricao_completa', 'transcricao', 'transcricao_or_resumo', 'texto_pos_topicos']);
     out = out.replace(/\{\{([\w.]+)\}\}/g, (full, key) => {
         if (key === '.') return escapeHtml(ctx['.'] != null ? ctx['.'] : '');
         const v = getPath(ctx, key);
@@ -145,18 +145,63 @@ function enrichEvento(item) {
     // descricao_curta: aceita resumo ou descricao_curta
     const descricaoCurta = item.descricao_curta || item.resumo || '';
 
+    // --- Campos ricos opcionais ---
+
+    // Barra de estatísticas (stats_bar): array de {valor, legenda}
+    const statsBar = (item.stats_bar && item.stats_bar.length > 0) ? item.stats_bar : null;
+
+    // Tópicos em destaque (checkmarks): envolve em {items} para iteração no template
+    const topicosDestaque = (item.topicos_destaque && item.topicos_destaque.length > 0)
+        ? { items: item.topicos_destaque }
+        : null;
+
+    // Galeria de fotos: normaliza URLs das imagens adicionando '/'
+    let galeria = null;
+    if (item.galeria && item.galeria.imagens && item.galeria.imagens.length > 0) {
+        galeria = Object.assign({}, item.galeria, {
+            imagens: item.galeria.imagens.map(img => ({
+                url: img.url ? '/' + img.url.replace(/^\/+/, '') : '',
+                alt: img.alt || '',
+            })),
+        });
+    }
+
+    // Títulos da seção de programação
+    const programacaoTitulo         = item.programacao_titulo          || 'Cronograma';
+    const programacaoTituloDestaque = item.programacao_titulo_destaque || 'do Evento';
+    const programacaoSubtitulo      = item.programacao_subtitulo       || 'programação';
+
+    // Sidebar
+    const sidebarDescricao = item.sidebar_descricao || descricaoCurta;
+    const sidebarItemsList = (item.sidebar_items && item.sidebar_items.length > 0)
+        ? { items: item.sidebar_items }
+        : null;
+    const sidebarMilestonesList = (item.sidebar_milestones && item.sidebar_milestones.length > 0)
+        ? { items: item.sidebar_milestones }
+        : null;
+
     return Object.assign({}, item, {
-        imagem_capa:           imgCapa,
-        local:                 local,
-        horario_inicio:        horarioInicio,
-        horario_fim:           horarioFim,
-        descricao_completa:    descricaoCompleta,
-        descricao_curta:       descricaoCurta,
-        data_inicio_formatada: formatDateBR(item.data_inicio),
-        data_fim_formatada:    formatDateBR(item.data_fim),
-        inscricao_obrigatoria: item.inscricao && item.inscricao.obrigatoria,
-        local_mapa_url:        local && local.mapa && local.mapa.google_maps_url,
-        programacao:           (item.programacao && item.programacao.length > 0) ? { items: item.programacao } : null,
+        imagem_capa:                 imgCapa,
+        local:                       local,
+        horario_inicio:              horarioInicio,
+        horario_fim:                 horarioFim,
+        descricao_completa:          descricaoCompleta,
+        descricao_curta:             descricaoCurta,
+        data_inicio_formatada:       formatDateBR(item.data_inicio),
+        data_fim_formatada:          formatDateBR(item.data_fim),
+        inscricao_obrigatoria:       item.inscricao && item.inscricao.obrigatoria,
+        local_mapa_url:              local && local.mapa && local.mapa.google_maps_url,
+        programacao:                 (item.programacao && item.programacao.length > 0) ? { items: item.programacao } : null,
+        // Campos ricos
+        stats_bar:                   statsBar,
+        topicos_destaque_list:       topicosDestaque,
+        galeria:                     galeria,
+        programacao_titulo:          programacaoTitulo,
+        programacao_titulo_destaque: programacaoTituloDestaque,
+        programacao_subtitulo:       programacaoSubtitulo,
+        sidebar_descricao:           sidebarDescricao,
+        sidebar_items_list:          sidebarItemsList,
+        sidebar_milestones_list:     sidebarMilestonesList,
     });
 }
 
