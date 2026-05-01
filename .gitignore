@@ -8,6 +8,10 @@ Thumbs.db
 .vscode/
 *.sublime-*
 
+# Uploads de imagens (arquivos reais — rastreados só via .gitkeep)
+images/uploads/**
+!images/uploads/**/.gitkeep
+
 # Logs
 *.log
 logs/
