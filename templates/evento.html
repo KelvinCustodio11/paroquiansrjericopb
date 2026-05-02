@@ -23,7 +23,7 @@
   "name": "{{titulo}}",
   "startDate": "{{data_inicio}}T{{horario_inicio}}:00-03:00",
   "endDate": "{{data_fim}}T{{horario_fim}}:00-03:00",
-  "eventStatus": "https://schema.org/EventScheduled",
+  "eventStatus": "https://schema.org/{{jsonld_event_status}}",
   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
   "location": {
     "@type": "Place",
@@ -64,6 +64,7 @@
 				<div class="col-lg-12">
 					<div class="page-header-box">
 						<h1 class="text-anime-style-2" data-cursor="-opaque">{{titulo}}</h1>
+						{{#subtitulo}}<p class="wow fadeInUp" data-wow-delay="0.1s" style="opacity:.85;font-size:1.1rem;">{{subtitulo}}</p>{{/subtitulo}}
 						<nav class="wow fadeInUp" aria-label="breadcrumb">
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="../index.html">início</a></li>

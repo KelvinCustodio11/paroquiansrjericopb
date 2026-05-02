@@ -24,7 +24,7 @@ class CompromissoResource extends Resource
         return $form->schema([
             Forms\Components\Section::make()->columns(2)->schema([
                 Forms\Components\TextInput::make('titulo')->required()->columnSpanFull(),
-                Forms\Components\DatePicker::make('data')->required()->displayFormat('d/m/Y'),
+                Forms\Components\DatePicker::make('data')->required()->displayFormat('d/m/Y')->minDate(now()->startOfDay()),
                 Forms\Components\TimePicker::make('hora')->seconds(false),
                 Forms\Components\Select::make('tipo')->required()->options([
                     'reuniao' => 'Reunião', 'formacao' => 'Formação', 'visita' => 'Visita',

@@ -6,11 +6,14 @@ namespace App\Console\Commands;
 
 use App\Models\Artigo;
 use App\Models\Compromisso;
+use App\Models\Configuracao;
 use App\Models\Evento;
+use App\Models\GaleriaAlbum;
 use App\Models\Homilia;
 use App\Models\Igreja;
 use App\Models\Ministerio;
 use App\Models\Paroco;
+use App\Models\Radio;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
@@ -107,9 +110,40 @@ class ContentExport extends Command
             $this->warn('Nenhum pároco ativo encontrado — paroco.json não atualizado.');
         }
 
+        // Configurações do site
+        $config = Configuracao::current();
+        File::put($dataDir.'/configuracoes.json',
+            json_encode($config->toJsonExport(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
+        $this->info('OK configuracoes.json');
+
+        // Rádios
+        $radios = Radio::where('ativa', true)->orderBy('destaque', 'desc')->orderBy('ordem')->get()
+            ->map(fn (Radio $r) => [
+                'nome'      => $r->nome,
+                'url'       => $r->url,
+                'descricao' => $r->descricao,
+                'favicon'   => $r->favicon,
+                'destaque'  => (bool) $r->destaque,
+            ])->values()->all();
+        File::put($dataDir.'/radios.json',
+            json_encode($radios, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
+        $this->info('OK radios.json ('.count($radios).' rádio(s))');
+
+        // Galeria
+        $albuns = GaleriaAlbum::with('fotos')
+            ->where('publico', true)
+            ->orderBy('ordem')
+            ->get()
+            ->map(fn (GaleriaAlbum $a) => $a->toJsonExport())
+            ->all();
+        File::put($dataDir.'/galeria.json',
+            json_encode(['albuns' => $albuns], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
+        $this->info('OK galeria.json ('.count($albuns).' álbum(ns))');
+
         if ($this->option('validate')) {
             $this->info('Validando com schemas...');
-            passthru('cd '.escapeshellarg($repoRoot).' && node scripts/validate-data.js', $code);
+            exec('cd '.escapeshellarg($repoRoot).' && node scripts/validate-data.js 2>&1', $out, $code);
+            foreach ($out as $line) { $this->line($line); }
             if ($code !== 0) {
                 $this->error('Validacao falhou — abortando build.');
 
@@ -118,10 +152,20 @@ class ContentExport extends Command
         }
 
         if ($this->option('build')) {
-            $this->info('Regenerando HTMLs estaticos...');
-            passthru('cd '.escapeshellarg($repoRoot).' && node scripts/build-content.js', $code);
+            $this->info('Regenerando HTMLs estaticos (build-content.js)...');
+            exec('cd '.escapeshellarg($repoRoot).' && node scripts/build-content.js 2>&1', $out, $code);
+            foreach ($out as $line) { $this->line($line); }
             if ($code !== 0) {
+                $this->error('build-content.js falhou.');
+
                 return self::FAILURE;
+            }
+
+            $this->info('Propagando partials (build.js)...');
+            exec('cd '.escapeshellarg($repoRoot).' && node build.js 2>&1', $out2, $code2);
+            foreach ($out2 as $line) { $this->line($line); }
+            if ($code2 !== 0) {
+                $this->warn('build.js retornou erro (partials podem estar desatualizados).');
             }
         }
 

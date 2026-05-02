@@ -205,6 +205,8 @@ function enrichEvento(item) {
         sidebar_descricao:           sidebarDescricao,
         sidebar_items_list:          sidebarItemsList,
         sidebar_milestones_list:     sidebarMilestonesList,
+        // JSON-LD eventStatus derivado do campo status
+        jsonld_event_status: ({ agendado: 'EventScheduled', 'em-andamento': 'EventScheduled', encerrado: 'EventScheduled', cancelado: 'EventCancelled' })[item.status] || 'EventScheduled',
     });
 }
 
@@ -338,6 +340,19 @@ for (const plan of PLAN) {
         }
         count++;
     }
+
+    // Remove arquivos órfãos (slugs que não existem mais no JSON)
+    const slugsAtivos = new Set(
+        items.filter(i => i.publicado !== false).map(i => `${i.slug}.html`)
+    );
+    const existentes = fs.readdirSync(outDirPath).filter(f => f.endsWith('.html'));
+    for (const file of existentes) {
+        if (!slugsAtivos.has(file)) {
+            fs.unlinkSync(path.join(outDirPath, file));
+            console.log(`  🗑 ${plan.outDir}/${file} (órfão removido)`);
+        }
+    }
+
     console.log(`- ${plan.dataFile}: ${count} item(ns) processado(s)\n`);
     totalGerado += count;
 }
@@ -423,15 +438,23 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
      * reverseLayout=true coloca imagem a direita (order-lg-2/order-lg-1).
      */
     function ourEventHtml(ev, reverseLayout) {
-        const img   = escapeHtml(imgPath(ev.imagem_capa));
-        const tit   = escapeHtml(ev.titulo || '');
-        const label = escapeHtml(ev.categoria || 'próximo evento');
-        const dt    = escapeHtml(dataHoraStr(ev));
-        const loc   = escapeHtml(localStr(ev.local));
-        const res   = escapeHtml(ev.resumo || '');
+        const img    = escapeHtml(imgPath(ev.imagem_capa));
+        const tit    = escapeHtml(ev.titulo || '');
+        const label  = escapeHtml(ev.categoria || 'próximo evento');
+        const status = ev.status || '';
+        // data_fim só exibe quando diferente de data_inicio
+        const dtParts = [formatDateBR(ev.data_inicio)];
+        if (ev.data_fim && ev.data_fim !== ev.data_inicio) dtParts.push(formatDateBR(ev.data_fim));
+        const dt  = escapeHtml(dtParts.join(' – ') + (ev.hora_inicio ? ` — ${ev.hora_inicio}` : ''));
+        const loc = escapeHtml(localStr(ev.local));
+        const res = escapeHtml(ev.resumo || ev.subtitulo || '');
         const link  = `eventos/${escapeHtml(ev.slug)}.html`;
         const colImg = reverseLayout ? 'col-lg-6 order-lg-2' : 'col-lg-6';
         const colTxt = reverseLayout ? 'col-lg-6 order-lg-1' : 'col-lg-6';
+        const statusBadgeMap = { cancelado: ['danger', 'Cancelado'], encerrado: ['secondary', 'Encerrado'] };
+        const statusBadge = statusBadgeMap[status]
+            ? `\n                        <span class="badge bg-${statusBadgeMap[status][0]} mb-2">${statusBadgeMap[status][1]}</span>`
+            : '';
         const resHtml = res
             ? `\n                    <div class="event-footer">\n                        <p class="wow fadeInUp" data-wow-delay="0.5s">${res}</p>\n                    </div>`
             : '';
@@ -449,7 +472,7 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
                     <div class="event-content">
                         <div class="section-title">
                             <h3 class="wow fadeInUp">${label}</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">${tit}</h2>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">${tit}</h2>${statusBadge}
                         </div>
                         <div class="event-body">
                             <div class="event-item wow fadeInUp">
@@ -518,6 +541,10 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
                 const link = `eventos/${escapeHtml(ev.slug)}.html`;
                 const sub  = escapeHtml([formatDateBR(ev.data_inicio), ev.hora_inicio, localStr(ev.local)].filter(Boolean).join(' — '));
                 const fb   = fallbacks[i] || fallbacks[0];
+                const statusMap = { cancelado: ['danger', 'Cancelado'], encerrado: ['secondary', 'Encerrado'] };
+                const statusBadge = statusMap[ev.status]
+                    ? ` <span class="badge bg-${statusMap[ev.status][0]}" style="font-size:0.65em;">${statusMap[ev.status][1]}</span>`
+                    : '';
                 return `                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="${delays[i]}">
                     <div class="ministries-item">
                         <div class="ministries-image" data-cursor-text="Ver">
@@ -528,7 +555,7 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
                             </a>
                         </div>
                         <div class="ministries-content">
-                            <h3>${tit}</h3>
+                            <h3>${tit}${statusBadge}</h3>
                             <p>${sub}</p>
                         </div>
                         <div class="ministries-btn">
@@ -606,8 +633,10 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
                 const img   = escapeHtml(imgPath(ev.imagem_capa));
                 const tit   = escapeHtml(ev.titulo || '');
                 const link  = `eventos/${escapeHtml(ev.slug)}.html`;
-                const res   = escapeHtml(ev.resumo || '');
-                const dt    = escapeHtml(formatDateBR(ev.data_inicio));
+                const res   = escapeHtml(ev.resumo || ev.subtitulo || '');
+                const dtParts = [formatDateBR(ev.data_inicio)];
+                if (ev.data_fim && ev.data_fim !== ev.data_inicio) dtParts.push(formatDateBR(ev.data_fim));
+                const dt    = escapeHtml(dtParts.join(' – '));
                 const hr    = escapeHtml(ev.hora_inicio || '');
                 const loc   = escapeHtml(localStr(ev.local));
                 const fb    = fallbacks[i % fallbacks.length];
@@ -616,6 +645,13 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
                 const hrCell = hr ? `\n                                    <div class="skill-no">${hr}</div>` : '';
                 const locRow = loc
                     ? `\n                                <div class="skill-data" style="margin-top:8px; margin-bottom:0;">\n                                    <div class="skill-title"><i class="fa-solid fa-location-dot"></i> &nbsp;${loc}</div>\n                                </div>`
+                    : '';
+                const catMap   = { liturgico: 'Litúrgico', pastoral: 'Pastoral', social: 'Social', formativo: 'Formativo', festivo: 'Festivo', outro: 'Outro' };
+                const catLabel = catMap[ev.categoria] || escapeHtml(ev.categoria || '');
+                const catBadge = ev.categoria ? `\n                            <span class="badge bg-secondary mb-1" style="font-size:0.7em;font-weight:500;">${catLabel}</span>` : '';
+                const statusMap = { cancelado: ['danger', 'Cancelado'], encerrado: ['secondary', 'Encerrado'] };
+                const statusBadge = statusMap[ev.status]
+                    ? ` <span class="badge bg-${statusMap[ev.status][0]}" style="font-size:0.65em;">${statusMap[ev.status][1]}</span>`
                     : '';
                 return `                <div class="col-lg-4 col-md-6">
                     <div class="campaign-item wow fadeInUp"${delay}>
@@ -627,8 +663,8 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
                             </figure>
                         </div>
                         <div class="campaign-body">
-                            <div class="campaign-content">
-                                <h2>${tit}</h2>${resRow}
+                            <div class="campaign-content">${catBadge}
+                                <h2>${tit}${statusBadge}</h2>${resRow}
                             </div>
                             <div class="campaign-btn">
                                 <a href="${link}" class="read-more-btn">ver detalhes</a>
@@ -651,6 +687,236 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
     }
 
     console.log('- Secoes dinamicas concluidas.\n');
+
+    // ── Configurações do Site ─────────────────────────────────────────
+    console.log('Aplicando configuracoes do site...');
+    const configPath = path.join(DATA, 'configuracoes.json');
+    if (fs.existsSync(configPath)) {
+        const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+        // 1. CSS: theme-cms.css com as 4 variáveis de cor do site
+        const HEX = /^#[0-9a-fA-F]{3,8}$/;
+        const corAcento    = HEX.test(cfg.cor_principal    || '') ? cfg.cor_principal    : '#acaa59';
+        const corEscuro    = HEX.test(cfg.cor_fundo_escuro || '') ? cfg.cor_fundo_escuro : '#000000';
+        const corClaro     = HEX.test(cfg.cor_fundo_claro  || '') ? cfg.cor_fundo_claro  : '#FFF4F1';
+        const corTexto     = HEX.test(cfg.cor_texto        || '') ? cfg.cor_texto        : '#525252';
+        const cssContent = `:root {\n    --accent-color:    ${corAcento};\n    --primary-color:   ${corEscuro};\n    --secondary-color: ${corClaro};\n    --text-color:      ${corTexto};\n}\n`;
+        const themeCssPath = path.join(ROOT, 'css', 'theme-cms.css');
+        if (!fs.existsSync(themeCssPath) || fs.readFileSync(themeCssPath, 'utf8') !== cssContent) {
+            fs.writeFileSync(themeCssPath, cssContent, 'utf8');
+            console.log(`  ✓ css/theme-cms.css (acento:${corAcento} escuro:${corEscuro} claro:${corClaro} texto:${corTexto})`);
+        } else {
+            console.log(`  . css/theme-cms.css (sem alteracoes)`);
+        }
+
+        // 2. Hero section em index.html
+        const heroTagline  = escapeHtml(cfg.hero_tagline  || 'Paróquia Nossa Senhora dos Remédios — Jericó/PB');
+        const heroTitulo   = escapeHtml(cfg.hero_titulo   || 'Fé, Esperança e Amor no coração do Sertão Paraibano!');
+        const heroDesc     = escapeHtml(cfg.hero_descricao || 'Uma comunidade de fé com mais de 66 anos de história, erguida em torno da devoção à Nossa Senhora dos Remédios, padroeira de Jericó, no sertão da Paraíba.');
+        const heroBtn1Txt  = escapeHtml(cfg.hero_btn1_texto || 'Horários');
+        const heroBtn1Link = escapeHtml(cfg.hero_btn1_link  || 'agenda-liturgica.html');
+        const heroBtn2Txt  = escapeHtml(cfg.hero_btn2_texto || 'Calendário Litúrgico');
+        const heroBtn2Link = escapeHtml(cfg.hero_btn2_link  || 'agenda-liturgica.html');
+        const heroImgStyle = cfg.hero_imagem
+            ? ` style="background-image:url('${escapeHtml(cfg.hero_imagem)}')"`
+            : '';
+        const heroContent = `\t\t<!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">${heroTagline}</h3>
+                            <h1 class="text-anime-style-2" data-cursor="-opaque">${heroTitulo}</h1>
+                            <p class="wow fadeInUp" data-wow-delay="0.25s">${heroDesc}</p>
+                        </div>
+                        <!-- Section Title End -->
+
+                        <!-- Hero Content Body Start -->
+                        <div class="hero-content-body wow fadeInUp" data-wow-delay="0.5s">
+                            <a href="${heroBtn1Link}" class="btn-default btn-highlighted"><span>${heroBtn1Txt}</span></a>
+                            <a href="${heroBtn2Link}" class="btn-default"><span>${heroBtn2Txt}</span></a>
+                        </div>
+                        <!-- Hero Content Body End -->`;
+        injectSection(path.join(ROOT, 'index.html'), 'site:hero-content', heroContent);
+
+        // 3. Header CTA button
+        const ctaTxt  = escapeHtml(cfg.header_cta_texto || 'Ouça agora');
+        const ctaLink = escapeHtml(cfg.header_cta_link  || '#');
+        const ctaAttr = ctaLink === '#' ? ' data-radio-trigger' : '';
+        const headerCta = `\t\t\t\t\t<div class="header-btn d-inline-flex">
+                        <a href="${ctaLink}" class="btn-default"${ctaAttr}><span>${ctaTxt}</span></a>
+                    </div>`;
+        injectSection(path.join(ROOT, 'partials', 'header.html'), 'site:header-cta', headerCta);
+
+        // 4. Footer — descrição
+        const footerDesc = escapeHtml(cfg.footer_descricao || '');
+        injectSection(path.join(ROOT, 'partials', 'footer.html'), 'site:footer-descricao', `\t\t\t\t\t\t<p>${footerDesc}</p>`);
+
+        // 5. Footer — contato
+        const tel      = escapeHtml(cfg.footer_telefone || '');
+        const email    = escapeHtml(cfg.footer_email    || '');
+        const endereco = escapeHtml(cfg.footer_endereco || '');
+        const telLink   = `tel:+55${tel.replace(/\D/g,'')}`;
+        const emailLink = `mailto:${email}`;
+        const footerContato = `\t\t\t\t\t\t<div class="footer-info-box">
+                            <div class="icon-box"><img src="images/icon-phone.svg" alt="" width="24" height="24"></div>
+                            <div class="footer-info-box-content"><p><a href="${escapeHtml(telLink)}">${tel}</a></p></div>
+                        </div>
+                        <div class="footer-info-box">
+                            <div class="icon-box"><img src="images/icon-mail.svg" alt="" width="24" height="24"></div>
+                            <div class="footer-info-box-content"><p><a href="${escapeHtml(emailLink)}">${email}</a></p></div>
+                        </div>
+                        <div class="footer-info-box">
+                            <div class="icon-box"><img src="images/icon-location.svg" alt="" width="24" height="24"></div>
+                            <div class="footer-info-box-content"><p>${endereco}</p></div>
+                        </div>`;
+        injectSection(path.join(ROOT, 'partials', 'footer.html'), 'site:footer-contato', footerContato);
+
+        // 6. Footer — redes sociais
+        const fb   = cfg.footer_facebook  || '';
+        const ig   = cfg.footer_instagram || '';
+        const wa   = cfg.footer_whatsapp  || '';
+        const yt   = cfg.footer_youtube   || '';
+        const socialLinks = [
+            fb ? `\t\t\t\t\t\t\t<li><a href="${escapeHtml(fb)}" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a></li>` : '',
+            ig ? `\t\t\t\t\t\t\t<li><a href="${escapeHtml(ig)}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></li>` : '',
+            wa ? `\t\t\t\t\t\t\t<li><a href="${escapeHtml(wa)}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a></li>` : '',
+            yt ? `\t\t\t\t\t\t\t<li><a href="${escapeHtml(yt)}" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a></li>` : '',
+        ].filter(Boolean).join('\n');
+        injectSection(path.join(ROOT, 'partials', 'footer.html'), 'site:footer-redes', socialLinks);
+
+        console.log('- Configuracoes aplicadas.\n');
+
+        // ── Logos ─────────────────────────────────────────────────────────
+        console.log('Aplicando logos...');
+        const logoCor = /^#[0-9a-fA-F]{3,8}$/.test(cfg.logo_cor || '') ? cfg.logo_cor : '#acaa59';
+
+        /** Lê um SVG, substitui todas ocorrências de fillFrom por fillTo e adiciona atributos ao elemento root. */
+        function buildInlineSvg(relPath, fillFrom, fillTo, extraAttrs) {
+            const p = path.join(ROOT, relPath);
+            if (!fs.existsSync(p)) return null;
+            let s = fs.readFileSync(p, 'utf8');
+            const regex = new RegExp(`fill="${fillFrom.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`, 'g');
+            s = s.replace(regex, `fill="${fillTo}"`);
+            if (extraAttrs) s = s.replace('<svg ', `<svg ${extraAttrs} `);
+            return s;
+        }
+
+        // Logo do cabeçalho
+        let headerLogoHtml;
+        if (cfg.logo_header_img) {
+            const src = escapeHtml(cfg.logo_header_img.replace(/^\//, ''));
+            headerLogoHtml = `<img src="${src}" alt="Logo Paróquia Nossa Senhora dos Remédios" style="max-height:55px;" loading="lazy">`;
+        } else {
+            headerLogoHtml = buildInlineSvg(
+                'images/logo.svg', '#acaa59', logoCor,
+                'style="max-height:55px;" role="img" aria-label="Logo Paróquia Nossa Senhora dos Remédios"'
+            ) || `<img src="images/logo.png" alt="Logo Paróquia Nossa Senhora dos Remédios" style="max-height:55px;" width="140" height="55">`;
+        }
+        injectSection(path.join(ROOT, 'partials', 'header.html'), 'site:header-logo', headerLogoHtml);
+
+        // Logo do rodapé
+        let footerLogoHtml;
+        if (cfg.logo_footer_img) {
+            const src = escapeHtml(cfg.logo_footer_img.replace(/^\//, ''));
+            footerLogoHtml = `<img src="${src}" alt="Paróquia Nossa Senhora dos Remédios" style="height:auto;max-height:80px;width:auto;" loading="lazy">`;
+        } else {
+            footerLogoHtml = buildInlineSvg(
+                'images/footer-logo.svg', '#acaa59', logoCor,
+                'style="height:auto;max-height:80px;width:auto;" role="img" aria-label="Paróquia Nossa Senhora dos Remédios"'
+            ) || `<img src="images/footer-logo.png" alt="Paróquia Nossa Senhora dos Remédios" width="200" height="102" style="height:auto;max-height:80px;width:auto;">`;
+        }
+        injectSection(path.join(ROOT, 'partials', 'footer.html'), 'site:footer-logo', footerLogoHtml);
+
+        // Logo do preloader (SVG é todo branco; substitui branco pela cor escolhida)
+        let loaderLogoHtml;
+        if (cfg.logo_loader_img) {
+            const src = escapeHtml(cfg.logo_loader_img.replace(/^\//, ''));
+            loaderLogoHtml = `<img src="${src}" alt="">`;
+        } else {
+            loaderLogoHtml = buildInlineSvg(
+                'images/loader.svg', 'white', logoCor,
+                'role="img" aria-hidden="true"'
+            ) || `<img src="images/loader.png" alt="">`;
+        }
+        injectSection(path.join(ROOT, 'partials', 'header.html'), 'site:loader-logo', loaderLogoHtml);
+
+        console.log(`  ✓ logos aplicados (cor: ${logoCor})\n`);
+    } else {
+        console.log('  . configuracoes.json ausente — pulando configuracoes do site.\n');
+    }
+
+    // ── Pároco ─────────────────────────────────────────────────
+    console.log('Injetando paginas estaticas...');
+    const paracoPath = path.join(DATA, 'paroco.json');
+    if (fs.existsSync(paracoPath)) {
+        const p = JSON.parse(fs.readFileSync(paracoPath, 'utf8'));
+        const saudacao = escapeHtml(p.saudacao || 'Pe.');
+        const nome     = escapeHtml(p.nome || 'Pároco');
+        const foto     = p.foto ? escapeHtml(p.foto.replace(/^\//, '')) : 'images/team-1.jpg';
+        const parocoHtml = `<!-- Pároco -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="team-member-item wow fadeInUp">
+                        <div class="team-image">
+                            <figure class="image-anime"><img loading="lazy" decoding="async" src="${foto}" onerror="this.src='images/team-1.jpg'" alt="${saudacao} ${nome}"></figure>
+                            <div class="team-social-icon">
+                                <ul>
+                                    <li><a href="#" class="social-icon" aria-label="WhatsApp" tabindex="-1"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="team-content">
+                            <h3>${saudacao} ${nome}</h3>
+                            <p>Pároco da Paróquia</p>
+                        </div>
+                    </div>
+                </div>`;
+        injectSection(path.join(ROOT, 'paroco.html'), 'paroco:card', parocoHtml);
+    } else {
+        console.log('  . paroco.json ausente, pulando paroco.html');
+    }
+
+    // ── Ministérios ────────────────────────────────────────────
+    const ministeriosDataPath = path.join(DATA, 'ministerios.json');
+    if (fs.existsSync(ministeriosDataPath)) {
+        const lista = JSON.parse(fs.readFileSync(ministeriosDataPath, 'utf8')).ministerios || [];
+        const delays = ['', '0.25s', '0.5s', '0.75s', '1s', '1.25s', '1.5s', '1.75s'];
+        const fallbacks = ['images/ministries-img-1.jpg', 'images/ministries-img-2.jpg', 'images/ministries-img-3.jpg'];
+        const ativos = lista.filter(m => m.ativo !== false);
+        let ministeriosCards;
+        if (ativos.length) {
+            ministeriosCards = ativos.map((m, i) => {
+                const nomeMin  = escapeHtml(m.nome || '');
+                const imgMin   = m.imagem ? escapeHtml(m.imagem.replace(/^\//, '')) : fallbacks[i % fallbacks.length];
+                const delay = delays[i] ? ` data-wow-delay="${delays[i]}"` : '';
+                const sub   = m.encontros
+                    ? escapeHtml([m.encontros.dia_semana, m.encontros.horario].filter(Boolean).join(' — '))
+                    : '';
+                const subHtml = sub ? `\n                            <p>${sub}</p>` : '';
+                return `                <div class="col-md-4">
+                    <div class="ministries-item wow fadeInUp"${delay}>
+                        <div class="ministries-image" data-cursor-text="Ver">
+                            <a href="#">
+                                <figure>
+                                    <img loading="lazy" decoding="async" src="${imgMin}" onerror="this.src='${fallbacks[i % fallbacks.length]}'" alt="${nomeMin}">
+                                </figure>
+                            </a>
+                        </div>
+                        <div class="ministries-content">
+                            <h3>${nomeMin}</h3>${subHtml}
+                        </div>
+                        <div class="ministries-btn">
+                            <a href="#" class="readmore-btn"><img loading="lazy" decoding="async" src="images/arrow-white.svg" alt=""></a>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('\n');
+        } else {
+            ministeriosCards = `                <div class="col-lg-12"><p class="text-center py-4">Nenhum ministério cadastrado no momento.</p></div>`;
+        }
+        injectSection(path.join(ROOT, 'ministerios.html'), 'ministerios:grade', ministeriosCards);
+    } else {
+        console.log('  . ministerios.json ausente, pulando ministerios.html');
+    }
+
+    console.log('- Paginas estaticas atualizadas.\n');
 })();
 
 } // end if (!PREVIEW_MODE)
