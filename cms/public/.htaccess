@@ -5,6 +5,9 @@
 
     RewriteEngine On
 
+    # Redireciona raiz do subdomínio para o painel
+    RewriteRule ^$ /admin [R=302,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
