@@ -164,7 +164,8 @@ jobs:
             **/vendor/**
             **/node_modules/**
             **/.env
-            **/.env.*
+            **/.env.example
+            **/.env.testing
             **/database/database.sqlite
             **/storage/app/**
             **/storage/logs/**
