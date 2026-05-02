@@ -1,66 +1,90 @@
 #!/usr/bin/env bash
 # =============================================================================
-# setup-server.sh — Configuração inicial do CMS no servidor Plesk
+# setup-server.sh — Configuração inicial do CMS no servidor Plesk (chroot)
 #
-# Execute via SSH UMA VEZ após o primeiro deploy pelo GitHub Actions:
+# Execute UMA VEZ no terminal SSH do Plesk após o primeiro deploy:
 #
-#   ssh usuario@pascomjerico.com.br 'bash -s' < scripts/setup-server.sh
+#   cd ~/cms && bash ~/cms/scripts/setup-server.sh
 #
-# Requisitos no servidor:
-#   - PHP 8.1+  com extensões: pdo, pdo_sqlite, mbstring, xml, curl, zip, gd
-#   - Composer instalado (ou acessível via /usr/bin/composer)
-#   - Node.js 18+ (para build-content.js)
-#   - cms/ em /var/www/vhosts/pascomjerico.com.br/cms/
-#   - httpdocs/ em /var/www/vhosts/pascomjerico.com.br/httpdocs/
+# Ou copie e cole diretamente no terminal do Plesk.
 # =============================================================================
 set -euo pipefail
 
-CMS_DIR="/var/www/vhosts/pascomjerico.com.br/cms"
-HTTPDOCS_DIR="/var/www/vhosts/pascomjerico.com.br/httpdocs"
-REPO_ROOT="/var/www/vhosts/pascomjerico.com.br"
+# Detecta PHP 8.2 do Plesk (único disponível no chroot)
+PHP="/opt/plesk/php/8.2/bin/php"
+CMS_DIR="$HOME/cms"
 
-echo "==> [1/7] Instalando dependências PHP (sem pacotes dev)..."
+echo "==> Usando PHP: $($PHP -r 'echo PHP_VERSION;')"
+echo "==> CMS dir: $CMS_DIR"
 cd "$CMS_DIR"
-composer install --no-dev --optimize-autoloader --no-interaction
 
-echo "==> [2/7] Configurando .env de produção..."
+# ── 1. Composer ──────────────────────────────────────────────────────────────
+echo ""
+echo "==> [1/7] Baixando Composer (se necessário)..."
+if [ ! -f "$CMS_DIR/composer.phar" ]; then
+    $PHP -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');"
+    $PHP /tmp/composer-setup.php --install-dir="$CMS_DIR" --filename=composer.phar
+    rm -f /tmp/composer-setup.php
+else
+    echo "     composer.phar já existe, pulando."
+fi
+
+# ── 2. Dependências ───────────────────────────────────────────────────────────
+echo ""
+echo "==> [2/7] Instalando dependências PHP..."
+mkdir -p "$CMS_DIR/bootstrap/cache"
+chmod 775 "$CMS_DIR/bootstrap/cache"
+$PHP "$CMS_DIR/composer.phar" install --no-dev --optimize-autoloader --no-interaction
+
+# ── 3. .env ───────────────────────────────────────────────────────────────────
+echo ""
+echo "==> [3/7] Configurando .env..."
 if [ ! -f "$CMS_DIR/.env" ]; then
     cp "$CMS_DIR/.env.production.example" "$CMS_DIR/.env"
-    echo "     ATENÇÃO: edite $CMS_DIR/.env com as credenciais reais antes de continuar."
-    echo "     Em especial: APP_KEY, MAIL_PASSWORD"
-    echo "     Pressione ENTER após editar o .env..."
+    echo "     .env criado a partir do exemplo."
+    echo ""
+    echo "     ⚠️  EDITE o .env agora com os valores corretos:"
+    echo "        APP_URL, STATIC_DISK_ROOT, MAIL_PASSWORD etc."
+    echo ""
+    echo "     Pressione ENTER após editar o .env para continuar..."
     read -r
 fi
 
-echo "==> [3/7] Gerando chave da aplicação..."
-php artisan key:generate --force
+# ── 4. App key ────────────────────────────────────────────────────────────────
+echo ""
+echo "==> [4/7] Gerando chave da aplicação..."
+$PHP artisan key:generate --force
 
-echo "==> [4/7] Criando banco de dados e rodando migrations..."
+# ── 5. Banco de dados ─────────────────────────────────────────────────────────
+echo ""
+echo "==> [5/7] Criando banco e rodando migrations..."
+mkdir -p "$CMS_DIR/database"
 touch "$CMS_DIR/database/database.sqlite"
-php artisan migrate --force
+$PHP artisan migrate --force
+$PHP artisan db:seed --force
 
-echo "==> [5/7] Rodando seeders (configuração inicial)..."
-php artisan db:seed --force
+# ── 6. Permissões ─────────────────────────────────────────────────────────────
+echo ""
+echo "==> [6/7] Ajustando permissões de storage..."
+mkdir -p "$CMS_DIR/storage/framework/sessions" \
+         "$CMS_DIR/storage/framework/views" \
+         "$CMS_DIR/storage/framework/cache" \
+         "$CMS_DIR/storage/logs" \
+         "$CMS_DIR/storage/app/public"
+chmod -R 775 "$CMS_DIR/storage"
+chmod -R 775 "$CMS_DIR/bootstrap/cache"
 
-echo "==> [6/7] Ajustando permissões..."
-chmod -R 755 "$CMS_DIR/storage"
-chmod -R 755 "$CMS_DIR/bootstrap/cache"
-# Garante que o CMS pode escrever nos HTMLs do site
-chmod -R 755 "$HTTPDOCS_DIR"
-
+# ── 7. Otimização ─────────────────────────────────────────────────────────────
+echo ""
 echo "==> [7/7] Otimizando para produção..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+$PHP artisan config:cache
+$PHP artisan route:cache
+$PHP artisan view:cache
 
 echo ""
 echo "✅  Setup concluído!"
 echo ""
-echo "Próximos passos MANUAIS no Plesk:"
-echo "  1. Subdomínio admin.pascomjerico.com.br"
-echo "     Document root: $CMS_DIR/public"
+echo "Próximo passo — criar usuário admin:"
+echo "   cd ~/cms && $PHP artisan make:filament-user"
 echo ""
-echo "  2. Criar usuário admin no CMS:"
-echo "     cd $CMS_DIR && php artisan make:filament-user"
-echo ""
-echo "  3. Verificar acesso: https://admin.pascomjerico.com.br/admin"
+echo "Depois acesse: https://admin.pascomjerico.com.br"
