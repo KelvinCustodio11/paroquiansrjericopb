@@ -18,7 +18,8 @@ class ConfiguracaoExportTest extends TestCase
         $this->dataDir = base_path('../data');
     }
 
-    public function TestShouldExportConfiguracaoToJson(): void
+    /** @test */
+    public function testShouldExportConfiguracaoToJson(): void
     {
         Configuracao::updateOrCreate(['id' => 1], [
             'cor_principal'     => '#acaa59',
@@ -26,7 +27,7 @@ class ConfiguracaoExportTest extends TestCase
             'footer_telefone'   => '(83) 99999-9999',
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileExists($this->dataDir.'/configuracoes.json');
         $content = json_decode(File::get($this->dataDir.'/configuracoes.json'), true);
@@ -35,7 +36,8 @@ class ConfiguracaoExportTest extends TestCase
         $this->assertEquals('Bem-vindo', $content['hero_titulo']);
     }
 
-    public function TestShouldExportHabilitarFlagsInConfiguracaoJson(): void
+    /** @test */
+    public function testShouldExportHabilitarFlagsInConfiguracaoJson(): void
     {
         Configuracao::updateOrCreate(['id' => 1], [
             'habilitar_santo_dia'     => true,
@@ -44,7 +46,7 @@ class ConfiguracaoExportTest extends TestCase
             'habilitar_testemunhos'   => true,
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/configuracoes.json'), true);
 
@@ -54,7 +56,8 @@ class ConfiguracaoExportTest extends TestCase
         $this->assertTrue($content['habilitar_testemunhos']);
     }
 
-    public function TestShouldExportContatoCoordenasInConfiguracaoJson(): void
+    /** @test */
+    public function testShouldExportContatoCoordenasInConfiguracaoJson(): void
     {
         Configuracao::updateOrCreate(['id' => 1], [
             'contato_coordenadas_lat' => '-6.5321',
@@ -62,7 +65,7 @@ class ConfiguracaoExportTest extends TestCase
             'contato_maps_url'        => 'https://www.google.com/maps/embed?pb=test',
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/configuracoes.json'), true);
 
@@ -70,7 +73,8 @@ class ConfiguracaoExportTest extends TestCase
         $this->assertEquals('-37.8475', $content['contato_coordenadas_lng']);
     }
 
-    public function TestShouldExportHeroTitulosAsArrayInConfiguracaoJson(): void
+    /** @test */
+    public function testShouldExportHeroTitulosAsArrayInConfiguracaoJson(): void
     {
         Configuracao::updateOrCreate(['id' => 1], [
             'hero_titulos' => [
@@ -79,7 +83,7 @@ class ConfiguracaoExportTest extends TestCase
             ],
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/configuracoes.json'), true);
 

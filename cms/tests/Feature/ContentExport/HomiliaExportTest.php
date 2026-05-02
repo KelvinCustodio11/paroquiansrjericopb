@@ -18,14 +18,15 @@ class HomiliaExportTest extends TestCase
         $this->dataDir = base_path('../data');
     }
 
-    public function TestShouldExportHomiliaPublicada(): void
+    /** @test */
+    public function testShouldExportHomiliaPublicada(): void
     {
         Homilia::factory()->publicado()->create([
             'titulo' => 'Homilia do Domingo',
             'slug'   => 'homilia-do-domingo-test',
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileExists($this->dataDir.'/homilias.json');
         $content = json_decode(File::get($this->dataDir.'/homilias.json'), true);
@@ -34,11 +35,12 @@ class HomiliaExportTest extends TestCase
         $this->assertContains('homilia-do-domingo-test', $slugs);
     }
 
-    public function TestShouldNotExportHomiliaRascunho(): void
+    /** @test */
+    public function testShouldNotExportHomiliaRascunho(): void
     {
         Homilia::factory()->rascunho()->create(['slug' => 'homilia-rascunho-xyz']);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/homilias.json'), true);
         $slugs = array_column($content['homilias'] ?? [], 'slug');

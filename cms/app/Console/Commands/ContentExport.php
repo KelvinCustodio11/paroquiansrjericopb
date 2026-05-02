@@ -45,7 +45,7 @@ class ContentExport extends Command
             return self::FAILURE;
         }
 
-        $eventos = Evento::orderBy('data_inicio', 'desc')->get()
+        $eventos = Evento::where('publicado', true)->orderBy('data_inicio', 'desc')->get()
             ->map(fn (Evento $e) => $e->toJsonExport())
             ->all();
 

@@ -1,18 +1,3 @@
 {
-    "homilias": [
-        {
-            "slug": "homilia-pascoa-2026",
-            "titulo": "Homilia do Domingo de Páscoa 2026",
-            "data": "2026-04-05",
-            "celebrante": "Pe. Pároco",
-            "ocasiao": "Domingo de Páscoa da Ressurreição do Senhor",
-            "resumo": "Reflexão sobre a alegria pascal e o sentido da Ressurreição do Senhor para a vida cristã.",
-            "transcricao": "<p>Irmãos e irmãs, a Páscoa do Senhor nos convoca à esperança...</p>",
-            "publicado": true,
-            "leitura_evangelho": {
-                "referencia": "Jo 20,1-9",
-                "texto": "No primeiro dia da semana, Maria Madalena foi ao túmulo bem cedo, quando ainda estava escuro..."
-            }
-        }
-    ]
+    "homilias": []
 }

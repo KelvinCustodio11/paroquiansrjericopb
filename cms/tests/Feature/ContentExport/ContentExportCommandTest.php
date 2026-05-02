@@ -18,24 +18,27 @@ class ContentExportCommandTest extends TestCase
         $this->dataDir = base_path('../data');
     }
 
-    public function TestShouldRunContentExportCommandWithoutError(): void
+    /** @test */
+    public function testShouldRunContentExportCommandWithoutError(): void
     {
-        $exitCode = Artisan::call('content:export', ['--no-build' => true]);
+        $exitCode = Artisan::call('content:export');
 
         $this->assertEquals(0, $exitCode);
     }
 
-    public function TestShouldCreateDataDirectoryIfNotExists(): void
+    /** @test */
+    public function testShouldCreateDataDirectoryIfNotExists(): void
     {
         // Garantir que o diretório existe (o próprio command cria)
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertDirectoryExists($this->dataDir);
     }
 
-    public function TestShouldExportAllRequiredJsonFiles(): void
+    /** @test */
+    public function testShouldExportAllRequiredJsonFiles(): void
     {
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $expectedFiles = [
             'artigos.json',
@@ -59,9 +62,10 @@ class ContentExportCommandTest extends TestCase
         }
     }
 
-    public function TestShouldGenerateValidJsonInAllExportedFiles(): void
+    /** @test */
+    public function testShouldGenerateValidJsonInAllExportedFiles(): void
     {
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         foreach (File::files($this->dataDir) as $file) {
             if ($file->getExtension() !== 'json') {

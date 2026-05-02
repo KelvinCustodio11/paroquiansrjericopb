@@ -18,14 +18,15 @@ class ArtigoExportTest extends TestCase
         $this->dataDir = base_path('../data');
     }
 
-    public function TestShouldExportArtigoToJson(): void
+    /** @test */
+    public function testShouldExportArtigoToJson(): void
     {
         $artigo = Artigo::factory()->publicado()->create([
             'titulo' => 'Artigo de Teste',
             'slug'   => 'artigo-de-teste',
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileExists($this->dataDir.'/artigos.json');
         $content = json_decode(File::get($this->dataDir.'/artigos.json'), true);
@@ -34,14 +35,15 @@ class ArtigoExportTest extends TestCase
         $this->assertContains('artigo-de-teste', $slugs);
     }
 
-    public function TestShouldNotExportUnpublishedArtigo(): void
+    /** @test */
+    public function testShouldNotExportUnpublishedArtigo(): void
     {
         $artigo = Artigo::factory()->rascunho()->create([
             'titulo' => 'Artigo Rascunho',
             'slug'   => 'artigo-rascunho-xyz',
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/artigos.json'), true);
         $slugs = array_column($content['artigos'] ?? [], 'slug');
@@ -49,27 +51,29 @@ class ArtigoExportTest extends TestCase
         $this->assertNotContains('artigo-rascunho-xyz', $slugs);
     }
 
-    public function TestShouldIncludeAllRequiredFieldsInArtigoJson(): void
+    /** @test */
+    public function testShouldIncludeAllRequiredFieldsInArtigoJson(): void
     {
         Artigo::factory()->publicado()->create(['slug' => 'artigo-campos-test']);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/artigos.json'), true);
         $artigo = collect($content['artigos'] ?? [])->firstWhere('slug', 'artigo-campos-test');
 
         $this->assertNotNull($artigo);
-        foreach (['slug', 'titulo', 'resumo', 'conteudo', 'data', 'imagem_capa'] as $campo) {
+        foreach (['slug', 'titulo', 'resumo', 'conteudo', 'data_publicacao'] as $campo) {
             $this->assertArrayHasKey($campo, $artigo, "Campo '{$campo}' ausente no export do artigo.");
         }
     }
 
-    public function TestShouldExportArtigosOrderedByDateDesc(): void
+    /** @test */
+    public function testShouldExportArtigosOrderedByDateDesc(): void
     {
-        Artigo::factory()->publicado()->create(['slug' => 'artigo-antigo', 'publicado_em' => now()->subDays(10)]);
-        Artigo::factory()->publicado()->create(['slug' => 'artigo-recente', 'publicado_em' => now()]);
+        Artigo::factory()->publicado()->create(['slug' => 'artigo-antigo', 'data_publicacao' => now()->subDays(10)]);
+        Artigo::factory()->publicado()->create(['slug' => 'artigo-recente', 'data_publicacao' => now()]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/artigos.json'), true);
         $slugs = array_column($content['artigos'] ?? [], 'slug');

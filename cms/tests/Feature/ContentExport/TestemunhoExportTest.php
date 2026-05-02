@@ -18,14 +18,15 @@ class TestemunhoExportTest extends TestCase
         $this->dataDir = base_path('../data');
     }
 
-    public function TestShouldExportAprovadoTestemunho(): void
+    /** @test */
+    public function testShouldExportAprovadoTestemunho(): void
     {
         Testemunho::factory()->aprovado()->create([
             'nome'  => 'Maria Silva',
             'texto' => 'Testemunho de aprovação.',
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileExists($this->dataDir.'/testemunhos.json');
         $content = json_decode(File::get($this->dataDir.'/testemunhos.json'), true);
@@ -34,11 +35,12 @@ class TestemunhoExportTest extends TestCase
         $this->assertContains('Maria Silva', $nomes);
     }
 
-    public function TestShouldNotExportPendenteTestemunho(): void
+    /** @test */
+    public function testShouldNotExportPendenteTestemunho(): void
     {
         Testemunho::factory()->pendente()->create(['nome' => 'João Pendente']);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/testemunhos.json'), true);
         $nomes = array_column($content['testemunhos'] ?? [], 'nome');
@@ -46,11 +48,12 @@ class TestemunhoExportTest extends TestCase
         $this->assertNotContains('João Pendente', $nomes);
     }
 
-    public function TestShouldNotExportRejeitadoTestemunho(): void
+    /** @test */
+    public function testShouldNotExportRejeitadoTestemunho(): void
     {
         Testemunho::factory()->rejeitado()->create(['nome' => 'Pedro Rejeitado']);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/testemunhos.json'), true);
         $nomes = array_column($content['testemunhos'] ?? [], 'nome');
@@ -58,14 +61,15 @@ class TestemunhoExportTest extends TestCase
         $this->assertNotContains('Pedro Rejeitado', $nomes);
     }
 
-    public function TestShouldNotExportEmailInTestemunhoJson(): void
+    /** @test */
+    public function testShouldNotExportEmailInTestemunhoJson(): void
     {
         Testemunho::factory()->aprovado()->create([
             'nome'  => 'Ana LGPD',
             'email' => 'ana.lgpd@example.com',
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/testemunhos.json'), true);
         $testemunho = collect($content['testemunhos'] ?? [])->firstWhere('nome', 'Ana LGPD');
@@ -74,12 +78,13 @@ class TestemunhoExportTest extends TestCase
         $this->assertArrayNotHasKey('email', $testemunho, 'E-mail NÃO deve ser exportado por LGPD.');
     }
 
-    public function TestShouldExportTestemunhosOrderedByAprovadoEmDesc(): void
+    /** @test */
+    public function testShouldExportTestemunhosOrderedByAprovadoEmDesc(): void
     {
         Testemunho::factory()->aprovado()->create(['nome' => 'Antigo', 'aprovado_em' => now()->subDays(10)]);
         Testemunho::factory()->aprovado()->create(['nome' => 'Recente', 'aprovado_em' => now()]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/testemunhos.json'), true);
         $nomes = array_column($content['testemunhos'] ?? [], 'nome');

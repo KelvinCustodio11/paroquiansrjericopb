@@ -18,14 +18,15 @@ class EventoExportTest extends TestCase
         $this->dataDir = base_path('../data');
     }
 
-    public function TestShouldExportEventoToJson(): void
+    /** @test */
+    public function testShouldExportEventoToJson(): void
     {
         Evento::factory()->publicado()->create([
             'titulo' => 'Evento de Teste',
             'slug'   => 'evento-de-teste',
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileExists($this->dataDir.'/eventos.json');
         $content = json_decode(File::get($this->dataDir.'/eventos.json'), true);
@@ -34,11 +35,12 @@ class EventoExportTest extends TestCase
         $this->assertContains('evento-de-teste', $slugs);
     }
 
-    public function TestShouldNotExportRascunhoEvento(): void
+    /** @test */
+    public function testShouldNotExportRascunhoEvento(): void
     {
         Evento::factory()->rascunho()->create(['slug' => 'evento-rascunho-xyz']);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/eventos.json'), true);
         $slugs = array_column($content['eventos'] ?? [], 'slug');
@@ -46,11 +48,12 @@ class EventoExportTest extends TestCase
         $this->assertNotContains('evento-rascunho-xyz', $slugs);
     }
 
-    public function TestShouldIncludeRequiredFieldsInEventoJson(): void
+    /** @test */
+    public function testShouldIncludeRequiredFieldsInEventoJson(): void
     {
         Evento::factory()->publicado()->create(['slug' => 'evento-campos-test']);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/eventos.json'), true);
         $evento = collect($content['eventos'] ?? [])->firstWhere('slug', 'evento-campos-test');

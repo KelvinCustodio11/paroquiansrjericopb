@@ -18,7 +18,8 @@ class IgrejaExportTest extends TestCase
         $this->dataDir = base_path('../data');
     }
 
-    public function TestShouldExportHistoriaJson(): void
+    /** @test */
+    public function testShouldExportHistoriaJson(): void
     {
         Igreja::factory()->create([
             'ativa'              => true,
@@ -29,7 +30,7 @@ class IgrejaExportTest extends TestCase
             ],
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileExists($this->dataDir.'/historia.json');
         $content = json_decode(File::get($this->dataDir.'/historia.json'), true);
@@ -40,7 +41,8 @@ class IgrejaExportTest extends TestCase
         $this->assertEquals('Fundação', $content['secoes'][0]['titulo']);
     }
 
-    public function TestShouldNotExportHistoriaWhenHistoriaSecoesIsEmpty(): void
+    /** @test */
+    public function testShouldNotExportHistoriaWhenHistoriaSecoesIsEmpty(): void
     {
         Igreja::factory()->create([
             'ativa'           => true,
@@ -52,12 +54,13 @@ class IgrejaExportTest extends TestCase
             File::delete($this->dataDir.'/historia.json');
         }
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileDoesNotExist($this->dataDir.'/historia.json');
     }
 
-    public function TestShouldIncludeAllSecoesFieldsInHistoriaJson(): void
+    /** @test */
+    public function testShouldIncludeAllSecoesFieldsInHistoriaJson(): void
     {
         Igreja::factory()->create([
             'ativa'           => true,
@@ -66,7 +69,7 @@ class IgrejaExportTest extends TestCase
             ],
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/historia.json'), true);
         $secao = $content['secoes'][0] ?? [];

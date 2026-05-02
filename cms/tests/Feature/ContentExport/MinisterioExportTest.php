@@ -18,7 +18,8 @@ class MinisterioExportTest extends TestCase
         $this->dataDir = base_path('../data');
     }
 
-    public function TestShouldExportMinisterioWithCategoria(): void
+    /** @test */
+    public function testShouldExportMinisterioWithCategoria(): void
     {
         Ministerio::factory()->create([
             'nome'      => 'Ministério Teste',
@@ -26,7 +27,7 @@ class MinisterioExportTest extends TestCase
             'categoria' => 'ministerio',
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileExists($this->dataDir.'/ministerios.json');
         $content = json_decode(File::get($this->dataDir.'/ministerios.json'), true);
@@ -37,11 +38,12 @@ class MinisterioExportTest extends TestCase
         $this->assertEquals('ministerio', $ministerio['categoria']);
     }
 
-    public function TestShouldNotExportMinisterioInativo(): void
+    /** @test */
+    public function testShouldNotExportMinisterioInativo(): void
     {
         Ministerio::factory()->create(['nome' => 'Ministerio Inativo', 'ativo' => false]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/ministerios.json'), true);
         $nomes = array_column($content['ministerios'] ?? [], 'nome');
@@ -49,12 +51,13 @@ class MinisterioExportTest extends TestCase
         $this->assertNotContains('Ministerio Inativo', $nomes);
     }
 
-    public function TestShouldExportPastoralJsonSeparately(): void
+    /** @test */
+    public function testShouldExportPastoralJsonSeparately(): void
     {
         Ministerio::factory()->create(['nome' => 'Catequese Teste', 'ativo' => true, 'categoria' => 'catequese']);
         Ministerio::factory()->create(['nome' => 'Ministerio de Louvor', 'ativo' => true, 'categoria' => 'ministerio']);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileExists($this->dataDir.'/pastoral.json');
         $content = json_decode(File::get($this->dataDir.'/pastoral.json'), true);

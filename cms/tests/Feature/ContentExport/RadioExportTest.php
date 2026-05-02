@@ -18,7 +18,8 @@ class RadioExportTest extends TestCase
         $this->dataDir = base_path('../data');
     }
 
-    public function TestShouldExportRadioWithCategoriaEstadoCidade(): void
+    /** @test */
+    public function testShouldExportRadioWithCategoriaEstadoCidade(): void
     {
         Radio::factory()->create([
             'nome'      => 'Rádio Teste',
@@ -28,7 +29,7 @@ class RadioExportTest extends TestCase
             'cidade'    => 'João Pessoa',
         ]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileExists($this->dataDir.'/radios.json');
         $content = json_decode(File::get($this->dataDir.'/radios.json'), true);
@@ -40,11 +41,12 @@ class RadioExportTest extends TestCase
         $this->assertEquals('João Pessoa', $radio['cidade']);
     }
 
-    public function TestShouldNotExportRadioInativa(): void
+    /** @test */
+    public function testShouldNotExportRadioInativa(): void
     {
         Radio::factory()->create(['nome' => 'Rádio Inativa', 'ativa' => false]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/radios.json'), true);
         $nomes = array_column($content ?? [], 'nome');
@@ -52,12 +54,13 @@ class RadioExportTest extends TestCase
         $this->assertNotContains('Rádio Inativa', $nomes);
     }
 
-    public function TestShouldExportRadioOrderedByDestaqueDesc(): void
+    /** @test */
+    public function testShouldExportRadioOrderedByDestaqueDesc(): void
     {
         Radio::factory()->create(['nome' => 'Normal', 'ativa' => true, 'destaque' => false, 'ordem' => 2]);
         Radio::factory()->create(['nome' => 'Destaque', 'ativa' => true, 'destaque' => true, 'ordem' => 1]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/radios.json'), true);
         $nomes = array_column($content ?? [], 'nome');

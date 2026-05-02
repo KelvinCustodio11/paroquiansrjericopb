@@ -18,11 +18,12 @@ class MenuItemExportTest extends TestCase
         $this->dataDir = base_path('../data');
     }
 
-    public function TestShouldExportMenuItemsToJson(): void
+    /** @test */
+    public function testShouldExportMenuItemsToJson(): void
     {
         MenuItem::factory()->create(['titulo' => 'Início', 'link' => 'index.html', 'visivel' => true, 'ordem' => 1]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $this->assertFileExists($this->dataDir.'/menu.json');
         $content = json_decode(File::get($this->dataDir.'/menu.json'), true);
@@ -32,11 +33,12 @@ class MenuItemExportTest extends TestCase
         $this->assertContains('Início', $titulos);
     }
 
-    public function TestShouldNotExportMenuItemInvisivel(): void
+    /** @test */
+    public function testShouldNotExportMenuItemInvisivel(): void
     {
         MenuItem::factory()->create(['titulo' => 'Oculto', 'visivel' => false]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/menu.json'), true);
         $titulos = array_column($content['items'] ?? [], 'titulo');
@@ -44,12 +46,13 @@ class MenuItemExportTest extends TestCase
         $this->assertNotContains('Oculto', $titulos);
     }
 
-    public function TestShouldExportMenuItemWithFilhosNested(): void
+    /** @test */
+    public function testShouldExportMenuItemWithFilhosNested(): void
     {
         $pai = MenuItem::factory()->create(['titulo' => 'Sobre', 'visivel' => true, 'pai_id' => null]);
         MenuItem::factory()->create(['titulo' => 'Nossa História', 'visivel' => true, 'pai_id' => $pai->id]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/menu.json'), true);
         $paiItem = collect($content['items'] ?? [])->firstWhere('titulo', 'Sobre');
@@ -60,12 +63,13 @@ class MenuItemExportTest extends TestCase
         $this->assertContains('Nossa História', $titulos);
     }
 
-    public function TestShouldExportMenuItemsOrderedByOrdem(): void
+    /** @test */
+    public function testShouldExportMenuItemsOrderedByOrdem(): void
     {
         MenuItem::factory()->create(['titulo' => 'Último', 'visivel' => true, 'ordem' => 99]);
         MenuItem::factory()->create(['titulo' => 'Primeiro', 'visivel' => true, 'ordem' => 1]);
 
-        $this->artisan('content:export', ['--no-build' => true])->assertSuccessful();
+        $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/menu.json'), true);
         $titulos = array_column($content['items'] ?? [], 'titulo');
