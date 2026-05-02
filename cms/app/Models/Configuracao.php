@@ -57,6 +57,7 @@ class Configuracao extends Model
         'habilitar_terco_dia',
         'habilitar_testemunhos',
         'radio_painel_titulo',
+        'radio_player_ativo',
     ];
 
     protected $casts = [
@@ -69,6 +70,7 @@ class Configuracao extends Model
         'habilitar_evangelho_dia' => 'boolean',
         'habilitar_terco_dia'     => 'boolean',
         'habilitar_testemunhos'   => 'boolean',
+        'radio_player_ativo'      => 'boolean',
     ];
 
     /** Retorna o único registro de configuração, criando-o se necessário. */
@@ -120,6 +122,7 @@ class Configuracao extends Model
             'habilitar_evangelho_dia' => true,
             'habilitar_terco_dia'     => true,
             'habilitar_testemunhos'   => false,
+            'radio_player_ativo'      => true,
         ];
     }
 

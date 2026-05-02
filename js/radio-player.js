@@ -686,6 +686,25 @@
 
     restoreState();
 
+    /* ── Verifica se o player está habilitado via data/radios.json ─────── */
+    (function verificarPlayerAtivo() {
+        fetch('data/radios.json')
+            .then(function (r) { return r.ok ? r.json() : {}; })
+            .catch(function () { return {}; })
+            .then(function (payload) {
+                var cfg = (!Array.isArray(payload) && payload.config) ? payload.config : {};
+                if (cfg.player_ativo === false) {
+                    /* Player desabilitado no CMS — remove elementos do DOM */
+                    var fabEl = document.getElementById('fabContainer');
+                    var barEl = document.getElementById('radioPlayerBar');
+                    if (audio) { audio.pause(); audio.src = ''; }
+                    if (fabEl && fabEl.parentElement) { fabEl.parentElement.removeChild(fabEl); }
+                    if (barEl && barEl.parentElement) { barEl.parentElement.removeChild(barEl); }
+                    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+                }
+            });
+    }());
+
     /* ── PJAX: navegação sem recarregar (mantém rádio tocando) ──────────── */
 
     /* Guard contra dupla inicialização quando radio-player.js é carregado

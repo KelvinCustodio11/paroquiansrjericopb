@@ -381,11 +381,16 @@ class Configuracoes extends Page implements HasForms
                                 Forms\Components\Section::make('Player de Rádio')
                                     ->description('Personalize o painel de rádio exibido no site.')
                                     ->schema([
+                                        Forms\Components\Toggle::make('radio_player_ativo')
+                                            ->label('Habilitar player de rádio no site')
+                                            ->helperText('Quando desligado, o botão flutuante e o player de rádio são ocultados de todas as páginas.')
+                                            ->default(true),
                                         Forms\Components\TextInput::make('radio_painel_titulo')
                                             ->label('Título do painel de rádio')
                                             ->placeholder('Rádios Católicas ao Vivo')
                                             ->maxLength(80)
-                                            ->helperText('Texto exibido no cabeçalho do seletor de rádios (ex: "Rádios ao Vivo", "Ouça Agora")'),
+                                            ->helperText('Texto exibido no cabeçalho do seletor de rádios (ex: "Rádios ao Vivo", "Ouça Agora")')
+                                            ->visible(fn (Forms\Get $get) => (bool) $get('radio_player_ativo')),
                                     ]),
                                 Forms\Components\Section::make('Devoções Diárias')
                                     ->description('Controle o que aparece na seção de devoções diárias do site.')

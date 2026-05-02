@@ -153,10 +153,12 @@ class ContentExport extends Command
             ], fn ($v) => $v !== null && $v !== ''))->values()->all();
 
         $titulopainel = $config->radio_painel_titulo ?? 'Rádios Católicas ao Vivo';
+        $playerAtivo  = $config->radio_player_ativo ?? true;
 
         $radioPayload = [
             'radios' => $radios,
             'config' => [
+                'player_ativo'         => (bool) $playerAtivo,
                 'titulo_painel'        => $titulopainel,
                 'externas_habilitadas' => count($regrasBusca) > 0,
                 'regras'               => $regrasBusca,
