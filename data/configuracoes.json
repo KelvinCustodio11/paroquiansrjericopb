@@ -1,5 +1,5 @@
 {
-    "cor_principal": "#dbd651",
+    "cor_principal": "#c8a96e",
     "header_cta_texto": "Ouça agora",
     "header_cta_link": "#",
     "hero_imagem": null,
@@ -21,8 +21,8 @@
     "cor_fundo_escuro": "#000000",
     "cor_fundo_claro": "#FFF4F1",
     "cor_texto": "#525252",
-    "logo_cor": "#acaa59",
-    "logo_header_img": "images/uploads/logos/01KQJYB7P4B2AW2KWHNN0DM9SP.png",
-    "logo_footer_img": "images/uploads/logos/01KQJYB7PA5347JNDJFK4XG50D.png",
+    "logo_cor": "#a06634",
+    "logo_header_img": null,
+    "logo_footer_img": null,
     "logo_loader_img": null
 }
