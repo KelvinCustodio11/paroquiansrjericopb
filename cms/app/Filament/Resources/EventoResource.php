@@ -145,35 +145,6 @@ class EventoResource extends Resource
                         Forms\Components\Toggle::make('destaque')->label('Destaque na home'),
                     ]),
 
-                Forms\Components\Section::make('Inscrição / Acesso (opcional)')
-                    ->description('Preencha se o evento exige inscrição prévia. Deixe vazio para exibir "Entrada gratuita — sem inscrição".')
-                    ->collapsed()
-                    ->schema([
-                        Forms\Components\Toggle::make('inscricao.obrigatoria')
-                            ->label('Inscrição obrigatória')
-                            ->live()
-                            ->columnSpanFull(),
-                        Forms\Components\TextInput::make('inscricao.link')
-                            ->label('Link para inscrição')
-                            ->url()
-                            ->placeholder('https://forms.gle/...')
-                            ->columnSpanFull(),
-                        Forms\Components\TextInput::make('inscricao.vagas_total')
-                            ->label('Total de vagas')
-                            ->numeric()
-                            ->minValue(0),
-                        Forms\Components\TextInput::make('inscricao.vagas_restantes')
-                            ->label('Vagas restantes')
-                            ->numeric()
-                            ->minValue(0),
-                        Forms\Components\TextInput::make('inscricao.valor')
-                            ->label('Valor (R$)')
-                            ->numeric()
-                            ->minValue(0)
-                            ->hint('0 = gratuito'),
-                    ])
-                    ->columns(2),
-
                 Forms\Components\Section::make('Barra de Estatísticas (opcional)')
                     ->description('Exibe 3 números/valores em destaque abaixo da imagem de capa. Deixe vazio para usar a data/horário/categoria automaticamente.')
                     ->collapsed()
