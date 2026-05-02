@@ -1,0 +1,33 @@
+{
+    "albuns": [
+        {
+            "slug": "teste",
+            "titulo": "Teste",
+            "descricao": "Obras",
+            "categoria": "obras",
+            "capa_imagem": "images/uploads/galeria/01KQJSCKXXADBN7Y3ZCH4VGNG7.JPG",
+            "fotos": [
+                {
+                    "arquivo": "images/uploads/galeria/01KQJSDXE98AGM0P9WKSHHXSEC.jpeg",
+                    "legenda": "qwe",
+                    "alt": "qwe"
+                },
+                {
+                    "arquivo": "images/uploads/galeria/01KQJSMYZWWJTJDK6MRC6T1R97.jpg",
+                    "legenda": "",
+                    "alt": "Teste"
+                },
+                {
+                    "arquivo": "images/uploads/galeria/01KQJSMZ00E67F1P73EYNN7NZE.jpg",
+                    "legenda": "",
+                    "alt": "Teste"
+                },
+                {
+                    "arquivo": "images/uploads/galeria/01KQJSMZ015E8M27CN1C51JSW8.jpg",
+                    "legenda": "",
+                    "alt": "Teste"
+                }
+            ]
+        }
+    ]
+}

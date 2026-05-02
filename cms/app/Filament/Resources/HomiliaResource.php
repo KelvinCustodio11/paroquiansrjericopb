@@ -94,7 +94,16 @@ class HomiliaResource extends Resource
         ])
         ->defaultSort('data', 'desc')
         ->filters([Tables\Filters\TernaryFilter::make('publicado')])
-        ->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()])
+        ->actions([
+            Tables\Actions\Action::make('preview')
+                ->label('Visualizar')
+                ->icon('heroicon-o-eye')
+                ->color('gray')
+                ->url(fn ($record): string => 'http://localhost:3000/homilias/' . $record->slug . '.html')
+                ->openUrlInNewTab(),
+            Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make(),
+        ])
         ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);
     }
 

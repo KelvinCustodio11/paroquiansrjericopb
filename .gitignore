@@ -58,3 +58,4 @@ build/
 *.bak
 *.orig
 *.tmp
+preview.html

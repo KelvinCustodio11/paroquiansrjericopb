@@ -379,30 +379,56 @@
         loadingEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Buscando rádios...';
         stationList.appendChild(loadingEl);
 
-        fetch('https://de1.api.radio-browser.info/json/stations/search?tag=catholic&countrycode=BR&limit=30&order=votes&reverse=true&hidebroken=true')
-            .then(function (res) { return res.json(); })
-            .then(function (stations) {
+        /* Carrega rádios personalizadas do data/radios.json, depois complementa com Radio Browser */
+        fetch('data/radios.json?' + Date.now())
+            .then(function (res) { return res.ok ? res.json() : []; })
+            .catch(function () { return []; })
+            .then(function (customStations) {
                 stationList.innerHTML = '';
-                var featured = { name: ITACAMBARI_NAME, url_resolved: ITACAMBARI_STREAM, favicon: '', tags: '', state: 'Jericó/PB' };
-                stationList.appendChild(buildItem(featured, true, isItacambariLive() ? 'AO VIVO' : 'Paróquial'));
 
-                if (stations && stations.length) {
-                    stations.forEach(function (s) { stationList.appendChild(buildItem(s, false, null)); });
+                /* Exibe as rádios cadastradas no CMS (destaque primeiro, depois demais) */
+                if (customStations && customStations.length) {
+                    customStations.forEach(function (r) {
+                        var s = {
+                            name:         r.nome,
+                            url_resolved: r.url,
+                            favicon:      r.favicon || '',
+                            tags:         r.descricao || '',
+                            state:        '',
+                        };
+                        var badge = r.destaque ? (currentUrl === r.url ? 'AO VIVO' : 'Destaque') : null;
+                        stationList.appendChild(buildItem(s, r.destaque, badge));
+                    });
                 } else {
-                    var emptyEl = document.createElement('div');
-                    emptyEl.className   = 'radio-station-loading';
-                    emptyEl.textContent = 'Nenhuma outra rádio encontrada.';
-                    stationList.appendChild(emptyEl);
+                    /* Fallback: sempre exibe Itacambarí se radios.json vazio */
+                    var featured = { name: ITACAMBARI_NAME, url_resolved: ITACAMBARI_STREAM, favicon: '', tags: '', state: 'Jericó/PB' };
+                    stationList.appendChild(buildItem(featured, true, isItacambariLive() ? 'AO VIVO' : 'Paróquial'));
                 }
-            })
-            .catch(function () {
-                stationList.innerHTML = '';
-                var featured = { name: ITACAMBARI_NAME, url_resolved: ITACAMBARI_STREAM, favicon: '', tags: '', state: 'Jericó/PB' };
-                stationList.appendChild(buildItem(featured, true, isItacambariLive() ? 'AO VIVO' : 'Paróquial'));
-                var errEl = document.createElement('div');
-                errEl.className   = 'radio-station-loading';
-                errEl.textContent = 'Não foi possível carregar outras rádios.';
-                stationList.appendChild(errEl);
+
+                /* Separador para rádios externas */
+                var sep = document.createElement('div');
+                sep.className = 'radio-station-loading';
+                sep.style.cssText = 'font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.6;padding:8px 12px 4px;';
+                sep.textContent = 'Outras rádios católicas';
+                stationList.appendChild(sep);
+
+                /* API pública: mais rádios católicas brasileiras */
+                fetch('https://de1.api.radio-browser.info/json/stations/search?tag=catholic&countrycode=BR&limit=30&order=votes&reverse=true&hidebroken=true')
+                    .then(function (res) { return res.json(); })
+                    .then(function (stations) {
+                        stationList.removeChild(sep);
+                        if (stations && stations.length) {
+                            var divSep = document.createElement('div');
+                            divSep.className = 'radio-station-loading';
+                            divSep.style.cssText = 'font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.6;padding:8px 12px 4px;';
+                            divSep.textContent = 'Outras rádios católicas';
+                            stationList.appendChild(divSep);
+                            stations.forEach(function (s) { stationList.appendChild(buildItem(s, false, null)); });
+                        }
+                    })
+                    .catch(function () {
+                        stationList.removeChild(sep);
+                    });
             });
     }
 
@@ -463,6 +489,11 @@
     restoreState();
 
     /* ── PJAX: navegação sem recarregar (mantém rádio tocando) ──────────── */
+
+    /* Guard contra dupla inicialização quando radio-player.js é carregado
+     * mais de uma vez (ex.: script duplicado na página ou após troca de body) */
+    if (window.__nsr_pjax_init) { return; }
+    window.__nsr_pjax_init = true;
 
     /* Overlay para fade entre páginas (fica abaixo do player) */
     var pjaxOverlay = document.createElement('div');
@@ -530,15 +561,37 @@
                     setTimeout(function () { if (prog.parentNode) prog.parentNode.removeChild(prog); }, 300);
                 }, 200);
 
-                /* Re-executa function.js */
-                var s = document.createElement('script');
-                s.src = 'js/function.js?' + Date.now();
-                document.body.appendChild(s);
+                /* Re-executa scripts necessários para a nova página */
+                var scriptsToRun = ['js/function.js', 'js/active-nav.js'];
 
-                /* Notifica demais módulos que o DOM foi trocado */
-                setTimeout(function () {
-                    document.dispatchEvent(new CustomEvent('pjax:ready'));
-                }, 0);
+                /* Scripts página-específicos: detecta pelos <script src> do novo body */
+                var pageScripts = Array.from(newDoc.querySelectorAll('script[src]'))
+                    .map(function (s) { return s.getAttribute('src').split('?')[0]; })
+                    .filter(function (src) {
+                        /* Só scripts específicos de página (não os do partial comum) */
+                        var commons = ['jquery', 'bootstrap', 'validator', 'slicknav',
+                            'swiper', 'waypoints', 'counterup', 'magnific', 'SmoothScroll',
+                            'parallaxie', 'gsap', 'magiccursor', 'SplitText', 'ScrollTrigger',
+                            'YTPlayer', 'plyr', 'wow', 'function.js', 'active-nav.js',
+                            'radio-player.js', 'horarios-missa', 'agenda-pastoral'];
+                        return !commons.some(function (c) { return src.indexOf(c) !== -1; });
+                    });
+                pageScripts.forEach(function (src) { scriptsToRun.push(src); });
+
+                var scriptIdx = 0;
+                function runNextScript() {
+                    if (scriptIdx >= scriptsToRun.length) {
+                        /* Notifica demais módulos que o DOM foi trocado */
+                        document.dispatchEvent(new CustomEvent('pjax:ready'));
+                        return;
+                    }
+                    var s = document.createElement('script');
+                    s.src = scriptsToRun[scriptIdx++] + '?' + Date.now();
+                    s.onload = runNextScript;
+                    s.onerror = runNextScript;
+                    document.body.appendChild(s);
+                }
+                runNextScript();
             })
             .catch(function () {
                 pjaxOverlay.style.opacity = '0';

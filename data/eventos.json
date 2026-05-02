@@ -1,8 +1,8 @@
 {
     "eventos": [
         {
-            "slug": "assembleia-pascom-2026",
-            "titulo": "Assembleia Forânea",
+            "slug": "assembleia-foranea-4321",
+            "titulo": "Assembleia Forânea 4321",
             "subtitulo": "Encontro formativo para os agentes de comunicação da Forania de Jericó",
             "data_inicio": "2026-05-10",
             "data_fim": "2026-05-10",
@@ -10,6 +10,8 @@
             "local": "Salão Paroquial — Jericó/PB",
             "categoria": "pastoral",
             "status": "agendado",
+            "resumo": "Resumo",
+            "conteudo": "<h2>Sobre a Assembleia Forânea 2026</h2><p>A Pastoral da Comunicação (PASCOM) da Forania de Católé do Rocha convoca todos os seus membros para a Assembleia Forânea 2026. É um momento fundamental de partilha, formação e renovação do compromisso com a evangelização através dos meios de comunicação.</p><h3>Tema de 2026</h3><p><em>\"Preservar Vozes e Rostos Humanos\"</em> — Num mundo cada vez mais dominado por conteúdos automatizados e inteligência artificial, a <strong>PASCOM </strong>reafirma seu compromisso com uma comunicação que preserve a dignidade de cada ser humano. A evangelização exige autenticidade, presença e amor.</p><h3>O que esperamos desta assembleia</h3><p>Este encontro é uma oportunidade única de integração e discernimento. Ao longo do dia, vamos:</p><p><br></p>",
             "imagem_capa": "images/uploads/events/assembleia-pascom-2026-capa.png",
             "stats_bar": [
                 {
@@ -31,7 +33,8 @@
                 "Planejamento pastoral da PASCOM para 2026",
                 "Grupos de trabalho por área de atuação",
                 "Missa de encerramento com todos os participantes",
-                "testando"
+                "testando123",
+                "treewrterterwt43214"
             ],
             "texto_pos_topicos": "A participação é aberta a todos os agentes da PASCOM da Forania. Confirmação de presença obrigatória pelo WhatsApp da paróquia.",
             "galeria": {
@@ -109,10 +112,10 @@
                     "aberto": false
                 },
                 {
-                    "slug": "plenaria",
+                    "slug": "plenaria2134",
                     "hora": "13h30",
-                    "titulo": "Plenária e Deliberações",
-                    "descricao": "Apresentação dos resultados dos grupos, votação das propostas e definição do plano pastoral da PASCOM forânea.",
+                    "titulo": "Plenária e Deliberações qew",
+                    "descricao": "Apresentação dos resultados dos grupos, votação das propostas e definição do plano pastoral da PASCOM forânea.eqr",
                     "icone": "fa-vote-yea",
                     "local_display": "Salão Principal",
                     "horario_display": "13h30 – 15h00",
@@ -173,6 +176,13 @@
                     "progresso": 75
                 }
             ],
+            "inscricao": {
+                "obrigatoria": false,
+                "link": null,
+                "vagas_total": null,
+                "vagas_restantes": null,
+                "valor": null
+            },
             "publicado": true,
             "destaque": true
         },
@@ -207,7 +217,7 @@
                 "Procissão luminosa toda sexta-feira",
                 "Adoração ao Santíssimo nas quartas-feiras",
                 "Coroação solene de Nossa Senhora no dia 31",
-                "teste"
+                "teste123"
             ],
             "texto_pos_topicos": "Todas as celebrações são abertas à comunidade e não exigem inscrição prévia. Venha participar!",
             "galeria": {

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\IconPickerField;
 use App\Filament\Resources\EventoResource\Pages;
 use App\Models\Evento;
 use Filament\Forms;
@@ -144,6 +145,35 @@ class EventoResource extends Resource
                         Forms\Components\Toggle::make('destaque')->label('Destaque na home'),
                     ]),
 
+                Forms\Components\Section::make('Inscrição / Acesso (opcional)')
+                    ->description('Preencha se o evento exige inscrição prévia. Deixe vazio para exibir "Entrada gratuita — sem inscrição".')
+                    ->collapsed()
+                    ->schema([
+                        Forms\Components\Toggle::make('inscricao.obrigatoria')
+                            ->label('Inscrição obrigatória')
+                            ->live()
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('inscricao.link')
+                            ->label('Link para inscrição')
+                            ->url()
+                            ->placeholder('https://forms.gle/...')
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('inscricao.vagas_total')
+                            ->label('Total de vagas')
+                            ->numeric()
+                            ->minValue(0),
+                        Forms\Components\TextInput::make('inscricao.vagas_restantes')
+                            ->label('Vagas restantes')
+                            ->numeric()
+                            ->minValue(0),
+                        Forms\Components\TextInput::make('inscricao.valor')
+                            ->label('Valor (R$)')
+                            ->numeric()
+                            ->minValue(0)
+                            ->hint('0 = gratuito'),
+                    ])
+                    ->columns(2),
+
                 Forms\Components\Section::make('Barra de Estatísticas (opcional)')
                     ->description('Exibe 3 números/valores em destaque abaixo da imagem de capa. Deixe vazio para usar a data/horário/categoria automaticamente.')
                     ->collapsed()
@@ -260,9 +290,11 @@ class EventoResource extends Resource
                                     Forms\Components\TextInput::make('hora')
                                         ->label('Horário')
                                         ->placeholder('Ex: 9h00'),
-                                    Forms\Components\TextInput::make('icone')
-                                        ->label('Ícone FA (sem fa-solid)')
-                                        ->placeholder('Ex: fa-calendar-days'),
+                                    IconPickerField::make('icone')
+                                        ->label('Ícone'),
+                                Forms\Components\Placeholder::make('icone_hint_prog')
+                                        ->label('')
+                                        ->content(''),
                                 ]),
                                 Forms\Components\TextInput::make('titulo')
                                     ->label('Título do item')
@@ -301,9 +333,8 @@ class EventoResource extends Resource
                         Forms\Components\Repeater::make('sidebar_items')
                             ->label('Itens de informação')
                             ->schema([
-                                Forms\Components\TextInput::make('icone')
-                                    ->label('Ícone FA')
-                                    ->placeholder('Ex: fa-calendar-days')
+                                IconPickerField::make('icone')
+                                    ->label('Ícone')
                                     ->required(),
                                 Forms\Components\TextInput::make('titulo')
                                     ->label('Rótulo')
@@ -393,6 +424,12 @@ class EventoResource extends Resource
                 Tables\Filters\TernaryFilter::make('publicado'),
             ])
             ->actions([
+                Tables\Actions\Action::make('preview')
+                    ->label('Visualizar')
+                    ->icon('heroicon-o-eye')
+                    ->color('gray')
+                    ->url(fn (Evento $record): string => 'http://localhost:3000/eventos/' . $record->slug . '.html')
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

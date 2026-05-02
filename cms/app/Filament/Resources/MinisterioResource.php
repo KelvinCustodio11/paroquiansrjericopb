@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\IconPickerField;
 use App\Filament\Resources\MinisterioResource\Pages;
 use App\Models\Ministerio;
 use Filament\Forms;
@@ -30,7 +31,7 @@ class MinisterioResource extends Resource
                 Forms\Components\TextInput::make('slug')->required()->unique(ignoreRecord: true)
                     ->rules(['regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/']),
                 Forms\Components\Textarea::make('descricao')->label('Descrição')->required()->rows(3)->columnSpanFull(),
-                Forms\Components\TextInput::make('icone')->label('Ícone Font Awesome (ex.: fa-solid fa-music)'),
+                IconPickerField::make('icone')->label('Ícone'),
                 Forms\Components\FileUpload::make('imagem')
                     ->label('Imagem do Ministério')
                     ->disk('site_static')

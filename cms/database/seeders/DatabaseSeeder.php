@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             CompromissoSeeder::class,
             MinisterioSeeder::class,
             ParocoSeeder::class,
+            ConfiguracaoSeeder::class,
         ]);
     }
 }
