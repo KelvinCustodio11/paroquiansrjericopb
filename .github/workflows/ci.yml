@@ -95,7 +95,7 @@ jobs:
           done
 
   deploy:
-    name: Deploy para Plesk (FTP/SSH)
+    name: Deploy para Plesk
     runs-on: ubuntu-latest
     needs: [validate, audit]
     if: github.ref == 'refs/heads/production' && github.event_name == 'push'
@@ -113,27 +113,57 @@ jobs:
           node scripts/build-content.js
           node build.js
 
-      - name: Deploy via FTP para Plesk
+      # ── Passo 1: Site estático → httpdocs/ ───────────────────────────────
+      # cms/ é EXCLUÍDO aqui — ficará em pasta separada (fora de httpdocs/)
+      # para evitar exposição de .env, database.sqlite e demais arquivos PHP.
+      - name: Deploy site estático → httpdocs/
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          server-dir: ${{ secrets.FTP_HTTPDOCS_DIR }}
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             **/_template-avenix/**
             **/_template-paroquia/**
-            **/cms/vendor/**
-            **/cms/node_modules/**
-            **/cms/storage/**
-            **/cms/.env
-            **/cms/database/database.sqlite
+            **/cms/**
+            **/scripts/**
+            **/templates/**
+            **/schemas/**
+            **/partials/**
             **/README*.md
             **/PADRONIZACAO*.md
             **/MELHORIAS*.md
             **/AGENTES*.md
             **/SUGESTAO*.md
+            **/package*.json
+            **/build.js
+
+      # ── Passo 2: CMS Laravel → pasta FORA do httpdocs/ ──────────────────
+      # admin.pascomjerico.com.br aponta para FTP_CMS_DIR/public/ no Plesk.
+      # Nunca enviar: .env, database.sqlite, storage/app (gerenciados no servidor).
+      - name: Deploy CMS Laravel → cms/ (fora de httpdocs)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./cms/
+          server-dir: ${{ secrets.FTP_CMS_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/vendor/**
+            **/node_modules/**
+            **/.env
+            **/.env.*
+            **/database/database.sqlite
+            **/storage/app/**
+            **/storage/logs/**
+            **/storage/framework/cache/**
+            **/storage/framework/sessions/**
+            **/storage/framework/views/**
