@@ -11,6 +11,7 @@ Thumbs.db
 # Uploads de imagens (arquivos reais — rastreados só via .gitkeep)
 images/uploads/**
 !images/uploads/**/.gitkeep
+!images/uploads/logos/**
 
 # CMS — dependências geradas (não versionar)
 cms/vendor/
