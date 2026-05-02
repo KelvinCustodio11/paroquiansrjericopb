@@ -1,3 +1,101 @@
 {
-    "artigos": []
+    "artigos": [
+        {
+            "slug": "artigo-recente",
+            "titulo": "Porro cumque ab.",
+            "data_publicacao": "2026-05-02",
+            "autor": {
+                "nome": "Leonora Lynch Sr."
+            },
+            "categoria": "noticias",
+            "tags": [],
+            "resumo": "Qui delectus nulla incidunt molestiae itaque quia voluptatibus itaque est ut ex tenetur.",
+            "conteudo": "<p>Harum ea dolores quia numquam inventore. Possimus ex cum quasi atque. Harum voluptas occaecati minima cumque.</p>",
+            "destaque": false,
+            "publicado": true,
+            "imagem_capa": {
+                "url": "images/blog/artigo-default.jpg",
+                "alt": "Porro cumque ab."
+            }
+        },
+        {
+            "slug": "artigo-antigo",
+            "titulo": "Provident ea deserunt non voluptatem.",
+            "data_publicacao": "2026-04-22",
+            "autor": {
+                "nome": "Guido Hudson"
+            },
+            "categoria": "pastoral",
+            "tags": [],
+            "resumo": "Unde quod autem quia et ea est officiis doloremque id et et est.",
+            "conteudo": "<p>Veniam nobis a omnis. Reiciendis molestias est et a ipsam consequatur est. Et at ducimus quidem.</p>",
+            "destaque": false,
+            "publicado": true,
+            "imagem_capa": {
+                "url": "images/blog/artigo-default.jpg",
+                "alt": "Provident ea deserunt non voluptatem."
+            }
+        },
+        {
+            "slug": "artigo-de-teste",
+            "titulo": "Artigo de Teste",
+            "data_publicacao": "2026-04-08",
+            "autor": {
+                "nome": "Carmine Hamill IV"
+            },
+            "categoria": "evangelho",
+            "tags": [],
+            "resumo": "Molestiae non occaecati nihil commodi voluptatem magnam praesentium ut quibusdam voluptatum totam cumque sit.",
+            "conteudo": "<p>Quam corporis ipsum animi omnis culpa praesentium. Aut deleniti recusandae sunt tempora. Suscipit consectetur dolore praesentium id commodi in corporis.</p>",
+            "destaque": false,
+            "publicado": true,
+            "imagem_capa": {
+                "url": "images/blog/artigo-default.jpg",
+                "alt": "Eum sit qui praesentium ut quis."
+            }
+        },
+        {
+            "slug": "artigo-campos-test",
+            "titulo": "Asperiores accusantium et nisi quia et.",
+            "data_publicacao": "2026-04-06",
+            "autor": {
+                "nome": "Kali Kuhlman PhD"
+            },
+            "categoria": "evangelho",
+            "tags": [],
+            "resumo": "Sed impedit doloribus reiciendis qui explicabo reprehenderit sunt ad numquam voluptas voluptatibus similique tenetur sit aut.",
+            "conteudo": "<p>Quia et quod tenetur perferendis quae alias possimus. Dolorem vitae quo unde asperiores.</p>",
+            "destaque": false,
+            "publicado": true,
+            "imagem_capa": {
+                "url": "images/blog/artigo-default.jpg",
+                "alt": "Asperiores accusantium et nisi quia et."
+            }
+        },
+        {
+            "slug": "boas-vindas-novo-site",
+            "titulo": "Bem-vindos ao novo site da Paróquia NSR Jericó/PB",
+            "data_publicacao": "2026-04-01",
+            "autor": {
+                "nome": "PASCOM Paróquia NSR",
+                "papel": "Pastoral da Comunicação"
+            },
+            "categoria": "noticias",
+            "tags": [
+                "site",
+                "comunicação",
+                "paróquia"
+            ],
+            "resumo": "Apresentamos o novo portal da Paróquia Nossa Senhora dos Remédios, com agenda litúrgica, eventos, horários de missas e muito mais.",
+            "conteudo": "<p>É com grande alegria que apresentamos o novo portal da nossa Paróquia Nossa Senhora dos Remédios em Jericó/PB.</p><p>Aqui você encontra a agenda litúrgica diária, eventos, horários de missas, informações sobre nossos ministérios e contato direto com a equipe pastoral.</p><p>Esperamos que este espaço fortaleça nossa comunhão como comunidade de fé.</p>",
+            "destaque": true,
+            "publicado": true,
+            "imagem_capa": {
+                "url": "/images/uploads/demo/blog-1.jpg",
+                "alt": "Fachada da Paróquia Nossa Senhora dos Remédios em Jericó/PB",
+                "largura": 1200,
+                "altura": 800
+            }
+        }
+    ]
 }
