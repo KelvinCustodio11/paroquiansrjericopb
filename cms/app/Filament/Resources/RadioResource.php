@@ -20,7 +20,7 @@ class RadioResource extends Resource
 
     protected static ?string $navigationLabel = 'Rádios';
 
-    protected static ?string $navigationGroup = 'Conteúdo';
+    protected static ?string $navigationGroup = 'Rádio';
 
     protected static ?int $navigationSort = 10;
 
@@ -44,8 +44,20 @@ class RadioResource extends Resource
                 ->helperText('URL direta do stream de áudio (mp3, aac, ogg...)'),
 
             Forms\Components\TextInput::make('descricao')
-                ->label('Descrição')
-                ->maxLength(200),
+                ->label('Descrição curta')
+                ->maxLength(200)
+                ->helperText('Linha 1 sob o nome da rádio no player (ex: "Rádio diocesana — João Pessoa/PB")'),
+
+            Forms\Components\TextInput::make('programacao')
+                ->label('Programação / Horários')
+                ->maxLength(200)
+                ->helperText('Linha 2 no player: programação fixa (ex: "Missa ao vivo às 6h, 8h e 18h")'),
+
+            Forms\Components\TextInput::make('programacao_url')
+                ->label('URL da programação ao vivo (opcional)')
+                ->url()
+                ->maxLength(500)
+                ->helperText('URL de API JSON com {"programa":"..."}. Se informada, sobrepõe o campo Programação em tempo real.'),
 
             Forms\Components\TextInput::make('favicon')
                 ->label('URL do Favicon/Logo (opcional)')

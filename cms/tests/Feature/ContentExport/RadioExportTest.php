@@ -33,7 +33,7 @@ class RadioExportTest extends TestCase
 
         $this->assertFileExists($this->dataDir.'/radios.json');
         $content = json_decode(File::get($this->dataDir.'/radios.json'), true);
-        $radio = collect($content ?? [])->firstWhere('nome', 'Rádio Teste');
+        $radio = collect($content['radios'] ?? [])->firstWhere('nome', 'Rádio Teste');
 
         $this->assertNotNull($radio);
         $this->assertEquals('catolica', $radio['categoria']);
@@ -49,7 +49,7 @@ class RadioExportTest extends TestCase
         $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/radios.json'), true);
-        $nomes = array_column($content ?? [], 'nome');
+        $nomes = array_column($content['radios'] ?? [], 'nome');
 
         $this->assertNotContains('Rádio Inativa', $nomes);
     }
@@ -63,7 +63,7 @@ class RadioExportTest extends TestCase
         $this->artisan('content:export')->assertSuccessful();
 
         $content = json_decode(File::get($this->dataDir.'/radios.json'), true);
-        $nomes = array_column($content ?? [], 'nome');
+        $nomes = array_column($content['radios'] ?? [], 'nome');
         $posDestaque = array_search('Destaque', $nomes);
         $posNormal = array_search('Normal', $nomes);
 

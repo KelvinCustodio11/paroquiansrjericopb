@@ -1,1 +1,7 @@
-[]
+{
+    "radios": [],
+    "config": {
+        "externas_habilitadas": false,
+        "regras": []
+    }
+}

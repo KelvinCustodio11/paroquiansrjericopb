@@ -16,6 +16,8 @@ class Radio extends Model
         'nome',
         'url',
         'descricao',
+        'programacao',
+        'programacao_url',
         'favicon',
         'destaque',
         'ativa',

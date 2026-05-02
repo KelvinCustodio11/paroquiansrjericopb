@@ -139,13 +139,38 @@
         }
     }
 
+    /* ── Busca programação ao vivo via URL de API ─────────────────────────── */
+    function fetchProgramacaoLive(url, callback) {
+        fetch(url)
+            .then(function (res) { return res.ok ? res.json() : null; })
+            .then(function (data) {
+                if (data && data.programa) { callback(data.programa); }
+            })
+            .catch(function () { /* silencioso — não quebra o player */ });
+    }
+
     /* ── Programação da rádio selecionada (subtítulo fixo por rádio) ──────── */
     function setProgramInfo(station) {
         if (!station) { return; }
-        var url = station.url_resolved || station.url || '';
+        var url     = station.url_resolved || station.url || '';
+        var progUrl = station.programacao_url || '';
+        var prog    = station.programacao || '';
+
         if (url === ITACAMBARI_STREAM) {
             programEl.innerHTML = 'Transmissão da Santa Missa ' +
                 '<span class="radio-time"><i class="fa-regular fa-clock"></i> 8h00 às 9h30</span>';
+        } else if (prog || progUrl) {
+            /* Exibe estático imediatamente; atualiza se tiver URL ao vivo */
+            programEl.textContent = prog || 'Buscando programação…';
+            if (progUrl) {
+                var capturedUrl = url;
+                fetchProgramacaoLive(progUrl, function (nomeProg) {
+                    /* Só atualiza se a rádio ainda for a mesma */
+                    if (audio.src.indexOf(capturedUrl) !== -1 || currentUrl === capturedUrl) {
+                        programEl.textContent = nomeProg;
+                    }
+                });
+            }
         } else {
             var tags = station.tags
                 ? station.tags.split(',').slice(0, 3).map(function (t) { return t.trim(); }).join(' · ')
@@ -347,7 +372,8 @@
         var tags = station.tags
             ? station.tags.split(',').slice(0, 2).map(function (t) { return t.trim(); }).join(' · ')
             : '';
-        metaDiv.textContent = tags || station.state || station.country || '';
+        /* Prioridade: programacao estática > tags da API > localização */
+        metaDiv.textContent = station.programacao || tags || station.state || station.country || '';
 
         infoDiv.appendChild(nameDiv);
         infoDiv.appendChild(metaDiv);
@@ -381,10 +407,22 @@
 
         /* Carrega rádios personalizadas do data/radios.json, depois complementa com Radio Browser */
         fetch('data/radios.json?' + Date.now())
-            .then(function (res) { return res.ok ? res.json() : []; })
-            .catch(function () { return []; })
-            .then(function (customStations) {
+            .then(function (res) { return res.ok ? res.json() : {}; })
+            .catch(function () { return {}; })
+            .then(function (payload) {
                 stationList.innerHTML = '';
+
+                /* Suporta formato antigo (array) e novo (objeto {radios, config}) */
+                var customStations = Array.isArray(payload) ? payload : (payload.radios || []);
+                var radioConfig    = (!Array.isArray(payload) && payload.config) ? payload.config : {};
+                var regrasExternas = (radioConfig.externas_habilitadas && Array.isArray(radioConfig.regras))
+                    ? radioConfig.regras
+                    : [];
+
+                /* Fallback: se não há regras configuradas, usa busca padrão */
+                if (regrasExternas.length === 0) {
+                    regrasExternas = [{ label: 'Rádios católicas', tag: 'catholic', pais: 'BR', limite: 30 }];
+                }
 
                 /* ── Filtros por categoria e estado ─────────────────────── */
                 var filtroAtivo = { categoria: 'todos', estado: 'todos' };
@@ -468,11 +506,13 @@
 
                     filtradas.forEach(function (r) {
                         var s = {
-                            name:         r.nome,
-                            url_resolved: r.url,
-                            favicon:      r.favicon || '',
-                            tags:         r.descricao || '',
-                            state:        (r.cidade ? r.cidade + ' — ' : '') + (r.estado || ''),
+                            name:             r.nome,
+                            url_resolved:     r.url,
+                            favicon:          r.favicon || '',
+                            tags:             r.descricao || '',
+                            programacao:      r.programacao || '',
+                            programacao_url:  r.programacao_url || '',
+                            state:            (r.cidade ? r.cidade + ' — ' : '') + (r.estado || ''),
                         };
                         var badge = r.destaque ? (currentUrl === r.url ? 'AO VIVO' : 'Destaque') : null;
                         stationList.appendChild(buildItem(s, r.destaque, badge));
@@ -487,30 +527,52 @@
                     stationList.appendChild(buildItem(featured, true, isItacambariLive() ? 'AO VIVO' : 'Paróquial'));
                 }
 
-                /* Separador para rádios externas */
-                var sep = document.createElement('div');
-                sep.className = 'radio-station-loading';
-                sep.style.cssText = 'font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.6;padding:8px 12px 4px;';
-                sep.textContent = 'Outras rádios católicas';
-                stationList.appendChild(sep);
+                /* ── Busca rádios externas por regras configuradas no CMS ─── */
+                function carregarRegra(regra, onDone) {
+                    var params = new URLSearchParams({
+                        order:       'votes',
+                        reverse:     'true',
+                        hidebroken:  'true',
+                        limit:       String(regra.limite || 10),
+                    });
+                    if (regra.tag)   { params.set('tag', regra.tag); }
+                    if (regra.pais)  { params.set('countrycode', regra.pais); }
+                    if (regra.estado) { params.set('state', regra.estado); }
 
-                /* API pública: mais rádios católicas brasileiras */
-                fetch('https://de1.api.radio-browser.info/json/stations/search?tag=catholic&countrycode=BR&limit=30&order=votes&reverse=true&hidebroken=true')
-                    .then(function (res) { return res.json(); })
-                    .then(function (stations) {
-                        stationList.removeChild(sep);
+                    fetch('https://de1.api.radio-browser.info/json/stations/search?' + params.toString())
+                        .then(function (res) { return res.json(); })
+                        .then(onDone)
+                        .catch(function () { onDone([]); });
+                }
+
+                var regraIdx = 0;
+                function carregarProximaRegra() {
+                    if (regraIdx >= regrasExternas.length) { return; }
+                    var regra = regrasExternas[regraIdx++];
+
+                    var sepEl = document.createElement('div');
+                    sepEl.className = 'radio-station-loading';
+                    sepEl.style.cssText = 'font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.6;padding:8px 12px 4px;';
+                    sepEl.textContent = regra.label || 'Outras rádios';
+                    stationList.appendChild(sepEl);
+
+                    carregarRegra(regra, function (stations) {
+                        /* Remove o separador de loading; readiciona apenas se tiver resultados */
+                        if (stationList.contains(sepEl)) { stationList.removeChild(sepEl); }
                         if (stations && stations.length) {
                             var divSep = document.createElement('div');
                             divSep.className = 'radio-station-loading';
                             divSep.style.cssText = 'font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.6;padding:8px 12px 4px;';
-                            divSep.textContent = 'Outras rádios católicas';
+                            divSep.textContent = regra.label || 'Outras rádios';
                             stationList.appendChild(divSep);
                             stations.forEach(function (s) { stationList.appendChild(buildItem(s, false, null)); });
                         }
-                    })
-                    .catch(function () {
-                        stationList.removeChild(sep);
+                        /* Carrega próxima regra em sequência para não sobrecarregar a API */
+                        carregarProximaRegra();
                     });
+                }
+
+                carregarProximaRegra();
             });
     }
 

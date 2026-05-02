@@ -15,6 +15,7 @@ use App\Models\MenuItem;
 use App\Models\Ministerio;
 use App\Models\Paroco;
 use App\Models\Radio;
+use App\Models\RadioBuscaExterna;
 use App\Models\Testemunho;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -126,19 +127,40 @@ class ContentExport extends Command
 
         // Rádios
         $radios = Radio::where('ativa', true)->orderBy('destaque', 'desc')->orderBy('ordem')->get()
-            ->map(fn (Radio $r) => [
-                'nome'      => $r->nome,
-                'url'       => $r->url,
-                'descricao' => $r->descricao,
-                'favicon'   => $r->favicon,
-                'destaque'  => (bool) $r->destaque,
-                'categoria' => $r->categoria ?? 'catolica',
-                'estado'    => $r->estado,
-                'cidade'    => $r->cidade,
-            ])->values()->all();
+            ->map(fn (Radio $r) => array_filter([
+                'nome'            => $r->nome,
+                'url'             => $r->url,
+                'descricao'       => $r->descricao,
+                'programacao'     => $r->programacao,
+                'programacao_url' => $r->programacao_url,
+                'favicon'         => $r->favicon,
+                'destaque'        => (bool) $r->destaque,
+                'categoria'       => $r->categoria ?? 'catolica',
+                'estado'          => $r->estado,
+                'cidade'          => $r->cidade,
+            ], fn ($v) => $v !== null && $v !== ''))->values()->all();
+
+        $regrasBusca = RadioBuscaExterna::where('ativo', true)->orderBy('ordem')->get()
+            ->map(fn (RadioBuscaExterna $regra) => array_filter([
+                'label'  => $regra->label,
+                'tag'    => $regra->tag,
+                'pais'   => $regra->pais,
+                'estado' => $regra->estado,
+                'regiao' => $regra->regiao,
+                'limite' => $regra->limite,
+            ], fn ($v) => $v !== null && $v !== ''))->values()->all();
+
+        $radioPayload = [
+            'radios' => $radios,
+            'config' => [
+                'externas_habilitadas' => count($regrasBusca) > 0,
+                'regras'               => $regrasBusca,
+            ],
+        ];
+
         File::put($dataDir.'/radios.json',
-            json_encode($radios, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
-        $this->info('OK radios.json ('.count($radios).' rádio(s))');
+            json_encode($radioPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
+        $this->info('OK radios.json ('.count($radios).' rádio(s), '.count($regrasBusca).' regra(s) externa(s))');
 
         // Galeria
         $albuns = GaleriaAlbum::with('fotos')
