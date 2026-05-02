@@ -1,6 +1,7 @@
 {
     "radios": [],
     "config": {
+        "titulo_painel": "Rádios Católicas ao Vivo",
         "externas_habilitadas": false,
         "regras": []
     }

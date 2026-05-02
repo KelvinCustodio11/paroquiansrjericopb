@@ -27,7 +27,7 @@
         '<div class="radio-player-bar" id="radioPlayerBar" role="region" aria-label="Player de Rádio">' +
             '<div class="radio-station-panel" id="radioStationPanel" aria-label="Lista de rádios católicas">' +
                 '<div class="radio-station-panel-header">' +
-                    '<span>Rádios Católicas ao Vivo</span>' +
+                    '<span id="radioPanelTitulo">Rádios Católicas ao Vivo</span>' +
                     '<button class="radio-panel-close" id="radioPanelClose" aria-label="Fechar lista">' +
                         '<i class="fa-solid fa-chevron-down"></i>' +
                     '</button>' +
@@ -96,6 +96,7 @@
     var listBtn       = document.getElementById('radioListBtn');
     var panel         = document.getElementById('radioStationPanel');
     var panelClose    = document.getElementById('radioPanelClose');
+    var panelTitulo   = document.getElementById('radioPanelTitulo');
     var stationList   = document.getElementById('radioStationList');
     var radioBars     = document.getElementById('radioBars');
     var fabTop        = document.getElementById('fabTopBtn');
@@ -139,6 +140,12 @@
         }
     }
 
+    /* ── Formata janela de horário como string legível ───────────────────── */
+    function formatHorario(ini, fim) {
+        if (!ini) { return ''; }
+        return fim ? ini + ' – ' + fim : 'A partir de ' + ini;
+    }
+
     /* ── Busca programação ao vivo via URL de API ─────────────────────────── */
     function fetchProgramacaoLive(url, callback) {
         fetch(url)
@@ -161,21 +168,42 @@
                 '<span class="radio-time"><i class="fa-regular fa-clock"></i> 8h00 às 9h30</span>';
         } else if (prog || progUrl) {
             /* Exibe estático imediatamente; atualiza se tiver URL ao vivo */
+            var horario = formatHorario(station.hora_inicio, station.hora_fim);
             programEl.textContent = prog || 'Buscando programação…';
+            /* Adiciona badge de horário após o texto */
+            if (horario && !programEl.querySelector('.radio-time')) {
+                var span = document.createElement('span');
+                span.className = 'radio-time';
+                span.innerHTML = ' <i class="fa-regular fa-clock"></i> ' + horario;
+                programEl.appendChild(span);
+            }
             if (progUrl) {
                 var capturedUrl = url;
                 fetchProgramacaoLive(progUrl, function (nomeProg) {
                     /* Só atualiza se a rádio ainda for a mesma */
                     if (audio.src.indexOf(capturedUrl) !== -1 || currentUrl === capturedUrl) {
                         programEl.textContent = nomeProg;
+                        if (horario) {
+                            var sp = document.createElement('span');
+                            sp.className = 'radio-time';
+                            sp.innerHTML = ' <i class="fa-regular fa-clock"></i> ' + horario;
+                            programEl.appendChild(sp);
+                        }
                     }
                 });
             }
         } else {
+            var horarioFallback = formatHorario(station.hora_inicio, station.hora_fim);
             var tags = station.tags
                 ? station.tags.split(',').slice(0, 3).map(function (t) { return t.trim(); }).join(' · ')
                 : '';
-            programEl.textContent = tags || station.state || station.country || '';
+            var textoBase = tags || station.state || station.country || '';
+            if (horarioFallback) {
+                programEl.innerHTML = (textoBase ? textoBase + ' ' : '') +
+                    '<span class="radio-time"><i class="fa-regular fa-clock"></i> ' + horarioFallback + '</span>';
+            } else {
+                programEl.textContent = textoBase;
+            }
         }
     }
 
@@ -372,11 +400,30 @@
         var tags = station.tags
             ? station.tags.split(',').slice(0, 2).map(function (t) { return t.trim(); }).join(' · ')
             : '';
-        /* Prioridade: programacao estática > tags da API > localização */
-        metaDiv.textContent = station.programacao || tags || station.state || station.country || '';
+        /* Linha 1: descrição / tags / localização */
+        var descricao = tags || station.state || station.country || '';
+        metaDiv.textContent = descricao;
 
         infoDiv.appendChild(nameDiv);
         infoDiv.appendChild(metaDiv);
+
+        /* Linha 2 (opcional): programação + horário de transmissão */
+        var progTexto    = station.programacao || '';
+        var horarioTexto = formatHorario(station.hora_inicio, station.hora_fim);
+        if (progTexto || horarioTexto) {
+            var progDiv = document.createElement('div');
+            progDiv.className = 'radio-station-item-prog';
+            if (progTexto) {
+                progDiv.textContent = progTexto;
+            }
+            if (horarioTexto) {
+                var clockSpan = document.createElement('span');
+                clockSpan.className = 'radio-time';
+                clockSpan.innerHTML = (progTexto ? ' ' : '') + '<i class="fa-regular fa-clock"></i> ' + horarioTexto;
+                progDiv.appendChild(clockSpan);
+            }
+            infoDiv.appendChild(progDiv);
+        }
         btn.appendChild(infoDiv);
 
         if (badgeText) {
@@ -418,6 +465,11 @@
                 var regrasExternas = (radioConfig.externas_habilitadas && Array.isArray(radioConfig.regras))
                     ? radioConfig.regras
                     : [];
+
+                /* Título do painel configurável */
+                if (radioConfig.titulo_painel && panelTitulo) {
+                    panelTitulo.textContent = radioConfig.titulo_painel;
+                }
 
                 /* Fallback: se não há regras configuradas, usa busca padrão */
                 if (regrasExternas.length === 0) {
@@ -512,6 +564,8 @@
                             tags:             r.descricao || '',
                             programacao:      r.programacao || '',
                             programacao_url:  r.programacao_url || '',
+                            hora_inicio:      r.hora_inicio || '',
+                            hora_fim:         r.hora_fim || '',
                             state:            (r.cidade ? r.cidade + ' — ' : '') + (r.estado || ''),
                         };
                         var badge = r.destaque ? (currentUrl === r.url ? 'AO VIVO' : 'Destaque') : null;

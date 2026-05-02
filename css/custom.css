@@ -4706,6 +4706,21 @@ header.main-header .header-sticky.active{
 	text-overflow: ellipsis;
 }
 
+.radio-station-item-prog {
+	font-size: 10px;
+	color: rgba(255, 255, 255, 0.55);
+	margin-top: 2px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-style: italic;
+}
+
+.radio-station-item-prog .radio-time {
+	font-style: normal;
+	opacity: 0.85;
+}
+
 .radio-station-badge {
 	font-size: 10px;
 	font-weight: 700;

@@ -18,6 +18,8 @@ class Radio extends Model
         'descricao',
         'programacao',
         'programacao_url',
+        'hora_inicio',
+        'hora_fim',
         'favicon',
         'destaque',
         'ativa',

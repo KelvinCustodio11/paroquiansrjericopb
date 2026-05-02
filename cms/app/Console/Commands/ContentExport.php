@@ -133,6 +133,8 @@ class ContentExport extends Command
                 'descricao'       => $r->descricao,
                 'programacao'     => $r->programacao,
                 'programacao_url' => $r->programacao_url,
+                'hora_inicio'     => $r->hora_inicio ? substr((string) $r->hora_inicio, 0, 5) : null,
+                'hora_fim'        => $r->hora_fim    ? substr((string) $r->hora_fim, 0, 5)    : null,
                 'favicon'         => $r->favicon,
                 'destaque'        => (bool) $r->destaque,
                 'categoria'       => $r->categoria ?? 'catolica',
@@ -150,9 +152,12 @@ class ContentExport extends Command
                 'limite' => $regra->limite,
             ], fn ($v) => $v !== null && $v !== ''))->values()->all();
 
+        $titulopainel = $config->radio_painel_titulo ?? 'Rádios Católicas ao Vivo';
+
         $radioPayload = [
             'radios' => $radios,
             'config' => [
+                'titulo_painel'        => $titulopainel,
                 'externas_habilitadas' => count($regrasBusca) > 0,
                 'regras'               => $regrasBusca,
             ],

@@ -378,6 +378,15 @@ class Configuracoes extends Page implements HasForms
                         Forms\Components\Tabs\Tab::make('Funcionalidades')
                             ->icon('heroicon-o-puzzle-piece')
                             ->schema([
+                                Forms\Components\Section::make('Player de Rádio')
+                                    ->description('Personalize o painel de rádio exibido no site.')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('radio_painel_titulo')
+                                            ->label('Título do painel de rádio')
+                                            ->placeholder('Rádios Católicas ao Vivo')
+                                            ->maxLength(80)
+                                            ->helperText('Texto exibido no cabeçalho do seletor de rádios (ex: "Rádios ao Vivo", "Ouça Agora")'),
+                                    ]),
                                 Forms\Components\Section::make('Devoções Diárias')
                                     ->description('Controle o que aparece na seção de devoções diárias do site.')
                                     ->columns(2)

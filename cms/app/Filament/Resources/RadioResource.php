@@ -59,6 +59,23 @@ class RadioResource extends Resource
                 ->maxLength(500)
                 ->helperText('URL de API JSON com {"programa":"..."}. Se informada, sobrepõe o campo Programação em tempo real.'),
 
+            Forms\Components\Section::make('Janela de transmissão')
+                ->description('Defina o período em que esta rádio fica no ar. Aparece como horário no player e na lista.')
+                ->columns(2)
+                ->schema([
+                    Forms\Components\TimePicker::make('hora_inicio')
+                        ->label('Início da transmissão')
+                        ->seconds(false)
+                        ->placeholder('08:00')
+                        ->helperText('Ex: 08:00 — horário de início da missa/programa'),
+
+                    Forms\Components\TimePicker::make('hora_fim')
+                        ->label('Fim da transmissão')
+                        ->seconds(false)
+                        ->placeholder('09:30')
+                        ->helperText('Ex: 09:30 — horário de encerramento'),
+                ]),
+
             Forms\Components\TextInput::make('favicon')
                 ->label('URL do Favicon/Logo (opcional)')
                 ->url()
@@ -135,6 +152,13 @@ class RadioResource extends Resource
 
                 Tables\Columns\TextColumn::make('estado')
                     ->label('UF')
+                    ->default('—'),
+
+                Tables\Columns\TextColumn::make('hora_inicio')
+                    ->label('Transmissão')
+                    ->formatStateUsing(fn ($record) => $record->hora_inicio
+                        ? substr($record->hora_inicio, 0, 5).' – '.substr($record->hora_fim ?? '', 0, 5)
+                        : '—')
                     ->default('—'),
 
                 Tables\Columns\IconColumn::make('ativa')

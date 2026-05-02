@@ -56,6 +56,7 @@ class Configuracao extends Model
         'habilitar_evangelho_dia',
         'habilitar_terco_dia',
         'habilitar_testemunhos',
+        'radio_painel_titulo',
     ];
 
     protected $casts = [
