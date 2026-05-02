@@ -3,6 +3,8 @@
 > Definição de **agentes especializados** (papéis automatizáveis com IA / responsabilidades humanas) e **skills** recomendadas para evolução contínua do projeto.
 >
 > **Regra mestra**: todos os agentes **devem respeitar o design original do template Avenix Church** e manter consistência visual em todo o projeto.
+>
+> Última revisão: **2026-05-02**. CMS em produção (Laravel 11 + Filament 3) em admin.pascomjerico.com.br.
 
 ---
 
@@ -11,12 +13,13 @@
 | Agente | Responsabilidade | Aciona quando... |
 |---|---|---|
 | **Frontend UI/UX** | Mantém padrão visual Avenix Church | Nova página, ajuste de layout, componente novo |
-| **Backend / CMS** | Painel admin, permissões, dados dinâmicos | Nova entidade no CMS, integração, autenticação |
+| **Backend / CMS** | Painel admin, recursos Filament, exportação | Nova entidade CMS, novo campo, novo template de exportação |
+| **Build / Integração** | `build.js` (partials) + `content:export` (CMS) | Alteração em partial, novo template, novo JSON |
 | **SEO + Performance** | Indexação, meta tags, velocidade | Antes de publicar conteúdo / release |
 | **Segurança + Code Review** | Auditoria contínua, prevenção | Toda PR; revisão trimestral profunda |
 | **Conteúdo / Editorial** | Padronização de posts e eventos | Cada novo post/evento |
 | **Acessibilidade (a11y)** | WCAG 2.1 AA mínimo | Toda PR de frontend |
-| **DevOps / Infra** | Deploy, backup, monitoramento | Configuração inicial e manutenção |
+| **DevOps / Infra** | Deploy CI/CD (GitHub Actions → Plesk FTP), backup | PR em `developer` → `production` |
 
 ---
 
@@ -51,23 +54,36 @@
 ## 3. Agente Backend / CMS
 
 ### Responsabilidades
-- Painel administrativo (Laravel + Filament — ver [SUGESTAO_CMS.md](SUGESTAO_CMS.md)).
-- Modelagem de dados (entities, relacionamentos).
-- **Autenticação** segura (Sanctum, 2FA opcional).
+- Painel administrativo ✅ **em produção** em admin.pascomjerico.com.br (Laravel 11 + Filament 3).
+- Manutenção e expansão dos Resources Filament em `cms/app/Filament/Resources/`.
+- Comando `content:export` (`cms/app/Console/Commands/`) — exporta JSON + gera HTMLs via templates Blade.
+- Modelagem de dados (migrations + seeds em `cms/database/`).
+- **Autenticação** segura (Filament Shield + Sanctum).
 - **Autorização** granular (Spatie Permission).
-- **API REST/GraphQL** para frontend.
-- **Workflow editorial** (rascunho → revisão → publicação).
-- **Auditoria** (Spatie Activitylog).
+- **Workflow editorial** (rascunho → publicação via campo `status`).
+- Novos recursos do backlog: Testemunhos, Menu, Footer, Devoções, ConfiguracoesResource (ver `MELHORIAS_GERAIS.md §12`).
+
+### Resources implementados
+| Resource | Exporta JSON | Gera HTML | Observações |
+|---|---|---|---|
+| `ArtigoResource` | ✅ `data/artigos.json` | ✅ `artigos/*.html` | |
+| `EventoResource` | ✅ `data/eventos.json` | ✅ `eventos/*.html` | |
+| `HomiliaResource` | ✅ `data/homilias.json` | ✅ `homilias/*.html` | |
+| `MinisterioResource` | ✅ `data/ministerios.json` | ⏳ pendente | |
+| `ParocoResource` | ✅ `data/paroco.json` | ⏳ pendente | |
+| `RadioResource` | ✅ `data/radios.json` | — | listado no player |
+| `GaleriaAlbumResource` | ✅ `data/galeria.json` | ⏳ pendente | |
+| `IgrejaResource` | ✅ `data/configuracoes.json` | ⏳ parcial | sem FileUpload img |
+| `CompromissoResource` | ✅ `data/agenda-pastoral.json` | — | |
 
 ### Skills recomendadas
-- **PHP 8.3+** moderno (typed properties, enums, readonly).
-- **Laravel 11**: Eloquent, Queues, Jobs, Events, Policies.
-- **Filament 3**: Resources, Forms, Tables, Actions, Widgets.
-- **MySQL/PostgreSQL** + migrations + seeds.
-- **Redis** para cache e queues.
-- **PHPUnit / Pest** para testes.
-- **OpenAPI** para documentar API.
-- **Spatie ecosystem** (Permission, MediaLibrary, Activitylog, Sitemap, Backup).
+- **PHP 8.2+** moderno (typed properties, enums, readonly).
+- **Laravel 11**: Eloquent, Jobs, Events, Policies, Artisan Commands.
+- **Filament 3**: Resources, Forms, Tables, Actions, Widgets, Infolists.
+- **SQLite** (dev) + **MySQL** (produção Plesk).
+- **Pest PHP** para testes de integração do pipeline de exportação.
+- **Spatie ecosystem** (Permission, MediaLibrary, Activitylog).
+- Templates Blade simples (não são páginas web, são templates de exportação).
 
 ### Critérios de aprovação
 - [ ] Migrations reversíveis.

@@ -2,6 +2,34 @@
 
 > Análise comparativa para escolher a melhor plataforma de gerenciamento de conteúdo do site, eliminando edição manual de HTML.
 
+> **🟢 DECISÃO IMPLEMENTADA (2026-04-30):** Laravel 11 + Filament 3 escolhido e em produção.
+> Admin: https://admin.pascomjerico.com.br | CMS em `cms/` | Pipeline: `php artisan content:export --build`
+
+---
+
+## 0. Estado Atual do CMS (implementado)
+
+| Recurso | Status |
+|---|---|
+| Artigos (Blog) | ✅ CRUD + exportação HTML/JSON |
+| Eventos | ✅ CRUD + exportação HTML/JSON |
+| Homilias | ✅ CRUD + exportação HTML/JSON |
+| Ministérios | ✅ CRUD + exportação JSON |
+| Pároco | ✅ CRUD + exportação JSON |
+| Rádios | ✅ CRUD + exportação JSON |
+| Galeria de Álbuns | ✅ CRUD + exportação JSON |
+| Igreja (config. geral) | ✅ CRUD parcial (sem imagem ainda) |
+| Compromissos/Agenda | ✅ CRUD + exportação JSON |
+| Configurações do site | ✅ `data/configuracoes.json` |
+| Deploy CI/CD | ✅ GitHub Actions → FTP Plesk |
+| Autenticação | ✅ Filament Shield (usuário admin criado) |
+
+### Pendências do CMS (próximas iterações)
+- Ver backlog em `MELHORIAS_GERAIS.md §12` (itens 0-11).
+- `IgrejaResource`: FileUpload de imagem pendente.
+- Webhook de rebuild automático ao salvar.
+- Gestão de múltiplos usuários admin.
+
 ---
 
 ## 1. Necessidades funcionais identificadas
