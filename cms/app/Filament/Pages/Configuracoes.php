@@ -184,17 +184,65 @@ class Configuracoes extends Page implements HasForms
                                     })
                                     ->columnSpanFull(),
                                 Forms\Components\TextInput::make('hero_tagline')
-                                    ->label('Linha de destaque (acima do título)')
+                                    ->label('Linha de destaque principal (acima do título)')
                                     ->placeholder('Ex: Paróquia Nossa Senhora dos Remédios — Jericó/PB')
+                                    ->columnSpanFull(),
+                                Forms\Components\Repeater::make('hero_taglines')
+                                    ->label('Variações da linha de destaque (rotação automática)')
+                                    ->helperText('Se preenchido, o texto acima será substituído pelas variações abaixo, alternando com animação.')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('texto')->label('Texto')->required()->maxLength(150),
+                                        Forms\Components\ColorPicker::make('cor')->label('Cor (opcional)'),
+                                        Forms\Components\Select::make('efeito')
+                                            ->label('Efeito de transição')
+                                            ->options(['fade' => 'Fade', 'slide' => 'Slide', 'typewriter' => 'Typewriter'])
+                                            ->default('fade'),
+                                        Forms\Components\TextInput::make('duracao')->label('Duração (ms)')->numeric()->default(3000),
+                                    ])
+                                    ->columns(4)
+                                    ->addActionLabel('Adicionar variação')
+                                    ->collapsible()
+                                    ->defaultItems(0)
                                     ->columnSpanFull(),
                                 Forms\Components\TextInput::make('hero_titulo')
                                     ->label('Título principal')
                                     ->placeholder('Ex: Fé, Esperança e Amor…')
                                     ->required()
                                     ->columnSpanFull(),
+                                Forms\Components\Repeater::make('hero_titulos')
+                                    ->label('Variações do título (rotação automática)')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('texto')->label('Texto')->required()->maxLength(200),
+                                        Forms\Components\ColorPicker::make('cor')->label('Cor (opcional)'),
+                                        Forms\Components\Select::make('efeito')
+                                            ->label('Efeito')
+                                            ->options(['fade' => 'Fade', 'slide' => 'Slide', 'typewriter' => 'Typewriter'])
+                                            ->default('fade'),
+                                        Forms\Components\TextInput::make('duracao')->label('Duração (ms)')->numeric()->default(4000),
+                                    ])
+                                    ->columns(4)
+                                    ->addActionLabel('Adicionar variação')
+                                    ->collapsible()
+                                    ->defaultItems(0)
+                                    ->columnSpanFull(),
                                 Forms\Components\Textarea::make('hero_descricao')
-                                    ->label('Descrição / subtítulo')
-                                    ->rows(3)
+                                    ->label('Descrição / subtítulo principal')
+                                    ->rows(2)
+                                    ->columnSpanFull(),
+                                Forms\Components\Repeater::make('hero_descricoes')
+                                    ->label('Variações da descrição (rotação automática)')
+                                    ->schema([
+                                        Forms\Components\Textarea::make('texto')->label('Texto')->required()->rows(2)->maxLength(400),
+                                        Forms\Components\Select::make('efeito')
+                                            ->label('Efeito')
+                                            ->options(['fade' => 'Fade', 'slide' => 'Slide'])
+                                            ->default('fade'),
+                                        Forms\Components\TextInput::make('duracao')->label('Duração (ms)')->numeric()->default(5000),
+                                    ])
+                                    ->columns(3)
+                                    ->addActionLabel('Adicionar variação')
+                                    ->collapsible()
+                                    ->defaultItems(0)
                                     ->columnSpanFull(),
                                 Forms\Components\Grid::make(2)->schema([
                                     Forms\Components\TextInput::make('hero_btn1_texto')
@@ -216,6 +264,15 @@ class Configuracoes extends Page implements HasForms
                         Forms\Components\Tabs\Tab::make('Rodapé')
                             ->icon('heroicon-o-bars-3-bottom-left')
                             ->schema([
+                                Forms\Components\Grid::make(2)->schema([
+                                    Forms\Components\TextInput::make('paroquia_nome')
+                                        ->label('Nome da paróquia (exibido no footer)')
+                                        ->placeholder('Ex: Paróquia Nossa Senhora dos Remédios')
+                                        ->required(),
+                                    Forms\Components\TextInput::make('paroquia_titulo')
+                                        ->label('Título/subtítulo do footer')
+                                        ->placeholder('Ex: Diocese de Cajazeiras'),
+                                ]),
                                 Forms\Components\Textarea::make('footer_descricao')
                                     ->label('Texto de descrição')
                                     ->rows(3)
@@ -252,6 +309,96 @@ class Configuracoes extends Page implements HasForms
                                             ->label('YouTube (URL completa)')
                                             ->placeholder('https://youtube.com/...')
                                             ->url(),
+                                    ]),
+                                Forms\Components\Section::make('Links Rápidos do Footer')
+                                    ->description('Links exibidos na coluna "Links Rápidos" do rodapé.')
+                                    ->schema([
+                                        Forms\Components\Repeater::make('footer_links_rapidos')
+                                            ->label('')
+                                            ->schema([
+                                                Forms\Components\TextInput::make('texto')
+                                                    ->label('Texto do link')
+                                                    ->required()
+                                                    ->maxLength(60),
+                                                Forms\Components\TextInput::make('link')
+                                                    ->label('URL')
+                                                    ->required()
+                                                    ->maxLength(200),
+                                            ])
+                                            ->columns(2)
+                                            ->addActionLabel('Adicionar link')
+                                            ->defaultItems(0),
+                                    ]),
+                                Forms\Components\Section::make('Sacramentos no Footer')
+                                    ->description('Links exibidos na coluna "Sacramentos" do rodapé.')
+                                    ->schema([
+                                        Forms\Components\Repeater::make('footer_sacramentos')
+                                            ->label('')
+                                            ->schema([
+                                                Forms\Components\TextInput::make('nome')
+                                                    ->label('Nome do sacramento')
+                                                    ->required()
+                                                    ->maxLength(60),
+                                                Forms\Components\TextInput::make('link')
+                                                    ->label('URL')
+                                                    ->required()
+                                                    ->maxLength(200),
+                                            ])
+                                            ->columns(2)
+                                            ->addActionLabel('Adicionar sacramento')
+                                            ->defaultItems(0),
+                                    ]),
+                            ]),
+
+                        // ── Contato ───────────────────────────────────────
+                        Forms\Components\Tabs\Tab::make('Contato e Localização')
+                            ->icon('heroicon-o-map-pin')
+                            ->schema([
+                                Forms\Components\TextInput::make('contato_maps_url')
+                                    ->label('URL do embed do Google Maps')
+                                    ->helperText('Cole o src do iframe do Google Maps (https://www.google.com/maps/embed?pb=...)')
+                                    ->maxLength(600)
+                                    ->columnSpanFull(),
+                                Forms\Components\TextInput::make('contato_horario_secretaria')
+                                    ->label('Horário de atendimento da secretaria')
+                                    ->placeholder('Ex: Seg a Sex: 8h às 12h e 13h às 17h')
+                                    ->maxLength(200)
+                                    ->columnSpanFull(),
+                                Forms\Components\Grid::make(2)->schema([
+                                    Forms\Components\TextInput::make('contato_coordenadas_lat')
+                                        ->label('Latitude')
+                                        ->placeholder('Ex: -6.5321'),
+                                    Forms\Components\TextInput::make('contato_coordenadas_lng')
+                                        ->label('Longitude')
+                                        ->placeholder('Ex: -37.8475'),
+                                ]),
+                            ]),
+
+                        // ── Funcionalidades ───────────────────────────────
+                        Forms\Components\Tabs\Tab::make('Funcionalidades')
+                            ->icon('heroicon-o-puzzle-piece')
+                            ->schema([
+                                Forms\Components\Section::make('Devoções Diárias')
+                                    ->description('Controle o que aparece na seção de devoções diárias do site.')
+                                    ->columns(2)
+                                    ->schema([
+                                        Forms\Components\Toggle::make('habilitar_santo_dia')
+                                            ->label('Exibir Santo do Dia')
+                                            ->default(true),
+                                        Forms\Components\Toggle::make('habilitar_evangelho_dia')
+                                            ->label('Exibir Evangelho do Dia')
+                                            ->default(true),
+                                        Forms\Components\Toggle::make('habilitar_terco_dia')
+                                            ->label('Exibir Terço do Dia')
+                                            ->default(true),
+                                    ]),
+                                Forms\Components\Section::make('Participação da Comunidade')
+                                    ->columns(2)
+                                    ->schema([
+                                        Forms\Components\Toggle::make('habilitar_testemunhos')
+                                            ->label('Habilitar envio de testemunhos pelos fiéis')
+                                            ->helperText('Quando ativo, exibe formulário de testemunho no site. Aprovação via CMS.')
+                                            ->default(false),
                                     ]),
                             ]),
                     ])

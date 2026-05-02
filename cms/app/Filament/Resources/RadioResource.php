@@ -64,6 +64,36 @@ class RadioResource extends Resource
                 ->label('Ordem de exibição')
                 ->numeric()
                 ->default(0),
+
+            Forms\Components\Select::make('categoria')
+                ->label('Categoria')
+                ->options([
+                    'catolica'  => 'Católica',
+                    'gospel'    => 'Gospel',
+                    'religiosa' => 'Religiosa',
+                    'regional'  => 'Regional',
+                    'outra'     => 'Outra',
+                ])
+                ->default('catolica')
+                ->required(),
+
+            Forms\Components\Select::make('estado')
+                ->label('Estado (UF)')
+                ->options([
+                    'AC' => 'AC', 'AL' => 'AL', 'AM' => 'AM', 'AP' => 'AP', 'BA' => 'BA',
+                    'CE' => 'CE', 'DF' => 'DF', 'ES' => 'ES', 'GO' => 'GO', 'MA' => 'MA',
+                    'MG' => 'MG', 'MS' => 'MS', 'MT' => 'MT', 'PA' => 'PA', 'PB' => 'PB',
+                    'PE' => 'PE', 'PI' => 'PI', 'PR' => 'PR', 'RJ' => 'RJ', 'RN' => 'RN',
+                    'RO' => 'RO', 'RR' => 'RR', 'RS' => 'RS', 'SC' => 'SC', 'SE' => 'SE',
+                    'SP' => 'SP', 'TO' => 'TO',
+                ])
+                ->searchable()
+                ->nullable(),
+
+            Forms\Components\TextInput::make('cidade')
+                ->label('Cidade de origem')
+                ->maxLength(80)
+                ->nullable(),
         ]);
     }
 
@@ -87,6 +117,13 @@ class RadioResource extends Resource
                 Tables\Columns\IconColumn::make('destaque')
                     ->label('Destaque')
                     ->boolean(),
+
+                Tables\Columns\BadgeColumn::make('categoria')
+                    ->label('Categoria'),
+
+                Tables\Columns\TextColumn::make('estado')
+                    ->label('UF')
+                    ->default('—'),
 
                 Tables\Columns\IconColumn::make('ativa')
                     ->label('Ativa')

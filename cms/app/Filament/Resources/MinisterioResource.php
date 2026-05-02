@@ -30,6 +30,17 @@ class MinisterioResource extends Resource
                     ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('slug', Str::slug($state))),
                 Forms\Components\TextInput::make('slug')->required()->unique(ignoreRecord: true)
                     ->rules(['regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/']),
+                Forms\Components\Select::make('categoria')
+                    ->label('Categoria')
+                    ->options([
+                        'ministerio'     => 'Ministério',
+                        'catequese'      => 'Catequese',
+                        'estudo-biblico' => 'Estudo Bíblico',
+                        'grupo-oracao'   => 'Grupo de Oração',
+                        'outro'          => 'Outro',
+                    ])
+                    ->default('ministerio')
+                    ->required(),
                 Forms\Components\Textarea::make('descricao')->label('Descrição')->required()->rows(3)->columnSpanFull(),
                 IconPickerField::make('icone')->label('Ícone'),
                 Forms\Components\FileUpload::make('imagem')

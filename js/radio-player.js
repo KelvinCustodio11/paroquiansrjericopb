@@ -386,19 +386,101 @@
             .then(function (customStations) {
                 stationList.innerHTML = '';
 
-                /* Exibe as rádios cadastradas no CMS (destaque primeiro, depois demais) */
-                if (customStations && customStations.length) {
-                    customStations.forEach(function (r) {
+                /* ── Filtros por categoria e estado ─────────────────────── */
+                var filtroAtivo = { categoria: 'todos', estado: 'todos' };
+                var todasEstacoes = customStations || [];
+
+                if (todasEstacoes.length > 1) {
+                    /* Coletar categorias e estados disponíveis */
+                    var categoriasDisp = ['todos'];
+                    var estadosDisp   = ['todos'];
+                    todasEstacoes.forEach(function (r) {
+                        if (r.categoria && !categoriasDisp.includes(r.categoria)) { categoriasDisp.push(r.categoria); }
+                        if (r.estado   && !estadosDisp.includes(r.estado))        { estadosDisp.push(r.estado); }
+                    });
+
+                    var labelsCat = { todos: 'Todas', catolica: 'Católica', gospel: 'Gospel', religiosa: 'Religiosa', regional: 'Regional', outra: 'Outra' };
+
+                    /* Barra de filtros */
+                    var filtroBar = document.createElement('div');
+                    filtroBar.className = 'radio-filtro-bar';
+                    filtroBar.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.08);';
+
+                    if (categoriasDisp.length > 2) {
+                        var selCat = document.createElement('select');
+                        selCat.className = 'radio-filtro-select';
+                        selCat.setAttribute('aria-label', 'Filtrar por categoria');
+                        selCat.style.cssText = 'flex:1;min-width:100px;padding:4px 6px;font-size:12px;border-radius:4px;border:1px solid rgba(255,255,255,.2);background:#1a1a1a;color:#fff;cursor:pointer;';
+                        categoriasDisp.forEach(function (c) {
+                            var o = document.createElement('option');
+                            o.value       = c;
+                            o.textContent = labelsCat[c] || c;
+                            selCat.appendChild(o);
+                        });
+                        selCat.addEventListener('change', function () {
+                            filtroAtivo.categoria = this.value;
+                            renderizarLista();
+                        });
+                        filtroBar.appendChild(selCat);
+                    }
+
+                    if (estadosDisp.length > 2) {
+                        var selEstado = document.createElement('select');
+                        selEstado.className = 'radio-filtro-select';
+                        selEstado.setAttribute('aria-label', 'Filtrar por estado');
+                        selEstado.style.cssText = 'flex:1;min-width:80px;padding:4px 6px;font-size:12px;border-radius:4px;border:1px solid rgba(255,255,255,.2);background:#1a1a1a;color:#fff;cursor:pointer;';
+                        estadosDisp.forEach(function (e) {
+                            var o = document.createElement('option');
+                            o.value       = e;
+                            o.textContent = e === 'todos' ? 'Todos UFs' : e;
+                            selEstado.appendChild(o);
+                        });
+                        selEstado.addEventListener('change', function () {
+                            filtroAtivo.estado = this.value;
+                            renderizarLista();
+                        });
+                        filtroBar.appendChild(selEstado);
+                    }
+
+                    if (filtroBar.children.length > 0) {
+                        stationList.parentElement.insertBefore(filtroBar, stationList);
+                    }
+                }
+
+                /* ── Renderiza lista filtrada ─────────────────────────────── */
+                function renderizarLista() {
+                    stationList.innerHTML = '';
+
+                    var filtradas = todasEstacoes.filter(function (r) {
+                        var passaCat    = filtroAtivo.categoria === 'todos' || (r.categoria || 'catolica') === filtroAtivo.categoria;
+                        var passaEstado = filtroAtivo.estado === 'todos' || r.estado === filtroAtivo.estado;
+                        return passaCat && passaEstado;
+                    });
+
+                    if (filtradas.length === 0) {
+                        var vazio = document.createElement('div');
+                        vazio.className = 'radio-station-loading';
+                        vazio.style.cssText = 'padding:16px;text-align:center;opacity:.6;';
+                        vazio.textContent = 'Nenhuma rádio encontrada para este filtro.';
+                        stationList.appendChild(vazio);
+                        return;
+                    }
+
+                    filtradas.forEach(function (r) {
                         var s = {
                             name:         r.nome,
                             url_resolved: r.url,
                             favicon:      r.favicon || '',
                             tags:         r.descricao || '',
-                            state:        '',
+                            state:        (r.cidade ? r.cidade + ' — ' : '') + (r.estado || ''),
                         };
                         var badge = r.destaque ? (currentUrl === r.url ? 'AO VIVO' : 'Destaque') : null;
                         stationList.appendChild(buildItem(s, r.destaque, badge));
                     });
+                }
+
+                if (todasEstacoes.length) {
+                    renderizarLista();
                 } else {
                     /* Fallback: sempre exibe Itacambarí se radios.json vazio */
                     var featured = { name: ITACAMBARI_NAME, url_resolved: ITACAMBARI_STREAM, favicon: '', tags: '', state: 'Jericó/PB' };

@@ -14,7 +14,7 @@ class Ministerio extends Model
     protected $table = 'ministerios';
 
     protected $fillable = [
-        'slug', 'nome', 'descricao',
+        'slug', 'nome', 'categoria', 'descricao',
         'coordenador_nome', 'coordenador_telefone', 'coordenador_email',
         'encontros_dia_semana', 'encontros_horario', 'encontros_local',
         'imagem', 'icone', 'ativo',
@@ -27,6 +27,7 @@ class Ministerio extends Model
         $data = [
             'slug'      => $this->slug,
             'nome'      => $this->nome,
+            'categoria' => $this->categoria ?? 'ministerio',
             'descricao' => $this->descricao,
             'imagem'    => $this->imagem,
             'icone'     => $this->icone,

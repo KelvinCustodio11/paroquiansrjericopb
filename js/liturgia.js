@@ -171,16 +171,71 @@
     _ttsCharMap = [];
   }
 
-  /* Envolve cada palavra em <span class="lit-word"> para efeito karaokê */
-  function wrapWords(text) {
-    return text.split(/([\s]+)/).map(function (chunk) {
-      return /\S/.test(chunk)
-        ? '<span class="lit-word">' + escHtml(chunk) + '</span>'
-        : escHtml(chunk);
-    }).join('');
+  /* Mapeamento de abreviações bíblicas para TTS (leitura natural) */
+  var ABREV_BIBLICAS = {
+    'Gn': 'Gênesis', 'Ex': 'Êxodo', 'Lv': 'Levítico', 'Nm': 'Números', 'Dt': 'Deuteronômio',
+    'Js': 'Josué', 'Jz': 'Juízes', 'Rt': 'Rute', 'Ne': 'Neemias', 'Tb': 'Tobias',
+    'Jt': 'Judite', 'Est': 'Ester', 'Jó': 'Jó', 'Sl': 'Salmos', 'Pr': 'Provérbios',
+    'Ecl': 'Eclesiastes', 'Ct': 'Cântico dos Cânticos', 'Sb': 'Sabedoria', 'Eclo': 'Eclesiástico',
+    'Is': 'Isaías', 'Jr': 'Jeremias', 'Lm': 'Lamentações', 'Ez': 'Ezequiel', 'Dn': 'Daniel',
+    'Os': 'Oséias', 'Jl': 'Joel', 'Am': 'Amós', 'Ob': 'Abdias', 'Jn': 'Jonas',
+    'Mq': 'Miquéias', 'Na': 'Naum', 'Hab': 'Habacuc', 'Sf': 'Sofonias', 'Ag': 'Ageu',
+    'Zc': 'Zacarias', 'Ml': 'Malaquias',
+    'Mt': 'Mateus', 'Mc': 'Marcos', 'Lc': 'Lucas', 'Jo': 'João',
+    'At': 'Atos dos Apóstolos', 'Rm': 'Romanos', '1Cor': 'Primeira Coríntios',
+    '2Cor': 'Segunda Coríntios', 'Gl': 'Gálatas', 'Ef': 'Efésios', 'Fl': 'Filipenses',
+    'Cl': 'Colossenses', '1Ts': 'Primeira Tessalonicenses', '2Ts': 'Segunda Tessalonicenses',
+    '1Tm': 'Primeira Timóteo', '2Tm': 'Segunda Timóteo', 'Tt': 'Tito', 'Fm': 'Filêmon',
+    'Hb': 'Hebreus', 'Tg': 'Tiago', '1Pd': 'Primeira Pedro', '2Pd': 'Segunda Pedro',
+    '1Jo': 'Primeira João', '2Jo': 'Segunda João', '3Jo': 'Terceira João',
+    'Jd': 'Judas', 'Ap': 'Apocalipse',
+    'Rs': 'Reis', '1Rs': 'Primeiro Reis', '2Rs': 'Segundo Reis',
+    'Cr': 'Crônicas', '1Cr': 'Primeiro Crônicas', '2Cr': 'Segundo Crônicas',
+    'Sm': 'Samuel', '1Sm': 'Primeiro Samuel', '2Sm': 'Segundo Samuel',
+    'Mc': 'Macabeus', '1Mc': 'Primeiro Macabeus', '2Mc': 'Segundo Macabeus',
+  };
+
+  /**
+   * Expande abreviações bíblicas em um texto para leitura mais natural.
+   * Ex: "Sl 23,1-6" → "Salmos 23, versículo 1 ao 6"
+   * Ex: "Jo 3,16" → "João 3, versículo 16"
+   */
+  function expandirAbreviacoes(texto) {
+    if (!texto) return texto;
+
+    // Expandir abreviações de livros (ex: "Jo 3," → "João 3,")
+    var padraoAbrev = new RegExp(
+      '\\b(' + Object.keys(ABREV_BIBLICAS).map(function (k) {
+        return k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }).join('|') + ')\\b',
+      'g'
+    );
+    var result = texto.replace(padraoAbrev, function (match) {
+      return ABREV_BIBLICAS[match] || match;
+    });
+
+    // Expandir intervalos de versículos (ex: "3,1-6" → "3, versículo 1 ao 6")
+    result = result.replace(/(\d+),(\d+)-(\d+)/g, '$1, versículo $2 ao $3');
+    result = result.replace(/(\d+),(\d+)/g, '$1, versículo $2');
+
+    // Remover numerações de versículos soltas (ex: "¹", "²", números no início de linha)
+    result = result.replace(/[¹²³⁴⁵⁶⁷⁸⁹⁰]/g, '');
+    result = result.replace(/^\d+\s/gm, '');
+
+    return result;
   }
 
-  /* Mapeia cada span.lit-word → charStart em bodyText (texto do corpo, sem prefixo) */
+  /* Envolve cada parágrafo em <span class="lit-para"> para destaque por parágrafo */
+  function wrapWords(text) {
+    // Mantém compatibilidade de nome mas agora envolve por parágrafo
+    var paragrafos = text.split(/\n+/);
+    return paragrafos.map(function (p) {
+      if (!p.trim()) return '';
+      return '<span class="lit-word lit-para">' + escHtml(p.trim()) + '</span>';
+    }).filter(Boolean).join('\n');
+  }
+
+  /* Mapeia cada span.lit-para → charStart no texto para leitura por parágrafo */
   function buildWordMap(ttsId, bodyText) {
     var root = ttsId === 'pddia-gospel'
       ? document.querySelector('.pddia-full-text')
@@ -190,11 +245,10 @@
     if (!root) return;
     _ttsWordEls = Array.prototype.slice.call(root.querySelectorAll('span.lit-word'));
     if (!_ttsWordEls.length) return;
-    /* O bodyText é exatamente o texto dos spans — mapeamento direto sem offset */
     var searchFrom = 0;
     _ttsWordEls.forEach(function (el) {
-      var t = el.textContent;
-      if (!t.trim()) return;
+      var t = el.textContent.trim();
+      if (!t) return;
       var idx = bodyText.indexOf(t, searchFrom);
       if (idx >= 0) {
         _ttsCharMap.push({ charStart: idx, el: el });
@@ -785,7 +839,7 @@
       var voice = _ttsVoice || loadBestVoice();
 
       function makeUtt(text) {
-        var u = new SpeechSynthesisUtterance(text);
+        var u = new SpeechSynthesisUtterance(expandirAbreviacoes(text));
         u.lang = 'pt-BR';
         u.rate = 0.88;
         u.pitch = 1.0;

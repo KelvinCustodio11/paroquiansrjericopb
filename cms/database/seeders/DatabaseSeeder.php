@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             MinisterioSeeder::class,
             ParocoSeeder::class,
             ConfiguracaoSeeder::class,
+            MenuItemSeeder::class,
+            TestemunhoSeeder::class,
         ]);
     }
 }

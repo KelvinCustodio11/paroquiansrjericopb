@@ -919,6 +919,55 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
     console.log('- Paginas estaticas atualizadas.\n');
 })();
 
+    // =============================================================
+    // Single-page templates
+    // Gera arquivos raiz (ex.: historia.html) a partir de um JSON
+    // que representa um objeto unico (nao uma colecao).
+    // =============================================================
+    (function buildSinglePageTemplates() {
+        const SINGLE_PAGES = [
+            {
+                dataFile: 'historia.json',
+                template: 'historia.html',
+                outFile:  'historia.html',
+                enrich: function(data) {
+                    // Adiciona campo `impar` para alternancia de layout
+                    const secoes = (data.secoes || []).map(function(sec, idx) {
+                        return Object.assign({}, sec, { impar: (idx % 2 === 0) });
+                    });
+                    return Object.assign({}, data, {
+                        secoes_list: secoes.length > 0 ? { items: secoes } : null,
+                    });
+                },
+            },
+        ];
+
+        for (const plan of SINGLE_PAGES) {
+            const dataPath = path.join(DATA, plan.dataFile);
+            const tplPath  = path.join(TPL, plan.template);
+            if (!fs.existsSync(dataPath) || !fs.existsSync(tplPath)) {
+                console.log(`- pulando single-page ${plan.template} (data ou template ausente)`);
+                continue;
+            }
+            const data    = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+            const tpl     = fs.readFileSync(tplPath, 'utf8');
+            const enriched = plan.enrich(data);
+            let rendered  = render(tpl, enriched);
+            rendered = expandPartials(rendered);
+            // Single-page templates ficam na raiz — sem rewrite de paths
+            const outPath = path.join(ROOT, plan.outFile);
+            const banner  = `<!-- GENERATED FROM data/${plan.dataFile} — DO NOT EDIT MANUALLY. Run: npm run build:content -->\n`;
+            const out     = banner + rendered;
+            const before  = fs.existsSync(outPath) ? fs.readFileSync(outPath, 'utf8') : null;
+            if (before !== out) {
+                fs.writeFileSync(outPath, out, 'utf8');
+                console.log(`  ✓ ${plan.outFile} (single-page)`);
+            } else {
+                console.log(`  · ${plan.outFile} (single-page, sem alteracoes)`);
+            }
+        }
+    })();
+
 } // end if (!PREVIEW_MODE)
 
 // =============================================================

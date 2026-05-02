@@ -18,6 +18,9 @@ class Radio extends Model
         'destaque',
         'ativa',
         'ordem',
+        'categoria',
+        'estado',
+        'cidade',
     ];
 
     protected $casts = [

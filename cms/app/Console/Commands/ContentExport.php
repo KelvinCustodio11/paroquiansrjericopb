@@ -11,9 +11,11 @@ use App\Models\Evento;
 use App\Models\GaleriaAlbum;
 use App\Models\Homilia;
 use App\Models\Igreja;
+use App\Models\MenuItem;
 use App\Models\Ministerio;
 use App\Models\Paroco;
 use App\Models\Radio;
+use App\Models\Testemunho;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
@@ -100,6 +102,12 @@ class ContentExport extends Command
             json_encode(['ministerios' => $ministerios], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK ministerios.json ('.count($ministerios).' registros)');
 
+        // Ministerios por categoria (pastoral: catequese, estudo-biblico, grupo-oracao)
+        $pastoral = array_filter($ministerios, fn ($m) => in_array($m['categoria'] ?? '', ['catequese', 'estudo-biblico', 'grupo-oracao', 'outro']));
+        File::put($dataDir.'/pastoral.json',
+            json_encode(['itens' => array_values($pastoral)], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
+        $this->info('OK pastoral.json ('.count($pastoral).' registros)');
+
         // Pároco ativo
         $paroco = Paroco::where('ativo', true)->first();
         if ($paroco) {
@@ -124,6 +132,9 @@ class ContentExport extends Command
                 'descricao' => $r->descricao,
                 'favicon'   => $r->favicon,
                 'destaque'  => (bool) $r->destaque,
+                'categoria' => $r->categoria ?? 'catolica',
+                'estado'    => $r->estado,
+                'cidade'    => $r->cidade,
             ])->values()->all();
         File::put($dataDir.'/radios.json',
             json_encode($radios, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
@@ -139,6 +150,42 @@ class ContentExport extends Command
         File::put($dataDir.'/galeria.json',
             json_encode(['albuns' => $albuns], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK galeria.json ('.count($albuns).' álbum(ns))');
+
+        // Menu
+        $menuRaiz = MenuItem::with('filhos')
+            ->whereNull('pai_id')
+            ->where('visivel', true)
+            ->orderBy('ordem')
+            ->get()
+            ->map(fn (MenuItem $m) => $m->toJsonExport())
+            ->values()->all();
+        File::put($dataDir.'/menu.json',
+            json_encode(['items' => $menuRaiz], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
+        $this->info('OK menu.json ('.count($menuRaiz).' item(ns) raiz)');
+
+        // Testemunhos aprovados
+        $testemunhos = Testemunho::aprovados()->latest('aprovado_em')->get()
+            ->map(fn (Testemunho $t) => $t->toJsonExport())->values()->all();
+        File::put($dataDir.'/testemunhos.json',
+            json_encode(['testemunhos' => $testemunhos], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
+        $this->info('OK testemunhos.json ('.count($testemunhos).' aprovado(s))');
+
+        // História (primeira Igreja ativa com seções preenchidas)
+        $igrejaHistoria = Igreja::where('ativa', true)
+            ->whereNotNull('historia_secoes')
+            ->first();
+        if ($igrejaHistoria && $igrejaHistoria->historia_secoes) {
+            $historiaData = [
+                'titulo'    => $igrejaHistoria->historia_titulo,
+                'subtitulo' => $igrejaHistoria->historia_subtitulo,
+                'secoes'    => $igrejaHistoria->historia_secoes,
+            ];
+            File::put($dataDir.'/historia.json',
+                json_encode($historiaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
+            $this->info('OK historia.json ('.count($igrejaHistoria->historia_secoes).' seção(ões))');
+        } else {
+            $this->warn('Nenhuma seção de história cadastrada — historia.json não atualizado.');
+        }
 
         if ($this->option('validate')) {
             $this->info('Validando com schemas...');

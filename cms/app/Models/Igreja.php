@@ -12,9 +12,15 @@ class Igreja extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['slug', 'nome', 'endereco', 'bairro', 'tipo', 'ativa'];
+    protected $fillable = [
+        'slug', 'nome', 'endereco', 'bairro', 'tipo', 'ativa',
+        'historia_titulo', 'historia_subtitulo', 'historia_secoes',
+    ];
 
-    protected $casts = ['ativa' => 'boolean'];
+    protected $casts = [
+        'ativa'           => 'boolean',
+        'historia_secoes' => 'array',
+    ];
 
     public function horarios(): HasMany
     {
