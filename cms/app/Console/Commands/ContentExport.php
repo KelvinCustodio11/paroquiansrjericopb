@@ -37,10 +37,10 @@ class ContentExport extends Command
 
     public function handle(): int
     {
-        // SITE_ROOT permite configurar o caminho quando cms/ e httpdocs/
-        // são pastas irmãs (ex: Plesk). Fallback: pasta-pai de cms/ (dev local).
-        $repoRoot = env('SITE_ROOT')
-            ? rtrim(env('SITE_ROOT'), '/')
+        // config('site.root') lê SITE_ROOT do .env via config/site.php.
+        // Funciona mesmo com config:cache ativo (ao contrário de env() direto).
+        $repoRoot = config('site.root')
+            ? rtrim(config('site.root'), '/')
             : realpath(base_path('..'));
 
         $dataDir = $repoRoot.'/data';

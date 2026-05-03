@@ -14,8 +14,8 @@ class ContentBuild extends Command
 
     public function handle(): int
     {
-        $repoRoot = env('SITE_ROOT')
-            ? rtrim(env('SITE_ROOT'), '/')
+        $repoRoot = config('site.root')
+            ? rtrim(config('site.root'), '/')
             : realpath(base_path('..'));
 
         $script = $repoRoot.'/scripts/build-content.js';
