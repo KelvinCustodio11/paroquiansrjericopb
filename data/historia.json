@@ -1,6 +1,16 @@
 {
     "titulo": "Nossa Trajetória",
-    "subtitulo": "200 anos de fé",
+    "subtitulo": "nossa paróquia",
+    "imagem1": "images/about-us-img-1.jpg",
+    "imagem2": "images/about-us-img-2.jpg",
+    "texto_intro": "A Paróquia Nossa Senhora dos Remédios de Jericó/PB é uma comunidade de fé com mais de dois séculos de história, construída com a devoção e o amor do povo jericoense. Nossa missão é evangelizar, celebrar os sacramentos e promover a caridade.",
+    "texto_intro2": "Guiada pelos valores do Evangelho, a nossa paróquia acolhe a todos com amor, oferecendo espaço para o crescimento espiritual, a partilha fraterna e o serviço ao próximo.",
+    "topicos": [
+        { "titulo": "evangelizar e celebrar", "icone": "images/icon-about-list-1.svg" },
+        { "titulo": "crescimento espiritual",  "icone": "images/icon-about-list-2.svg" },
+        { "titulo": "serviço ao próximo",       "icone": "images/icon-about-list-3.svg" },
+        { "titulo": "comunidade acolhedora",    "icone": "images/icon-about-list-4.svg" }
+    ],
     "secoes": [
         {
             "titulo": "Fundação",
