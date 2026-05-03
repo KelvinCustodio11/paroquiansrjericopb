@@ -232,75 +232,182 @@
 
     /* ── SVG do rosário ─────────────────────────────────────────────────── */
     function buildSVG() {
-        var CX = 110, CY = 240, CR = 85;
-        var html = '<svg id="rosario-svg" viewBox="0 0 220 450" xmlns="http://www.w3.org/2000/svg"'
-            + ' style="width:100%;max-width:200px;display:block;margin:0 auto;" role="img" aria-label="Rosário">';
-        /* Anel */
-        html += '<circle cx="' + CX + '" cy="' + CY + '" r="' + CR + '" fill="none" stroke="#e0e0e0" stroke-width="1.5"/>';
-        /* Crucifixo */
-        html += '<circle id="rc-cruz" cx="' + CX + '" cy="60" r="10" fill="#e0e0e0" stroke="#ccc" stroke-width="1.5" class="rc-bead rc-special" style="cursor:pointer;" onclick="Terco.irPara(0)">';
-        html += '<title>Crucifixo — Sinal da Cruz / Credo</title></circle>';
-        html += '<text x="' + CX + '" y="65" text-anchor="middle" font-size="10" fill="#666" pointer-events="none">✝</text>';
-        /* Corrente crucifixo → g0 */
-        html += '<line x1="' + CX + '" y1="70" x2="' + CX + '" y2="86" stroke="#ccc" stroke-width="1.2"/>';
-        /* Pai-Nosso abertura */
-        html += '<circle id="rc-g0" cx="' + CX + '" cy="93" r="9" fill="#e0e0e0" stroke="#ccc" stroke-width="1.5" class="rc-bead rc-pn" style="cursor:pointer;" onclick="Terco.irPara(2)">';
-        html += '<title>Pai-Nosso</title></circle>';
-        html += '<line x1="' + CX + '" y1="102" x2="' + CX + '" y2="114" stroke="#ccc" stroke-width="1.2"/>';
-        /* 3 Ave-Marias abertura */
-        var ayAb = [120, 131, 142];
-        for (var i = 0; i < 3; i++) {
-            var pi = i + 1;
-            html += '<circle id="rc-p' + pi + '" cx="' + CX + '" cy="' + ayAb[i] + '" r="6" fill="#e0e0e0" stroke="#ccc" stroke-width="1.2" class="rc-bead rc-am" style="cursor:pointer;" onclick="Terco.irPara(' + (3 + i) + ')">';
-            html += '<title>' + pi + '.ª Ave-Maria (abertura)</title></circle>';
-            if (i < 2) html += '<line x1="' + CX + '" y1="' + (ayAb[i] + 6) + '" x2="' + CX + '" y2="' + (ayAb[i + 1] - 6) + '" stroke="#ccc" stroke-width="1.2"/>';
+        /* ── Geometria ───────────────────────────────────────────────── */
+        var CX = 130, CY = 145, CR = 104;
+        var medY = CY + CR;           /* medal na base do anel = 249     */
+        var g0Y = 288;                /* Pai-Nosso abertura               */
+        var pYs = [312, 336, 360];   /* 3 Ave-Marias abertura            */
+        var cruzCY = 415;            /* centro vertical da cruz          */
+        var cruzTop = cruzCY - 24;   /* topo do braço vertical (391)     */
+        var cord = '#c9a45a';
+        var cw   = 2.5;
+        var H = '';
+
+        function ln(x1, y1, x2, y2) {
+            return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2
+                +'" stroke="'+cord+'" stroke-width="'+cw+'" stroke-linecap="round"/>';
         }
-        /* Corrente até medalha */
-        html += '<line x1="' + CX + '" y1="148" x2="' + CX + '" y2="' + (CY - CR - 2) + '" stroke="#ccc" stroke-width="1.2"/>';
-        /* Medalha */
-        html += '<circle id="rc-medalha" cx="' + CX + '" cy="' + (CY - CR) + '" r="11" fill="#e0e0e0" stroke="#ccc" stroke-width="1.5" class="rc-bead rc-special">';
-        html += '<title>Medalha</title></circle>';
-        html += '<text x="' + CX + '" y="' + (CY - CR + 5) + '" text-anchor="middle" font-size="10" fill="#666" pointer-events="none">✦</text>';
-        /* 5 décadas */
-        var angBase = -Math.PI / 2; /* começa no topo */
-        /* índices globais dos passos: abertura=7 itens, cada década=13 itens */
-        var BASE = 7;
-        var PER  = 13; /* misterio(1)+painosso(1)+10 aves+gloria(1)+fatima(1) */
+        /* Monta um grupo-conta: área de toque grande + conta visual */
+        function conta(id, cx, cy, r, grad, cls, nav, title) {
+            var oc = nav >= 0 ? ' onclick="Terco.irPara('+nav+')"' : '';
+            var cu = nav >= 0 ? 'pointer' : 'default';
+            return '<g id="'+id+'" class="rc-bead '+cls+'" data-g="'+grad+'"'+oc
+                +' style="cursor:'+cu+';">'
+                +'<title>'+title+'</title>'
+                +'<circle cx="'+cx+'" cy="'+cy+'" r="'+(r+10)+'" fill="transparent"/>'
+                +'<circle class="rc-vis" cx="'+cx+'" cy="'+cy+'" r="'+r
+                +'" fill="url(#'+grad+')" stroke="'+cord+'" stroke-width="1.6" filter="url(#f-sh)"/>'
+                +'</g>';
+        }
+
+        /* ── SVG abertura ────────────────────────────────────────────── */
+        H += '<svg id="rosario-svg" viewBox="0 0 260 458"'
+            +' xmlns="http://www.w3.org/2000/svg"'
+            +' style="width:100%;max-width:240px;display:block;margin:0 auto;"'
+            +' role="img" aria-label="Rosário — clique em qualquer conta para navegar">';
+
+        /* ── Defs ────────────────────────────────────────────────────── */
+        H += '<defs>'
+            /* Gradiente pérola (Ave-Maria) */
+            +'<radialGradient id="rg-am" cx="36%" cy="30%" r="65%">'
+            +'<stop offset="0%" stop-color="#faf7f2"/>'
+            +'<stop offset="55%" stop-color="#e8d9c4"/>'
+            +'<stop offset="100%" stop-color="#bca882"/>'
+            +'</radialGradient>'
+            /* Gradiente ouro (Pai-Nosso) */
+            +'<radialGradient id="rg-pn" cx="36%" cy="30%" r="65%">'
+            +'<stop offset="0%" stop-color="#fff5a8"/>'
+            +'<stop offset="55%" stop-color="#d4a017"/>'
+            +'<stop offset="100%" stop-color="#7a5000"/>'
+            +'</radialGradient>'
+            /* Gradiente ouro escuro (Cruz / Medal) */
+            +'<radialGradient id="rg-sp" cx="36%" cy="30%" r="65%">'
+            +'<stop offset="0%" stop-color="#f5d060"/>'
+            +'<stop offset="55%" stop-color="#aa7010"/>'
+            +'<stop offset="100%" stop-color="#5a3400"/>'
+            +'</radialGradient>'
+            /* Sombra suave */
+            +'<filter id="f-sh" x="-50%" y="-50%" width="200%" height="200%">'
+            +'<feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="rgba(0,0,0,0.3)"/>'
+            +'</filter>'
+            /* Brilho conta ativa */
+            +'<filter id="f-gw" x="-80%" y="-80%" width="260%" height="260%">'
+            +'<feGaussianBlur stdDeviation="4.5" result="b"/>'
+            +'<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>'
+            +'</filter>'
+            +'</defs>';
+
+        /* ── Fio do anel ─────────────────────────────────────────────── */
+        H += '<circle cx="'+CX+'" cy="'+CY+'" r="'+CR
+            +'" fill="none" stroke="'+cord+'" stroke-width="'+cw+'"/>';
+
+        /* ── Fios do rabicho ─────────────────────────────────────────── */
+        H += ln(CX, medY+13,    CX, g0Y-11);       /* medal → g0       */
+        H += ln(CX, g0Y+11,     CX, pYs[0]-9);     /* g0 → p1          */
+        H += ln(CX, pYs[0]+9,   CX, pYs[1]-9);     /* p1 → p2          */
+        H += ln(CX, pYs[1]+9,   CX, pYs[2]-9);     /* p2 → p3          */
+        H += ln(CX, pYs[2]+9,   CX, cruzTop);       /* p3 → cruz        */
+
+        /* ── Cruz (forma de cruz real) ───────────────────────────────── */
+        H += '<g id="rc-cruz" class="rc-bead rc-special" data-g="rg-sp"'
+            +' onclick="Terco.irPara(0)" style="cursor:pointer;">'
+            +'<title>Crucifixo — Sinal da Cruz / Credo</title>'
+            /* Área de toque grande */
+            +'<rect x="'+(CX-22)+'" y="'+(cruzCY-26)+'" width="44" height="52" fill="transparent"/>'
+            /* Braço vertical */
+            +'<rect x="'+(CX-5)+'" y="'+(cruzCY-24)+'" width="10" height="40"'
+            +' rx="4" fill="url(#rg-sp)" filter="url(#f-sh)"/>'
+            /* Braço horizontal */
+            +'<rect x="'+(CX-18)+'" y="'+(cruzCY-9)+'" width="36" height="10"'
+            +' rx="4" fill="url(#rg-sp)" filter="url(#f-sh)"/>'
+            +'</g>';
+
+        /* ── Medal (base do anel / junção com rabicho) ───────────────── */
+        H += conta('rc-medalha', CX, medY, 13, 'rg-sp', 'rc-special', -1, 'Medalha');
+        H += '<text x="'+CX+'" y="'+(medY+5)+'" text-anchor="middle"'
+            +' font-size="12" fill="#fff" pointer-events="none" font-family="serif">✦</text>';
+
+        /* ── Abertura: Pai-Nosso (g0) ────────────────────────────────── */
+        H += conta('rc-g0', CX, g0Y, 11, 'rg-pn', 'rc-pn', 2, 'Pai-Nosso (abertura)');
+
+        /* ── Abertura: 3 Ave-Marias ──────────────────────────────────── */
+        var amLabels = ['1.ª Ave-Maria — pela Fé','2.ª Ave-Maria — pela Esperança','3.ª Ave-Maria — pela Caridade'];
+        for (var i = 0; i < 3; i++) {
+            H += conta('rc-p'+(i+1), CX, pYs[i], 8, 'rg-am', 'rc-am', 3+i, amLabels[i]);
+        }
+
+        /* ── 5 Décadas no anel ───────────────────────────────────────── */
+        /* Medal na base (90°). Pai-Nossos em 126°,198°,270°,342°,54°   */
+        /* (deslocados 36° da medal para ficarem equidistantes)           */
+        var BASE = 7, PER = 13;
+        var angMed = Math.PI / 2;
         for (var d = 0; d < 5; d++) {
-            var angPN   = angBase + d * (2 * Math.PI / 5);
-            var angNext = angBase + (d + 1) * (2 * Math.PI / 5);
+            var angPN   = angMed + (d + 0.5) * (2 * Math.PI / 5);
+            var angNext = angMed + (d + 1.5) * (2 * Math.PI / 5);
             var pnX = Math.round(CX + CR * Math.cos(angPN));
             var pnY = Math.round(CY + CR * Math.sin(angPN));
-            var idxPN = BASE + d * PER + 1; /* +1 para o misterio antes */
-            html += '<circle id="rc-gd' + d + '" cx="' + pnX + '" cy="' + pnY + '" r="9" fill="#e0e0e0" stroke="#ccc" stroke-width="1.5" class="rc-bead rc-pn" style="cursor:pointer;" onclick="Terco.irPara(' + (BASE + d * PER) + ')">';
-            html += '<title>Pai-Nosso — ' + (d + 1) + '.ª Dezena</title></circle>';
+            H += conta('rc-gd'+d, pnX, pnY, 11, 'rg-pn', 'rc-pn',
+                BASE + d * PER, 'Pai-Nosso — '+(d+1)+'.ª Dezena');
             for (var a = 0; a < 10; a++) {
                 var frac = (a + 1) / 11;
-                var angAM = angPN + frac * (angNext - angPN);
-                var amX = Math.round(CX + CR * Math.cos(angAM));
-                var amY = Math.round(CY + CR * Math.sin(angAM));
-                var idxAM = BASE + d * PER + 2 + a;
-                html += '<circle id="rc-a' + d + '_' + a + '" cx="' + amX + '" cy="' + amY + '" r="5" fill="#e0e0e0" stroke="#ccc" stroke-width="1.2" class="rc-bead rc-am" style="cursor:pointer;" onclick="Terco.irPara(' + idxAM + ')">';
-                html += '<title>' + (a + 1) + '.ª Ave-Maria — ' + (d + 1) + '.ª Dezena</title></circle>';
+                var angA = angPN + frac * (angNext - angPN);
+                var amX  = Math.round(CX + CR * Math.cos(angA));
+                var amY  = Math.round(CY + CR * Math.sin(angA));
+                H += conta('rc-a'+d+'_'+a, amX, amY, 7, 'rg-am', 'rc-am',
+                    BASE + d * PER + 2 + a, (a+1)+'.ª Ave-Maria — '+(d+1)+'.ª Dezena');
             }
         }
-        html += '</svg>';
-        /* Legenda */
-        html += '<div style="margin-top:12px;font-size:.72rem;color:#aaa;text-align:center;line-height:1.8;">';
-        html += '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--primary-color);vertical-align:middle;margin-right:4px;"></span>Conta atual';
-        html += '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e0e0e0;border:1px solid #ccc;vertical-align:middle;margin:0 4px 0 12px;"></span>Aguardando';
-        html += '<br>Clique em qualquer conta para ir diretamente ao passo.';
-        html += '</div>';
-        return html;
+        H += '</svg>';
+
+        /* ── Legenda ─────────────────────────────────────────────────── */
+        H += '<div style="margin-top:10px;font-size:.68rem;color:#aaa;text-align:center;line-height:2;">'
+            +'<span style="display:inline-block;width:10px;height:10px;border-radius:50%;'
+            +'background:var(--primary-color);box-shadow:0 0 6px var(--primary-color);'
+            +'vertical-align:middle;margin-right:4px;"></span>Conta ativa&emsp;'
+            +'<span style="display:inline-block;width:11px;height:11px;border-radius:50%;'
+            +'background:linear-gradient(135deg,#fff5a8,#d4a017);border:1px solid '+cord+';'
+            +'vertical-align:middle;margin-right:4px;"></span>Pai-Nosso&emsp;'
+            +'<span style="display:inline-block;width:9px;height:9px;border-radius:50%;'
+            +'background:linear-gradient(135deg,#faf7f2,#e8d9c4);border:1px solid '+cord+';'
+            +'vertical-align:middle;margin-right:4px;"></span>Ave-Maria'
+            +'<br>Toque em qualquer conta para navegar diretamente.'
+            +'</div>';
+        return H;
     }
 
     /* ── Destaque no SVG ────────────────────────────────────────────────── */
     function highlightBead(contaId) {
-        var beads = document.querySelectorAll('#rosario-svg .rc-bead');
-        beads.forEach(function (b) { b.setAttribute('fill', '#e0e0e0'); });
+        /* Limpa todas as contas */
+        document.querySelectorAll('#rosario-svg .rc-bead').forEach(function (g) {
+            var grad = g.getAttribute('data-g') || 'rg-am';
+            g.querySelectorAll('.rc-vis').forEach(function (v) {
+                v.setAttribute('fill', 'url(#'+grad+')');
+                v.setAttribute('filter', 'url(#f-sh)');
+            });
+            if (g.id === 'rc-cruz') {
+                g.querySelectorAll('rect[rx]').forEach(function (r) {
+                    r.setAttribute('fill', 'url(#rg-sp)');
+                    r.setAttribute('filter', 'url(#f-sh)');
+                });
+            }
+        });
         if (!contaId) return;
-        var bead = document.getElementById('rc-' + contaId);
-        if (bead) bead.setAttribute('fill', 'var(--primary-color)');
+        /* 'crucifixo' (credo) destaca a mesma cruz visual */
+        var visId = contaId === 'crucifixo' ? 'cruz' : contaId;
+        var bead = document.getElementById('rc-' + visId);
+        if (!bead) return;
+        if (visId === 'cruz') {
+            bead.querySelectorAll('rect[rx]').forEach(function (r) {
+                r.setAttribute('fill', 'var(--primary-color)');
+                r.setAttribute('filter', 'url(#f-gw)');
+            });
+        } else {
+            var vis = bead.querySelector('.rc-vis');
+            if (vis) {
+                vis.setAttribute('fill', 'var(--primary-color)');
+                vis.setAttribute('filter', 'url(#f-gw)');
+            }
+        }
     }
 
     /* ── Render de um passo ──────────────────────────────────────────────── */
