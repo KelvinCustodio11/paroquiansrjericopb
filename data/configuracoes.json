@@ -22,8 +22,8 @@
     "cor_fundo_claro": "#FFF4F1",
     "cor_texto": "#525252",
     "logo_cor": "#acaa59",
-    "logo_header_img": null,
-    "logo_footer_img": null,
+    "logo_header_img": "images/logo.png",
+    "logo_footer_img": "images/footer-logo.png",
     "logo_loader_img": null,
     "hero_titulos": [
         {
