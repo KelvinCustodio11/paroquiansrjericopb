@@ -292,14 +292,22 @@
                                         <div class="section-title" style="margin-bottom:28px;">
                                             <h3 class="wow fadeInUp">oração mariana</h3>
                                             <h2 class="text-anime-style-2" data-cursor="-opaque">O Santo Terço <span>do Dia</span></h2>
-                                            <p class="wow fadeInUp" data-wow-delay="0.25s">O Rosário nos leva a contemplar os mistérios da vida de Jesus com os olhos de Maria. Cada dia da semana tem seus próprios mistérios.</p>
+                                            <p class="wow fadeInUp" data-wow-delay="0.25s">Unidos a Maria, meditamos a vida de Cristo oração por oração. Rezar o Terço é percorrer o Evangelho com o coração de Nossa Mãe.</p>
                                         </div>
                                         <div class="vision-mission-body">
-                                            <div id="terco-container">
-                                                <div class="text-center py-5">
-                                                    <i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color:var(--primary-color)" aria-hidden="true"></i>
-                                                    <p class="mt-2 text-muted">Carregando terço…</p>
-                                                </div>
+                                            <!-- Loading -->
+                                            <div id="terco-loading" class="text-center py-5">
+                                                <i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color:var(--primary-color)" aria-hidden="true"></i>
+                                                <p class="mt-2 text-muted">Preparando o terço do dia…</p>
+                                            </div>
+                                            <!-- Conteúdo principal -->
+                                            <div id="terco-container" hidden>
+                                                <!-- Seção 1: Cabeçalho + Terço Interativo -->
+                                                <div id="terco-section-abertura"></div>
+                                                <!-- Seção 2: Reflexão e intenções -->
+                                                <div id="terco-section-reflexao" class="mt-5"></div>
+                                                <!-- Seção 3: Catequese do Terço -->
+                                                <div id="terco-section-catequese" class="mt-5"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -449,6 +457,7 @@
 	<script src="js/liturgia.js"></script>
 	<script src="js/santo-dia.js"></script>
 	<script src="js/calendario-romano.js"></script>
+	<script src="js/terco.js"></script>
     <script>
     (function () {
         'use strict';
@@ -742,52 +751,8 @@
         }
 
         /* ── Terço do Dia ─────────────────────────────────────────────────── */
+        /* carregarTerco() e toda a lógica do terço estão em js/terco.js     */
         var _tercoLoaded = false;
-
-        function carregarTerco() {
-            var MISTERIOS = {
-                gozosos:   { nome: 'Mistérios Gozosos',   subtitulo: 'Segunda-feira e Sábado', icone: 'fa-star',
-                    lista: ['A Anunciação do Anjo Gabriel a Maria Santíssima','A Visitação de Nossa Senhora a Santa Isabel','O Nascimento de Jesus em Belém','A Apresentação de Jesus no Templo','Jesus encontrado entre os Doutores no Templo'] },
-                luminosos: { nome: 'Mistérios Luminosos',  subtitulo: 'Quinta-feira', icone: 'fa-sun',
-                    lista: ['O Batismo de Jesus no Rio Jordão','A Auto-revelação de Jesus nas Bodas de Caná','O Anúncio do Reino de Deus com apelo à conversão','A Transfiguração de Jesus no Monte Tabor','A Instituição da Eucaristia na Última Ceia'] },
-                dolorosos: { nome: 'Mistérios Dolorosos',  subtitulo: 'Terça-feira e Sexta-feira', icone: 'fa-cross',
-                    lista: ['A Agonia de Jesus no Jardim do Getsêmani','A Flagelação de Jesus na coluna','A Coroação de espinhos','Jesus carregando a Cruz até o Calvário','A Crucificação e Morte de Nosso Senhor Jesus Cristo'] },
-                gloriosos: { nome: 'Mistérios Gloriosos',  subtitulo: 'Quarta-feira, Domingo e Sábado (alt.)', icone: 'fa-crown',
-                    lista: ['A Ressurreição de Jesus Cristo','A Ascensão de Jesus ao Céu','A Vinda do Espírito Santo no Pentecostes','A Assunção de Nossa Senhora ao Céu','A Coroação de Nossa Senhora como Rainha do Universo'] },
-            };
-            var mapa = { 0:'gloriosos', 1:'gozosos', 2:'dolorosos', 3:'gloriosos', 4:'luminosos', 5:'dolorosos', 6:'gozosos' };
-            var chave = mapa[new Date().getDay()];
-            var m = MISTERIOS[chave];
-
-            var misteriosHTML = m.lista.map(function (txt, i) {
-                return '<div class="mb-4 p-3 rounded-3 bg-light">'
-                    + '<h6 class="fw-bold mb-1" style="color:var(--primary-color)">' + (i + 1) + 'º Mistério</h6>'
-                    + '<p class="mb-0 fst-italic">' + txt + '</p>'
-                    + '<small class="text-muted">Pai-Nosso · 10 Ave-Marias · Glória ao Pai</small>'
-                    + '</div>';
-            }).join('');
-
-            var el = document.getElementById('terco-container');
-            if (!el) return;
-            el.innerHTML = '<div class="row justify-content-center">'
-                + '<div class="col-lg-7">'
-                + '<div class="text-center mb-4">'
-                + '<i class="fas ' + m.icone + ' fa-3x mb-3" style="color:var(--primary-color)" aria-hidden="true"></i>'
-                + '<h2 class="fw-bold">' + m.nome + '</h2>'
-                + '<p class="text-muted">' + m.subtitulo + '</p>'
-                + '</div>'
-                + '<div class="alert border-0 mb-4" style="background:rgba(var(--primary-rgb,172,170,89),.08)">'
-                + '<strong>Como iniciar:</strong> Sinal da Cruz · Credo Apostólico · Pai-Nosso · 3 Ave-Marias · Glória ao Pai'
-                + '</div>'
-                + '<h5 class="fw-bold mb-3">Os 5 Mistérios de Hoje</h5>'
-                + misteriosHTML
-                + '<div class="p-4 rounded-3 bg-light mt-4">'
-                + '<h6 class="fw-bold">Encerramento — Salve Rainha</h6>'
-                + '<p class="small mb-0 fst-italic">Salve Rainha, Mãe de misericórdia, vida, doçura, esperança nossa, salve! A Vós bradamos, os degredados filhos de Eva; a Vós suspiramos, gemendo e chorando neste vale de lágrimas. Eia pois, Advogada nossa, esses Vossos olhos misericordiosos a nós voltai; e depois deste desterro, mostrai-nos Jesus, o fruto bendito do Vosso ventre. Ó clemente, ó piedosa, ó doce sempre Virgem Maria!</p>'
-                + '</div>'
-                + '</div>'
-                + '</div>';
-        }
 
         /* ── fixWow: garante visibilidade dos elementos .wow dentro de abas ─ */
         function fixWowInTab(tabId) {
@@ -810,7 +775,7 @@
                 if (target && target.charAt(0) === '#') fixWowInTab(target.slice(1));
                 if (target === '#terco' && !_tercoLoaded) {
                     _tercoLoaded = true;
-                    carregarTerco();
+                    if (typeof window.carregarTerco === 'function') window.carregarTerco();
                 }
             });
         });
