@@ -11,7 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->prepend(\Illuminate\Http\Middleware\HandleCors::class);
+        // A rota de page-view é pública (POST externo do site estático)
+        $middleware->validateCsrfTokens(except: [
+            'api/page-view',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

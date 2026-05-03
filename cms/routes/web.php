@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PageViewController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,3 +26,10 @@ Route::get('/site-media/{path}', function (string $path) {
 
     return response()->file($realPath);
 })->where('path', '.+');
+
+/*
+ * API pública: registra visualizações de páginas do site estático.
+ * CORS habilitado via config/cors.php + HandleCors middleware.
+ */
+Route::post('/api/page-view', [PageViewController::class, 'store'])
+    ->name('api.page-view');
