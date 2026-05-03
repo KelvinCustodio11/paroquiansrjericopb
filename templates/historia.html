@@ -2,19 +2,19 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-	<title>{{titulo}} | Paróquia NSR Jericó/PB</title>
-	<meta name="description" content="{{subtitulo}}">
+	<title>{{meta_titulo}} | Paróquia NSR Jericó/PB</title>
+	<meta name="description" content="{{meta_descricao}}">
 	<link rel="canonical" href="https://pascomjerico.com.br/historia.html">
 	<meta property="og:type" content="website">
 	<meta property="og:site_name" content="Paróquia Nossa Senhora dos Remédios — Jericó/PB">
 	<meta property="og:locale" content="pt_BR">
-	<meta property="og:title" content="{{titulo}} | Paróquia NSR Jericó/PB">
-	<meta property="og:description" content="{{subtitulo}}">
+	<meta property="og:title" content="{{meta_titulo}} | Paróquia NSR Jericó/PB">
+	<meta property="og:description" content="{{meta_descricao}}">
 	<meta property="og:url" content="https://pascomjerico.com.br/historia.html">
 	<meta property="og:image" content="https://pascomjerico.com.br/images/og-default.jpg">
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:title" content="{{titulo}} | Paróquia NSR Jericó/PB">
-	<meta name="twitter:description" content="{{subtitulo}}">
+	<meta name="twitter:title" content="{{meta_titulo}} | Paróquia NSR Jericó/PB">
+	<meta name="twitter:description" content="{{meta_descricao}}">
 	<meta name="twitter:image" content="https://pascomjerico.com.br/images/og-default.jpg">
 	<!-- @include partials/head-css.html -->
 </head>
@@ -23,17 +23,17 @@
 <!-- @include partials/header.html -->
 <a id="main-content" tabindex="-1"></a>
 
-	<!-- Page Header -->
+	<!-- Page Header Start -->
 	<div class="page-header">
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-lg-12">
 					<div class="page-header-box">
-						<h1 class="text-anime-style-2" data-cursor="-opaque">{{titulo}}</h1>
+						<h1 class="text-anime-style-2" data-cursor="-opaque">{{{page_titulo}}}</h1>
 						<nav class="wow fadeInUp">
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.html">início</a></li>
-								<li class="breadcrumb-item active" aria-current="page">{{titulo}}</li>
+								<li class="breadcrumb-item active" aria-current="page">{{breadcrumb_atual}}</li>
 							</ol>
 						</nav>
 					</div>
@@ -41,83 +41,363 @@
 			</div>
 		</div>
 	</div>
+	<!-- Page Header End -->
 
-	<main id="content">
+	<main id="main-content">
 
-		<!-- About Us Section Start -->
-		<div class="about-us page-about-us">
-			<div class="container">
-				<div class="row align-items-center">
-					{{#imagem1}}
-					<div class="col-lg-6">
-						<div class="about-image">
-							<div class="about-img-1">
-								<figure class="image-anime reveal">
-									<img loading="lazy" decoding="async" src="{{imagem1}}" alt="{{titulo}}" class="img-fluid rounded">
-								</figure>
-							</div>
-							{{#imagem2}}
-							<div class="about-img-2">
-								<figure class="image-anime reveal">
-									<img loading="lazy" decoding="async" src="{{imagem2}}" alt="{{titulo}}" class="img-fluid rounded">
-								</figure>
-							</div>
-							{{/imagem2}}
+	<!-- About Us Section Start -->
+	<div class="about-us page-about-us">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-lg-6">
+					<!-- About Image Start -->
+					<div class="about-image">
+						<div class="about-img-1">
+							<figure class="image-anime reveal">
+								<img src="{{about_imagem1}}" alt="{{about_subtitulo}}" loading="lazy" width="540" height="400">
+							</figure>
+						</div>
+						<div class="about-img-2">
+							<figure class="image-anime reveal">
+								<img src="{{about_imagem2}}" alt="{{about_subtitulo}}" loading="lazy" width="300" height="300">
+							</figure>
 						</div>
 					</div>
-					{{/imagem1}}
-					<div class="{{#imagem1}}col-lg-6{{/imagem1}}{{^imagem1}}col-lg-10 mx-auto{{/imagem1}}">
-						<div class="about-content">
-							<div class="section-title">
-								{{#subtitulo}}<h3 class="wow fadeInUp">{{subtitulo}}</h3>{{/subtitulo}}
-								<h2 class="text-anime-style-2" data-cursor="-opaque">{{titulo}}</h2>
-								{{#texto_intro}}<p class="wow fadeInUp" data-wow-delay="0.25s">{{{texto_intro}}}</p>{{/texto_intro}}
-								{{#texto_intro2}}<p class="wow fadeInUp" data-wow-delay="0.5s">{{{texto_intro2}}}</p>{{/texto_intro2}}
+					<!-- About Image End -->
+				</div>
+
+				<div class="col-lg-6">
+					<!-- About Content Start -->
+					<div class="about-content">
+						<!-- Section Title Start -->
+						<div class="section-title">
+							<h3 class="wow fadeInUp">{{about_subtitulo}}</h3>
+							<h2 class="text-anime-style-2" data-cursor="-opaque">{{{about_titulo}}}</h2>
+							<p class="wow fadeInUp" data-wow-delay="0.25s">{{about_intro1}}</p>
+							<p class="wow fadeInUp" data-wow-delay="0.5s">{{{about_intro2}}}</p>
+						</div>
+						<!-- Section Title End -->
+
+						<!-- About Content List Start -->
+						<div class="about-content-body">
+							{{#topicos}}
+							<div class="about-list-item wow fadeInUp"{{#atraso}} data-wow-delay="{{atraso}}"{{/atraso}}>
+								<div class="icon-box">
+									<img src="{{icone}}" alt="" width="40" height="40" aria-hidden="true">
+								</div>
+								<div class="about-list-item-content">
+									<h3>{{titulo}}</h3>
+								</div>
 							</div>
-							<div class="about-content-body">
-								{{#topicos}}
-								<div class="about-list-item wow fadeInUp">
-									<div class="icon-box">
-										<img src="{{icone}}" alt="" width="24" height="24" aria-hidden="true">
-									</div>
-									<div class="about-list-item-content">
-										<h3>{{titulo}}</h3>
+							{{/topicos}}
+						</div>
+						<!-- About Content List End -->
+					</div>
+					<!-- About Content End -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- About Us Section End -->
+
+	<!-- Our Mission Section Start -->
+	<div class="our-mission">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-lg-6">
+					<div class="mission-content">
+						<!-- Section Title Start -->
+						<div class="section-title">
+							<h3 class="wow fadeInUp">{{missao_subtitulo}}</h3>
+							<h2 class="text-anime-style-2" data-cursor="-opaque">{{{missao_titulo}}}</h2>
+						</div>
+						<!-- Section Title End -->
+
+						<!-- Mission Content Body Start -->
+						<div class="mission-content-body">
+							<h3 class="wow fadeInUp" data-wow-delay="0.25s">{{missao_subtexto}}</h3>
+							<p class="wow fadeInUp" data-wow-delay="0.5s">{{missao_texto}}</p>
+						</div>
+						<!-- Mission Content Body End -->
+
+						<!-- Mission Content Footer Start -->
+						<div class="mission-content-footer wow fadeInUp" data-wow-delay="0.75s">
+							<a href="{{missao_cta_href}}" class="btn-default">{{missao_cta_texto}}</a>
+						</div>
+						<!-- Mission Content Footer End -->
+					</div>
+				</div>
+
+				<div class="col-lg-6">
+					<!-- Mission Image Start -->
+					<div class="mission-image">
+						<div class="mission-img">
+							<figure class="image-anime reveal">
+								<img src="{{missao_imagem}}" alt="{{missao_subtitulo}}" loading="lazy" width="600" height="480">
+							</figure>
+						</div>
+					</div>
+					<!-- Mission Image End -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Our Mission Section End -->
+
+	<!-- Vision Mission Section Start -->
+	<div class="vision-mission">
+		<div class="container">
+			<div class="row section-row">
+				<div class="col-lg-12">
+					<!-- Section Title Start -->
+					<div class="section-title">
+						<h3 class="wow fadeInUp">{{vm_subtitulo}}</h3>
+						<h2 class="text-anime-style-2" data-cursor="-opaque">{{{vm_titulo}}}</h2>
+					</div>
+					<!-- Section Title End -->
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<!-- Vision Mission Nav Start -->
+					<div class="vision-mission-nav wow fadeInUp" data-wow-delay="0.25s">
+						<ul class="nav nav-tabs" id="vmTab" role="tablist">
+							{{#vm_abas}}
+							<li class="nav-item" role="presentation">
+								<button class="nav-link{{#ativo}} active{{/ativo}}" id="{{tab_id}}" data-bs-toggle="tab" data-bs-target="#{{aba_id}}" type="button" role="tab" aria-selected="{{#ativo}}true{{/ativo}}{{^ativo}}false{{/ativo}}">{{label}}</button>
+							</li>
+							{{/vm_abas}}
+						</ul>
+					</div>
+					<!-- Vision Mission Nav End -->
+
+					<!-- Vision Mission Box Start -->
+					<div class="vision-mission-box tab-content" id="vmTabContent">
+						{{#vm_abas}}
+						<div class="our-vision-item tab-pane fade{{#ativo}} show active{{/ativo}}" id="{{aba_id}}" role="tabpanel">
+							<div class="row align-items-center">
+								<div class="col-lg-6">
+									<div class="vision-mission-content">
+										<div class="section-title">
+											<h3 class="wow fadeInUp">{{subtitulo}}</h3>
+											<h2 class="text-anime-style-2" data-cursor="-opaque">{{{titulo}}}</h2>
+										</div>
+										<div class="vision-mission-body">
+											<h3 class="wow fadeInUp" data-wow-delay="0.25s">{{subtexto}}</h3>
+											<p class="wow fadeInUp" data-wow-delay="0.5s">{{texto}}</p>
+										</div>
 									</div>
 								</div>
-								{{/topicos}}
+								<div class="col-lg-6">
+									<div class="vision-mission-image">
+										<figure class="image-anime reveal">
+											<img src="{{imagem}}" alt="{{subtitulo}}" loading="lazy" width="600" height="480">
+										</figure>
+									</div>
+								</div>
+							</div>
+						</div>
+						{{/vm_abas}}
+					</div>
+					<!-- Vision Mission Box End -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Vision Mission Section End -->
+
+	<!-- Our Counter Section Start -->
+	<div class="our-counter">
+		<div class="container">
+			<div class="row counter-box">
+				{{#contador_items}}
+				<div class="col-lg-3 col-md-6">
+					<div class="counter-item">
+						<div class="counter-title">
+							<h2><span class="counter">{{valor}}</span>{{sufixo}}</h2>
+						</div>
+						<div class="counter-content">
+							<h3>{{label}}</h3>
+							<p>{{descricao}}</p>
+						</div>
+					</div>
+				</div>
+				{{/contador_items}}
+			</div>
+		</div>
+	</div>
+	<!-- Our Counter Section End -->
+
+	<!-- What We Do Section Start -->
+	<div class="what-we-do">
+		<div class="container">
+			<div class="row section-row">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<h3 class="wow fadeInUp">{{servicos_subtitulo}}</h3>
+						<h2 class="text-anime-style-2" data-cursor="-opaque">{{{servicos_titulo}}}</h2>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				{{#servicos}}
+				<div class="col-lg-4 col-md-6">
+					<div class="what-we-item wow fadeInUp"{{#atraso}} data-wow-delay="{{atraso}}"{{/atraso}}>
+						<div class="icon-box">
+							<img src="{{icone}}" alt="" aria-hidden="true">
+						</div>
+						<div class="what-we-content">
+							<h3>{{titulo}}</h3>
+							<p>{{descricao}}</p>
+						</div>
+					</div>
+				</div>
+				{{/servicos}}
+			</div>
+		</div>
+	</div>
+	<!-- What We Do Section End -->
+
+	<!-- Our Team Start -->
+	<div class="our-team">
+		<div class="container">
+			<div class="row align-items-center section-row">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<h3 class="wow fadeInUp">{{equipe_subtitulo}}</h3>
+						<h2 class="text-anime-style-2" data-cursor="-opaque">{{{equipe_titulo}}}</h2>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				{{#membros}}
+				<div class="col-lg-3 col-md-6">
+					<div class="team-member-item wow fadeInUp"{{#atraso}} data-wow-delay="{{atraso}}"{{/atraso}}>
+						<div class="team-image">
+							<figure class="image-anime">
+								<img src="{{imagem}}" alt="{{nome}}" loading="lazy" width="350" height="350">
+							</figure>
+							<div class="team-social-icon">
+								<ul>
+									{{#facebook}}<li><a href="{{facebook}}" class="social-icon" aria-label="Facebook de {{nome}}"><i class="fa-brands fa-facebook-f"></i></a></li>{{/facebook}}
+									{{#instagram}}<li><a href="{{instagram}}" class="social-icon" aria-label="Instagram de {{nome}}"><i class="fa-brands fa-instagram"></i></a></li>{{/instagram}}
+									{{#whatsapp}}<li><a href="{{whatsapp}}" class="social-icon" aria-label="WhatsApp de {{nome}}"><i class="fa-brands fa-whatsapp"></i></a></li>{{/whatsapp}}
+								</ul>
+							</div>
+						</div>
+						<div class="team-content">
+							<h3>{{nome}}</h3>
+							<p>{{cargo}}</p>
+						</div>
+					</div>
+				</div>
+				{{/membros}}
+			</div>
+		</div>
+	</div>
+	<!-- Our Team End -->
+
+	<!-- Pastors Message Section Start -->
+	<div class="pastors-message">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-lg-6">
+					<div class="pastors-image">
+						<figure class="image-anime reveal">
+							<img src="{{paroco_imagem}}" alt="{{paroco_subtitulo}}" loading="lazy" width="600" height="500">
+						</figure>
+					</div>
+				</div>
+
+				<div class="col-lg-6">
+					<div class="pastors-content">
+						<div class="section-title">
+							<h3 class="wow fadeInUp">{{paroco_subtitulo}}</h3>
+							<h2 class="text-anime-style-2" data-cursor="-opaque">{{{paroco_titulo}}}</h2>
+						</div>
+						<div class="pastors-content-body">
+							<h3 class="wow fadeInUp" data-wow-delay="0.25s">{{paroco_subtexto}}</h3>
+							<p class="wow fadeInUp" data-wow-delay="0.5s">{{paroco_texto}}</p>
+						</div>
+						<div class="pastors-signature">
+							<div class="pastors-signature-img">
+								<img src="{{paroco_assinatura}}" alt="Assinatura" width="120" height="60">
+							</div>
+							<div class="pastors-signature-content">
+								<p>{{paroco_cargo}}</p>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- About Us Section End -->
+	</div>
+	<!-- Pastors Message Section End -->
 
-		{{#secoes_list}}
-		<section class="section-padding">
-			<div class="container">
-				{{#items}}
-				<div class="row align-items-center {{#impar}}mb-5{{/impar}} {{^impar}}flex-row-reverse mb-5{{/impar}}">
-					{{#imagem}}
-					<div class="col-lg-5 mb-4 mb-lg-0 wow fadeInLeft">
-						<figure class="image-anime reveal">
-							<img loading="lazy" decoding="async" src="{{imagem}}" alt="{{titulo}}" class="img-fluid rounded">
-						</figure>
-					</div>
-					{{/imagem}}
-					<div class="{{#imagem}}col-lg-7{{/imagem}}{{^imagem}}col-lg-10 mx-auto{{/imagem}} wow fadeInRight">
-						<div class="section-title">
-							<h2 class="text-anime-style-2" data-cursor="-opaque">{{titulo}}</h2>
-						</div>
-						<div class="historia-texto lh-lg">
-							{{{texto}}}
-						</div>
+	<!-- Core Value Section Start -->
+	<div class="core-value">
+		<div class="container">
+			<div class="row align-items-center section-row">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<h3 class="wow fadeInUp">{{valores_subtitulo}}</h3>
+						<h2 class="text-anime-style-2" data-cursor="-opaque">{{{valores_titulo}}}</h2>
 					</div>
 				</div>
-				{{/items}}
 			</div>
-		</section>
-		{{/secoes_list}}
+
+			<div class="row align-items-center">
+				<div class="col-lg-6">
+					<!-- Core Value FAQ Accordion Start -->
+					<div class="core-value-faqs-accordion" id="accordion">
+						{{#valores_faqs}}
+						<div class="accordion-item wow fadeInUp"{{#atraso}} data-wow-delay="{{atraso}}"{{/atraso}}>
+							<h2 class="accordion-header" id="{{heading_id}}">
+								<button class="accordion-button{{^aberto}} collapsed{{/aberto}}" type="button" data-bs-toggle="collapse" data-bs-target="#{{faq_id}}" aria-expanded="{{#aberto}}true{{/aberto}}{{^aberto}}false{{/aberto}}" aria-controls="{{faq_id}}">
+									{{pergunta}}
+								</button>
+							</h2>
+							<div id="{{faq_id}}" class="accordion-collapse collapse{{#aberto}} show{{/aberto}}" aria-labelledby="{{heading_id}}" data-bs-parent="#accordion">
+								<div class="accordion-body">
+									<p>{{resposta}}</p>
+								</div>
+							</div>
+						</div>
+						{{/valores_faqs}}
+					</div>
+					<!-- Core Value FAQ Accordion End -->
+				</div>
+
+				<div class="col-lg-6">
+					<!-- Core Value Slider Start -->
+					<div class="core-value-slider">
+						<div class="swiper">
+							<div class="swiper-wrapper">
+								{{#valores_imagens}}
+								<div class="swiper-slide">
+									<div class="core-value-slider-img">
+										<figure class="image-anime">
+											<img src="{{imagem}}" alt="{{valores_subtitulo}}" loading="lazy" width="600" height="480">
+										</figure>
+									</div>
+								</div>
+								{{/valores_imagens}}
+							</div>
+							<div class="core-value-btn">
+								<div class="core-value-button-prev"></div>
+								<div class="core-value-button-next"></div>
+							</div>
+						</div>
+					</div>
+					<!-- Core Value Slider End -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Core Value Section End -->
 
 	</main>
 
@@ -125,3 +405,4 @@
 <!-- @include partials/scripts-common.html -->
 </body>
 </html>
+

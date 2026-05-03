@@ -1,21 +1,113 @@
 {
-    "titulo": "Nossa Trajetória",
-    "subtitulo": "nossa paróquia",
-    "imagem1": "images/about-us-img-1.jpg",
-    "imagem2": "images/about-us-img-2.jpg",
-    "texto_intro": "A Paróquia Nossa Senhora dos Remédios de Jericó/PB é uma comunidade de fé com mais de dois séculos de história, construída com a devoção e o amor do povo jericoense. Nossa missão é evangelizar, celebrar os sacramentos e promover a caridade.",
-    "texto_intro2": "Guiada pelos valores do Evangelho, a nossa paróquia acolhe a todos com amor, oferecendo espaço para o crescimento espiritual, a partilha fraterna e o serviço ao próximo.",
+    "meta_titulo": "História da Paróquia",
+    "meta_descricao": "Conheça a história da Paróquia Nossa Senhora dos Remédios de Jericó/PB, fundada por volta de 1870 junto com a origem da cidade.",
+
+    "page_titulo": "<span>Sobre</span> a Paróquia",
+    "breadcrumb_atual": "História",
+
+    "about_imagem1": "images/about-us-img-1.jpg",
+    "about_imagem2": "images/about-us-img-2.jpg",
+    "about_subtitulo": "História",
+    "about_titulo": "Mais de 150 anos de fé no coração do <span>sertão paraibano</span>",
+    "about_intro1": "A Paróquia Nossa Senhora dos Remédios nasceu junto com a própria cidade de Jericó. Por volta de 1870, o fazendeiro Alexandre Matias de Melo doou um terreno para a construção de uma igreja em honra à Nossa Senhora dos Remédios. Ao redor dela foram sendo construídas as primeiras casas, dando origem ao povoado que depois se tornaria a cidade de Jericó.",
+    "about_intro2": "O município passou por diversos nomes antes de ser chamado Jericó: Quixó Penoso, Caipora e Itacambá. Sua emancipação política ocorreu em 8 de maio de 1959. Pertencemos à Diocese de Cajazeiras — erigida em 6 de fevereiro de 1914 pelo Papa Pio X pela bula <em>Maius Catholicae Religionis Incrementum</em> — e integramos a Forania de Catolé do Rocha, que abrange 8 municípios da região.",
     "topicos": [
-        { "titulo": "evangelizar e celebrar", "icone": "images/icon-about-list-1.svg" },
-        { "titulo": "crescimento espiritual",  "icone": "images/icon-about-list-2.svg" },
-        { "titulo": "serviço ao próximo",       "icone": "images/icon-about-list-3.svg" },
-        { "titulo": "comunidade acolhedora",    "icone": "images/icon-about-list-4.svg" }
+        { "icone": "images/icon-about-list-1.svg", "titulo": "fundada por volta de 1870",            "atraso": "" },
+        { "icone": "images/icon-about-list-2.svg", "titulo": "emancipação em 8 de maio de 1959",     "atraso": "0.25s" },
+        { "icone": "images/icon-about-list-3.svg", "titulo": "Diocese de Cajazeiras (erigida em 1914)", "atraso": "0.5s" },
+        { "icone": "images/icon-about-list-4.svg", "titulo": "Forania de Catolé do Rocha",           "atraso": "0.75s" }
     ],
-    "secoes": [
+
+    "missao_subtitulo": "nossa missão",
+    "missao_titulo": "Nossa Missão: Evangelizar, <span>Celebrar e Servir</span>",
+    "missao_subtexto": "Somos enviados a anunciar o Evangelho, celebrar os sacramentos e servir a todos, especialmente os mais necessitados.",
+    "missao_texto": "A Paróquia Nossa Senhora dos Remédios de Jericó-PB tem como missão central evangelizar, celebrar os sacramentos com fervor e promover a caridade cristã. Pertencemos à Diocese de Cajazeiras e nos comprometemos a ser presença viva de Cristo no sertão paraibano, acolhendo a todos com amor fraterno.",
+    "missao_cta_texto": "Entre em contato",
+    "missao_cta_href": "contact.html",
+    "missao_imagem": "images/mission-image.jpg",
+
+    "vm_subtitulo": "fé, vocação e pastoral",
+    "vm_titulo": "Evangelizar, Celebrar os Sacramentos e <span>Servir com Amor.</span>",
+    "vm_abas": [
         {
-            "titulo": "Fundação",
-            "texto": "Fundada em 1800...",
-            "imagem": ""
+            "aba_id": "vision",
+            "tab_id": "vm-tab-fe",
+            "label": "nossa fé",
+            "ativo": true,
+            "subtitulo": "nossa fé",
+            "titulo": "Ser Uma Igreja Viva e <span>Atuante no Sertão</span>",
+            "subtexto": "Ser uma comunidade de fé ativa, acolhedora e evangelizadora no sertão paraibano, refletindo o amor de Cristo em cada gesto e ação.",
+            "texto": "Nossa visão é ser uma paróquia que anuncia o Evangelho com entusiasmo, celebra os sacramentos com fervor e é presença solidária para com os mais necessitados de Jericó e região. Queremos ser a casa de todos os que buscam a Deus, onde cada pessoa é acolhida com o amor de Nossa Senhora dos Remédios.",
+            "imagem": "images/our-vision-img.jpg"
+        },
+        {
+            "aba_id": "mission",
+            "tab_id": "vm-tab-vocacao",
+            "label": "nossa vocação",
+            "ativo": false,
+            "subtitulo": "nossa vocação",
+            "titulo": "Evangelizar, Celebrar e <span>Servir a Deus e ao Próximo</span>",
+            "subtexto": "Anunciar o Evangelho de Jesus Cristo com alegria, celebrar os sacramentos com fidelidade e promover a caridade cristã em Jericó e região.",
+            "texto": "Nossa missão é evangelizar, celebrar os sacramentos e servir. Acolhemos todos que chegam com fardo pesado, oferecendo consolo, formação cristã e a certeza de que em Nossa Senhora dos Remédios encontramos a intercessora poderosa que leva nossas penas ao Filho.",
+            "imagem": "images/our-mission-img.jpg"
+        },
+        {
+            "aba_id": "approach",
+            "tab_id": "vm-tab-pastoral",
+            "label": "nossa pastoral",
+            "ativo": false,
+            "subtitulo": "nossa pastoral",
+            "titulo": "Acolher, Formar e <span>Enviar ao Mundo</span>",
+            "subtexto": "Acolher o fiel, formá-lo na fé e enviá-lo como discípulo missioneiro ao mundo.",
+            "texto": "Nossa abordagem é pastoralmente integral: cuidamos da liturgia, da catequese, das pastorais sociais e da formação de lideranças. Inspirados pela devoção à Nossa Senhora dos Remédios, acreditamos que cada pessoa pode ser instrumento de cura e esperança para o próximo, como Nossa Senhora foi para os prisioneiros libertados pela Ordem da Santíssima Trindade.",
+            "imagem": "images/our-approach-img.jpg"
         }
+    ],
+
+    "contador_items": [
+        { "valor": "150", "sufixo": "+", "label": "anos de história",       "descricao": "Fundada por volta de 1870, quando Alexandre Matias de Melo doou o terreno para a primeira igreja da cidade." },
+        { "valor": "61",  "sufixo": "",  "label": "paróquias na diocese",   "descricao": "A Diocese de Cajazeiras, erigida em 1914 pelo Papa Pio X, conta com 61 paróquias distribuídas pelo sertão." },
+        { "valor": "8",   "sufixo": "",  "label": "municípios na forania",  "descricao": "Jericó integra a Forania de Catolé do Rocha, que abrange 8 municípios da região do sertão paraibano." },
+        { "valor": "95",  "sufixo": "%", "label": "% de católicos",         "descricao": "A Diocese de Cajazeiras tem aproximadamente 95% de católicos em seu território de 14.867 km² no sertão." }
+    ],
+
+    "servicos_subtitulo": "o que fazemos",
+    "servicos_titulo": "Sacramentos, Pastorais e <span>Serviço à Comunidade</span>",
+    "servicos": [
+        { "icone": "images/icon-what-we-1.svg", "titulo": "celebrações litúrgicas",      "descricao": "Missas diárias e dominicais, festas do calendário litúrgico e a grande Festa da Padroeira (8 de setembro) que reúne toda a comunidade jericoense.", "atraso": "" },
+        { "icone": "images/icon-what-we-2.svg", "titulo": "catequese e formação",        "descricao": "Preparação para os sacramentos (batismo, eucaristia, crisma e matrimônio), grupos bíblicos e formação cristã para todas as idades.", "atraso": "0.25s" },
+        { "icone": "images/icon-what-we-3.svg", "titulo": "pastoral social e caridade",  "descricao": "Ações solidárias para apoiar os mais necessitados da comunidade de Jericó e região, vivendo o mandamento do amor ao próximo.", "atraso": "0.5s" }
+    ],
+
+    "equipe_subtitulo": "equipe pastoral",
+    "equipe_titulo": "Conheça Nossa <span>Equipe Paroquial</span>",
+    "membros": [
+        { "imagem": "images/team-1.jpg", "nome": "Pe. José Gomes",          "cargo": "Pároco da Paróquia",                         "facebook": "#", "instagram": "#", "whatsapp": "#", "atraso": "" },
+        { "imagem": "images/team-2.jpg", "nome": "Didcálico / Catequista",  "cargo": "responsável pela catequese",                 "facebook": "#", "instagram": "#", "whatsapp": "#", "atraso": "0.25s" },
+        { "imagem": "images/team-3.jpg", "nome": "Pastoral Jovem",          "cargo": "coordenadora da pastoral da juventude",      "facebook": "#", "instagram": "#", "whatsapp": "#", "atraso": "0.5s" },
+        { "imagem": "images/team-4.jpg", "nome": "Pastoral Social",         "cargo": "coordenadora das obras sociais e caridade",  "facebook": "#", "instagram": "#", "whatsapp": "#", "atraso": "0.75s" }
+    ],
+
+    "paroco_imagem": "images/pastors-image.jpg",
+    "paroco_subtitulo": "mensagem do pároco",
+    "paroco_titulo": "Sua generosidade gera um <span>impacto profundo</span>",
+    "paroco_subtexto": "Nossa missão é compartilhar o amor de Deus, promover o crescimento espiritual e servir nossa comunidade com compaixão e propósito.",
+    "paroco_texto": "Gostaríamos muito de conhecer você melhor. Sinta-se à vontade para entrar em contato conosco pela nossa página de Contato, ou venha participar de uma de nossas celebrações e eventos. Nossas portas estão sempre abertas e aguardamos com alegria recebê-lo na família paroquial.",
+    "paroco_assinatura": "images/pastors-signature.svg",
+    "paroco_cargo": "senior pároco",
+
+    "valores_subtitulo": "valores",
+    "valores_titulo": "Fundamentos da Nossa Fé e da <span>Vida em Comunidade</span>",
+    "valores_faqs": [
+        { "faq_id": "collapseFaq1", "heading_id": "headingFaq1", "pergunta": "Por que a fé é um valor central?",                       "resposta": "A fé é o alicerce de tudo que fazemos. Ela nos orienta nas decisões, sustenta nos momentos difíceis e nos une como povo de Deus.",                                                                                                                                 "aberto": true,  "atraso": "" },
+        { "faq_id": "collapseFaq2", "heading_id": "headingFaq2", "pergunta": "Como a paróquia demonstra o amor ao próximo?",            "resposta": "Demonstramos o amor por meio do serviço compassivo, do acolhimento fraterno e de práticas comunitárias que incluem e dignificam cada pessoa.",                                                                                                 "aberto": false, "atraso": "0.25s" },
+        { "faq_id": "collapseFaq3", "heading_id": "headingFaq3", "pergunta": "Como a comunidade é fortalecida na paróquia?",            "resposta": "A comunidade cresce por meio de grupos de oração, encontros formativos, celebrações e pelo cuidado mútuo entre os paroquianos.",                                                                                                      "aberto": false, "atraso": "0.5s" },
+        { "faq_id": "collapseFaq4", "heading_id": "headingFaq4", "pergunta": "Qual é a importância do crescimento espiritual?",         "resposta": "O crescimento espiritual nos ajuda a aprofundar a relação com Deus, fortalecer a vida de oração e discernir a vontade de Deus em cada etapa da vida.",                                                                             "aberto": false, "atraso": "0.75s" },
+        { "faq_id": "collapseFaq5", "heading_id": "headingFaq5", "pergunta": "Como esses valores moldam as atividades paroquiais?",     "resposta": "Os valores guiam cada evento, celebração e serviço pastoral, garantindo que tudo seja feito com amor, respeito e comprometimento com o Evangelho.",                                                                              "aberto": false, "atraso": "1s" }
+    ],
+    "valores_imagens": [
+        { "imagem": "images/core-value-img.jpg" },
+        { "imagem": "images/core-value-img.jpg" },
+        { "imagem": "images/core-value-img.jpg" }
     ]
 }

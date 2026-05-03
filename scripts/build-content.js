@@ -930,15 +930,7 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
                 dataFile: 'historia.json',
                 template: 'historia.html',
                 outFile:  'historia.html',
-                enrich: function(data) {
-                    // Adiciona campo `impar` para alternancia de layout
-                    const secoes = (data.secoes || []).map(function(sec, idx) {
-                        return Object.assign({}, sec, { impar: (idx % 2 === 0) });
-                    });
-                    return Object.assign({}, data, {
-                        secoes_list: secoes.length > 0 ? { items: secoes } : null,
-                    });
-                },
+                enrich: function(data) { return data; },
             },
         ];
 
