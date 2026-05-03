@@ -342,7 +342,7 @@
                 ? ' tabindex="0" onkeydown="if(event.key===\'Enter\'||event.key===\' \')Terco.irPara(' + nav + ')"'
                 : '';
             return '<g id="' + id + '" class="rc-bead ' + cls + '" data-g="' + grad + '"' + oc
-                 + ' style="cursor:' + cu + ';" role="' + (nav >= 0 ? 'button' : 'img') + '"' + tk + ' >'
+                 + ' style="cursor:' + cu + ';outline:none;-webkit-tap-highlight-color:transparent;" role="' + (nav >= 0 ? 'button' : 'img') + '"' + tk + ' >'
                  + '<title>' + title + '</title>'
                  + '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r + 13) + '" fill="transparent"/>'
                  + '<circle class="rc-vis" cx="' + cx + '" cy="' + cy + '" r="' + r
@@ -423,7 +423,7 @@
 
         /* ── Camada 4: crucifixo ─────────────────────────────────────── */
         H += '<g id="rc-cruz" class="rc-bead rc-special" data-g="rg-sp"'
-           + ' onclick="Terco.irPara(0)" style="cursor:pointer;" role="button" tabindex="0"'
+           + ' onclick="Terco.irPara(0)" style="cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;" role="button" tabindex="0"'
            + ' onkeydown="if(event.key===\'Enter\'||event.key===\' \')Terco.irPara(0)">'
            + '<title>Crucifixo — Sinal da Cruz e Credo</title>'
            + '<rect x="' + (MEDX - 24) + '" y="' + (cruzTopY - 4)
@@ -545,6 +545,8 @@
                     r.setAttribute('filter', 'url(#f-sh)');
                 });
             }
+            var ar = g.querySelector('.rc-active-ring');
+            if (ar) ar.setAttribute('display', 'none');
         });
         if (!contaId) return;
         var bead = document.getElementById('rc-' + contaId);
@@ -560,9 +562,14 @@
             var vis = bead.querySelector('.rc-vis');
             if (vis) {
                 vis.setAttribute('fill', '#f0c040');
-                vis.setAttribute('stroke', '#fff');
-                vis.setAttribute('stroke-width', '2.5');
+                vis.setAttribute('stroke', '#ffffff');
+                vis.setAttribute('stroke-width', contaId === 'medalha' ? '4' : '2.5');
                 vis.setAttribute('filter', 'url(#f-gw)');
+            }
+            /* Anel externo para medalha (gradiente já é dourado — precisa de anel visível) */
+            if (contaId === 'medalha') {
+                var ring = bead.querySelector('.rc-active-ring');
+                if (ring) ring.setAttribute('display', 'inline');
             }
         }
     }
