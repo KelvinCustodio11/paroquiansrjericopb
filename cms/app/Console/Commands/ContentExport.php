@@ -46,9 +46,8 @@ class ContentExport extends Command
         $dataDir = $repoRoot.'/data';
 
         if (! is_dir($dataDir)) {
-            $this->error("Diretorio de saida nao encontrado: {$dataDir}");
-
-            return self::FAILURE;
+            File::makeDirectory($dataDir, 0755, true);
+            $this->info("Pasta criada: {$dataDir}");
         }
 
         $eventos = Evento::where('publicado', true)->orderBy('data_inicio', 'desc')->get()
