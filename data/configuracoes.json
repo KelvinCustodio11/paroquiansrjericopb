@@ -1,6 +1,6 @@
 {
     "cor_principal": "#acaa59",
-    "header_cta_texto": "Ouça agora 1",
+    "header_cta_texto": "Ouça agora",
     "header_cta_link": "#",
     "hero_imagem": "images/uploads/hero/01KQKBNP0D8V88N21E0KNCJ934.jpg",
     "hero_tagline": "Paróquia Nossa Senhora dos Remédios — Jericó/PB",
@@ -22,9 +22,9 @@
     "cor_fundo_claro": "#FFF4F1",
     "cor_texto": "#525252",
     "logo_cor": "#acaa59",
-    "logo_header_img": "images/uploads/logos/01KQJYB7P4B2AW2KWHNN0DM9SP.png",
-    "logo_footer_img": "images/uploads/logos/01KQJYB7PA5347JNDJFK4XG50D.png",
-    "logo_loader_img": "images/uploads/logos/01KQKBMH9H49TN0TPHET5QPAR8.png",
+    "logo_header_img": null,
+    "logo_footer_img": null,
+    "logo_loader_img": null,
     "hero_titulos": [
         {
             "texto": "Fé e Amor",
