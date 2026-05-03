@@ -269,9 +269,9 @@
             passos.push({ tipo: 'oracao', key: 'fatima', conta: 'a' + d + '_9',
                 badge: '2/2', label: 'Fátima — ' + (d + 1) + '.ª Dezena' });
         }
-        /* Encerramento */
-        passos.push({ tipo: 'oracao', key: 'salverainha', conta: 'medalha' });
-        passos.push({ tipo: 'oracao', key: 'letanias',    conta: 'medalha' });
+        /* Encerramento — fica na última Ave da 5.ª dezena */
+        passos.push({ tipo: 'oracao', key: 'salverainha', conta: 'a4_9' });
+        passos.push({ tipo: 'oracao', key: 'letanias',    conta: 'a4_9' });
         return passos;
     }
 
@@ -414,8 +414,8 @@
         }
         H += fio(ring55[54].x, ring55[54].y, MEDX, MEDY);
 
-        /* ── Camada 3: cordão do rabicho (medal→p3→p2→p1→g0→cruz) ───── */
-        H += fio(MEDX, MEDY + 15,  MEDX, p3Y -  8);
+        /* ── Camada 3: cordão do rabicho (junção→p3→p2→p1→g0→cruz) ───── */
+        H += fio(MEDX, MEDY + 2,   MEDX, p3Y -  8);
         H += fio(MEDX, p3Y +  8,   MEDX, p2Y -  8);
         H += fio(MEDX, p2Y +  8,   MEDX, p1Y -  8);
         H += fio(MEDX, p1Y +  8,   MEDX, g0Y - 11);
@@ -489,13 +489,6 @@
         /* Pai-Nosso de abertura — perto da cruz */
         H += conta('rc-g0', MEDX, g0Y, 10, 'rg-pn', 'rc-pn', 2,
             'Pai-Nosso — abertura do Terço (próx. cruz)');
-
-        /* ── Camada 8: medal ─────────────────────────────────────────── */
-        H += conta('rc-medalha', MEDX, MEDY, 14, 'rg-sp', 'rc-special', 70,
-            'Medal — Salve Rainha e Oração Final');
-        H += '<text x="' + MEDX + '" y="' + (MEDY + 5) + '"'
-           + ' text-anchor="middle" font-size="12" fill="#fff8d8"'
-           + ' font-family="Georgia,serif" font-weight="bold" pointer-events="none">✦</text>';
 
         /* ── Numeração tênue das décadas ─────────────────────────────── */
         for (var d = 0; d < 5; d++) {
@@ -682,26 +675,6 @@
         h += '</div></div>';
         h += '<p style="margin:14px 0 0;font-size:.95rem;color:#555;line-height:1.75;">' + esc(m.reflexao_geral) + '</p>';
         h += '</div>';
-
-        /* ── Oferecimento do dia ─────────────────────────────────────────── */
-        var _diasOfer = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
-        var _diaOfer  = _diasOfer[new Date().getDay()];
-        h += '<div id="terco-oferecimento" style="border:1px solid rgba(var(--primary-rgb,172,170,89),.3);border-radius:10px;padding:20px 24px;margin-bottom:28px;background:rgba(var(--primary-rgb,172,170,89),.04)">';
-        h += '<p style="font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--primary-color);margin:0 0 8px;">✝ Oferecimento do Terço — ' + _diaOfer + '</p>';
-        h += '<p style="margin:0 0 14px;font-size:.94rem;color:#333;line-height:1.9;font-style:italic;">';
-        h += 'Eu vos ofereço, meu Deus, este Terço, meditando nos Santos Mistérios, pedindo pelas intenções da Santa Igreja, do Santo Padre e por ';
-        h += '<span id="terco-intencao-preview" style="color:var(--primary-color);font-weight:600;">[suas intenções]</span>. Amém.';
-        h += '</p>';
-        h += '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">';
-        h += '<input id="terco-intencao" type="text" maxlength="120"';
-        h += ' placeholder="Sua intenção de hoje (' + _diaOfer + ')…"';
-        h += ' aria-label="Intenção de oração"';
-        h += ' style="flex:1;min-width:160px;border:1px solid #ddd;border-radius:6px;padding:9px 12px;font-size:.88rem;font-style:italic;"';
-        h += ' oninput="var pv=document.getElementById(\'terco-intencao-preview\');if(pv)pv.textContent=this.value||\'[suas intenções]\';"';
-        h += '/>';
-        h += '<button onclick="var inp=document.getElementById(\'terco-intencao\');if(inp&&inp.value.trim()){inp.style.borderColor=\'var(--primary-color)\';inp.style.outline=\'none\';}"';
-        h += ' style="padding:9px 18px;background:var(--primary-color);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:.85rem;">Confirmar</button>';
-        h += '</div></div>';
 
         /* Layout: rosário + oração */
         h += '<div class="row g-4 align-items-start">';
