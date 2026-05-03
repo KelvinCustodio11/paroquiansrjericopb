@@ -37,7 +37,12 @@ class ContentExport extends Command
 
     public function handle(): int
     {
-        $repoRoot = realpath(base_path('..')); // assumindo cms/ dentro do repo
+        // SITE_ROOT permite configurar o caminho quando cms/ e httpdocs/
+        // são pastas irmãs (ex: Plesk). Fallback: pasta-pai de cms/ (dev local).
+        $repoRoot = env('SITE_ROOT')
+            ? rtrim(env('SITE_ROOT'), '/')
+            : realpath(base_path('..'));
+
         $dataDir = $repoRoot.'/data';
 
         if (! is_dir($dataDir)) {

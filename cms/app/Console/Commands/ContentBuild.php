@@ -14,8 +14,11 @@ class ContentBuild extends Command
 
     public function handle(): int
     {
-        $repoRoot = realpath(base_path('..'));
-        $script   = $repoRoot.'/scripts/build-content.js';
+        $repoRoot = env('SITE_ROOT')
+            ? rtrim(env('SITE_ROOT'), '/')
+            : realpath(base_path('..'));
+
+        $script = $repoRoot.'/scripts/build-content.js';
 
         if (! file_exists($script)) {
             $this->error("Script não encontrado: {$script}");
