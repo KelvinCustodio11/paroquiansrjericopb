@@ -98,7 +98,7 @@
                             <li class="nav-item"><a class="nav-link" data-page="pastoral"        href="sacramentos.html">Pastoral</a></li>
                             <li class="nav-item"><a class="nav-link" data-page="eventos"         href="eventos.html">Eventos</a></li>
                             <li class="nav-item"><a class="nav-link" data-page="agenda"          href="agenda-liturgica.html">Agenda Litúrgica</a></li>
-                            <li class="nav-item"><a class="nav-link" data-page="liturgia"        href="agenda-liturgica.html?tab=liturgia">Liturgia do Dia</a></li>
+                            <li class="nav-item"><a class="nav-link" data-page="liturgia"        href="devocoes-diarias.html">Devoções Diárias</a></li>
                             <li class="nav-item"><a class="nav-link" data-page="contato"         href="contato.html">Contato</a></li>
                             <li class="nav-item highlighted-menu"><a class="nav-link" href="#" data-radio-trigger>Ouça agora</a></li>
                         </ul>
@@ -139,68 +139,182 @@
 	</div>
 	<!-- Page Header End -->
 
-	<main id="content">
-		<section class="section-padding" aria-label="Devoções do dia">
-			<div class="container">
 
-				<!-- Tabs de navegação -->
-				<ul class="nav nav-tabs justify-content-center mb-5 wow fadeInUp" id="devocoesTabs" role="tablist" aria-label="Escolha a devoção">
-					<li class="nav-item" role="presentation" id="tab-santo-item">
-						<button class="nav-link active" id="tab-santo" data-bs-toggle="tab" data-bs-target="#painel-santo"
-							type="button" role="tab" aria-controls="painel-santo" aria-selected="true">
-							<i class="fa-solid fa-star me-2" aria-hidden="true"></i>Santo do Dia
-						</button>
-					</li>
-					<li class="nav-item" role="presentation" id="tab-evangelho-item">
-						<button class="nav-link" id="tab-evangelho" data-bs-toggle="tab" data-bs-target="#painel-evangelho"
-							type="button" role="tab" aria-controls="painel-evangelho" aria-selected="false">
-							<i class="fa-solid fa-book-open me-2" aria-hidden="true"></i>Evangelho do Dia
-						</button>
-					</li>
-					<li class="nav-item" role="presentation" id="tab-terco-item">
-						<button class="nav-link" id="tab-terco" data-bs-toggle="tab" data-bs-target="#painel-terco"
-							type="button" role="tab" aria-controls="painel-terco" aria-selected="false">
-							<i class="fa-solid fa-circle-dot me-2" aria-hidden="true"></i>Terço do Dia
-						</button>
-					</li>
-				</ul>
+    <!-- Devoções Diárias Section Start -->
+    <div class="vision-mission" style="padding: 80px 0;">
+        <div class="container">
+            <div class="row section-row">
+                <div class="col-lg-12">
+                    <!-- Section Title Start -->
+                    <div class="section-title">
+                        <h3 class="wow fadeInUp">espiritualidade diária</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">Liturgia, Santos e as <span>Devoções de Cada Dia</span></h2>
+                    </div>
+                    <!-- Section Title End -->
+                </div>
+            </div>
 
-				<div class="tab-content" id="devocoesTabsContent">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Tabs Nav Start -->
+                    <div class="vision-mission-nav wow fadeInUp" data-wow-delay="0.25s">
+                        <ul class="nav nav-tabs" id="devTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="liturgia-tab" data-bs-toggle="tab" data-bs-target="#liturgia" type="button" role="tab" aria-selected="true">liturgia do dia</button>
+                            </li>
+                            <li class="nav-item" role="presentation" id="tab-santo-item">
+                                <button class="nav-link" id="santo-dia-tab" data-bs-toggle="tab" data-bs-target="#santo-dia" type="button" role="tab" aria-selected="false">santo do dia</button>
+                            </li>
+                            <li class="nav-item" role="presentation" id="tab-terco-item">
+                                <button class="nav-link" id="terco-tab" data-bs-toggle="tab" data-bs-target="#terco" type="button" role="tab" aria-selected="false">terço do dia</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Tabs Nav End -->
 
-					<!-- Painel: Santo do Dia -->
-					<div class="tab-pane fade show active" id="painel-santo" role="tabpanel" aria-labelledby="tab-santo" tabindex="0">
-						<div id="santo-container">
-							<div class="text-center py-5">
-								<i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color:var(--primary-color)" aria-hidden="true"></i>
-								<p class="mt-2 text-muted">Carregando santo do dia…</p>
-							</div>
-						</div>
-					</div>
+                    <!-- Tab Content Start -->
+                    <div class="vision-mission-box tab-content" id="devTabContent">
 
-					<!-- Painel: Evangelho do Dia -->
-					<div class="tab-pane fade" id="painel-evangelho" role="tabpanel" aria-labelledby="tab-evangelho" tabindex="0">
-						<div id="evangelho-container">
-							<div class="text-center py-5">
-								<i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color:var(--primary-color)" aria-hidden="true"></i>
-								<p class="mt-2 text-muted">Carregando evangelho…</p>
-							</div>
-						</div>
-					</div>
+                        <!-- Aba Liturgia do Dia Start -->
+                        <div class="our-vision-item tab-pane fade show active" id="liturgia" role="tabpanel">
+                            <div class="row align-items-start pt-4">
+                                <div class="col-lg-12">
+                                    <div class="vision-mission-content">
+                                        <div class="section-title" style="margin-bottom:28px;">
+                                            <h3 class="wow fadeInUp">palavra de deus</h3>
+                                            <h2 class="text-anime-style-2" data-cursor="-opaque">Liturgia do <span>Dia de Hoje</span></h2>
+                                        </div>
+                                        <!-- Liturgia carregada via js/liturgia.js -->
+                                        <div id="liturgiaContainer"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Aba Liturgia do Dia End -->
 
-					<!-- Painel: Terço do Dia -->
-					<div class="tab-pane fade" id="painel-terco" role="tabpanel" aria-labelledby="tab-terco" tabindex="0">
-						<div id="terco-container">
-							<div class="text-center py-5">
-								<i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color:var(--primary-color)" aria-hidden="true"></i>
-								<p class="mt-2 text-muted">Carregando terço…</p>
-							</div>
-						</div>
-					</div>
+                        <!-- Aba Santo do Dia Start -->
+                        <div class="our-vision-item tab-pane fade" id="santo-dia" role="tabpanel">
 
-				</div>
-			</div>
-		</section>
-	</main>
+                            <!-- Cabeçalho + seletor de data -->
+                            <div class="row align-items-end pt-4 mb-4">
+                                <div class="col-lg-8 col-md-7">
+                                    <div class="section-title mb-0">
+                                        <h3 class="wow fadeInUp">hagiografia</h3>
+                                        <h2 class="text-anime-style-2" data-cursor="-opaque">Santo do <span>Dia</span></h2>
+                                        <p class="wow fadeInUp" data-wow-delay="0.25s">Conheça a vida, a missão e o testemunho dos santos que a Igreja celebra a cada dia do ano litúrgico.</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-5">
+                                    <div class="wow fadeInUp" data-wow-delay="0.25s">
+                                        <div class="mb-2">
+                                            <input type="text" id="sdTextInput" class="form-control sd-text-input"
+                                                placeholder="Nome do santo ou vocação…"
+                                                aria-label="Buscar santo por nome ou vocação">
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <label for="sdDateInput" class="sd-or-label">ou data:</label>
+                                            <input type="date" id="sdDateInput" class="form-control" style="flex:1;min-width:120px;width:auto;">
+                                            <button id="sdBuscarBtn" class="btn-default" style="padding:10px 50px 10px 16px;">
+                                                <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Estado: Carregando -->
+                            <div id="sdLoading" class="text-center py-4">
+                                <div class="sd-loading-wrap">
+                                    <span class="sd-loading-dot"></span>
+                                    <span class="sd-loading-dot"></span>
+                                    <span class="sd-loading-dot"></span>
+                                </div>
+                                <p class="mt-2 text-muted">Buscando o santo do dia…</p>
+                            </div>
+
+                            <!-- Estado: resultados da busca textual -->
+                            <div id="sdSearchResults" hidden>
+                                <p id="sdSearchHint" class="sd-search-hint"></p>
+                                <div id="sdSearchList" class="row g-4"></div>
+                            </div>
+
+                            <!-- Estado: Erro -->
+                            <div id="sdError" hidden class="text-center py-5">
+                                <i class="fa-solid fa-church fa-3x d-block mb-3" style="color:#ccc;"></i>
+                                <p>Não foi possível encontrar o santo do dia para esta data.<br>Tente outra data ou verifique sua conexão.</p>
+                            </div>
+
+                            <!-- Resultado -->
+                            <div id="sdCard" hidden>
+                                <!-- Botão voltar para lista de resultados -->
+                                <div id="sdBackBtn" hidden class="mb-4">
+                                    <button class="sd-back-btn">
+                                        <i class="fa-solid fa-arrow-left me-2"></i>Voltar aos resultados
+                                    </button>
+                                </div>
+                                <div class="row align-items-start">
+
+                                    <!-- Imagem + identidade -->
+                                    <div class="col-lg-4 col-md-5 mb-4">
+                                        <div class="team-member-item">
+                                            <div class="team-image">
+                                                <figure class="image-anime">
+                                                    <img loading="lazy" decoding="async" id="sdCardImg" src="" alt="" hidden>
+                                                    <div id="sdImgPlaceholder" class="sd-img-placeholder">
+                                                        <i class="fa-solid fa-person-praying"></i>
+                                                    </div>
+                                                </figure>
+                                            </div>
+                                            <div class="team-content">
+                                                <p id="sdCardDate" class="sd-feast-label"></p>
+                                                <h3 id="sdCardNome"></h3>
+                                                <p id="sdCardDescricao" class="sd-descricao"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Conteúdo biográfico -->
+                                    <div class="col-lg-8 col-md-7">
+                                        <div class="post-entry" id="sdContent"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Aba Santo do Dia End -->
+
+                        <!-- Aba Terço do Dia Start -->
+                        <div class="our-vision-item tab-pane fade" id="terco" role="tabpanel">
+                            <div class="row align-items-start pt-4">
+                                <div class="col-lg-12">
+                                    <div class="vision-mission-content">
+                                        <div class="section-title" style="margin-bottom:28px;">
+                                            <h3 class="wow fadeInUp">oração mariana</h3>
+                                            <h2 class="text-anime-style-2" data-cursor="-opaque">O Santo Terço <span>do Dia</span></h2>
+                                            <p class="wow fadeInUp" data-wow-delay="0.25s">O Rosário nos leva a contemplar os mistérios da vida de Jesus com os olhos de Maria. Cada dia da semana tem seus próprios mistérios.</p>
+                                        </div>
+                                        <div class="vision-mission-body">
+                                            <div id="terco-container">
+                                                <div class="text-center py-5">
+                                                    <i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color:var(--primary-color)" aria-hidden="true"></i>
+                                                    <p class="mt-2 text-muted">Carregando terço…</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Aba Terço do Dia End -->
+
+                    </div>
+                    <!-- Tab Content End -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Devoções Diárias Section End -->
 
 <!-- @include-start partials/footer.html -->
 <!-- Footer Start -->
@@ -332,167 +446,390 @@
     if (_y) _y.textContent = new Date().getFullYear();
 </script>
 <!-- @include-end partials/scripts-common.html -->
+	<script src="js/liturgia.js"></script>
+	<script src="js/santo-dia.js"></script>
+	<script src="js/calendario-romano.js"></script>
+    <script>
+    (function () {
+        'use strict';
 
-<script>
-(function () {
-  'use strict';
+        /* ── Oculta abas conforme config do CMS ─────────────────────────── */
+        fetch('data/configuracoes.json?' + Date.now())
+            .then(function (r) { return r.ok ? r.json() : {}; })
+            .catch(function () { return {}; })
+            .then(function (cfg) {
+                if (cfg.habilitar_santo_dia === false) {
+                    var liSanto = document.getElementById('tab-santo-item');
+                    if (liSanto) liSanto.style.display = 'none';
+                }
+                if (cfg.habilitar_terco_dia === false) {
+                    var liTerco = document.getElementById('tab-terco-item');
+                    if (liTerco) liTerco.style.display = 'none';
+                }
+            });
 
-  /* ── Carrega configurações para saber quais abas habilitar ─────────── */
-  var config = {};
-  fetch('data/configuracoes.json?' + Date.now())
-    .then(function (r) { return r.ok ? r.json() : {}; })
-    .catch(function () { return {}; })
-    .then(function (cfg) {
-      config = cfg;
-      if (cfg.habilitar_santo_dia === false) {
-        document.getElementById('tab-santo-item').style.display = 'none';
-      }
-      if (cfg.habilitar_evangelho_dia === false) {
-        document.getElementById('tab-evangelho-item').style.display = 'none';
-      }
-      if (cfg.habilitar_terco_dia === false) {
-        document.getElementById('tab-terco-item').style.display = 'none';
-      }
-      /* Ativa a primeira aba visível */
-      var primeiraAba = document.querySelector('#devocoesTabs .nav-item:not([style*="none"]) .nav-link');
-      if (primeiraAba) { primeiraAba.click(); }
-    });
+        /* ── Helpers para o Santo do Dia ─────────────────────────────────── */
+        var MESES_PT = [
+            'janeiro','fevereiro','março','abril','maio','junho',
+            'julho','agosto','setembro','outubro','novembro','dezembro'
+        ];
 
-  /* ── Santo do Dia (via Wikipedia PT-BR) ────────────────────────────── */
-  function carregarSanto() {
-    var hoje = new Date();
-    var dia   = hoje.getDate();
-    var mes   = hoje.toLocaleDateString('pt-BR', { month: 'long' });
-    var url   = 'https://pt.wikipedia.org/api/rest_v1/page/summary/' +
-                encodeURIComponent(dia + '_de_' + mes);
+        var SECTION_ICONS = {
+            'biografia':'fa-book-open','vida':'fa-seedling','vida e obra':'fa-seedling',
+            'história':'fa-scroll','infância':'fa-child','infancia':'fa-child',
+            'juventude':'fa-person','espiritualidade':'fa-dove',
+            'espiritualidade e mística':'fa-dove','missão':'fa-compass',
+            'apostolado':'fa-hands-praying','reforma da igreja':'fa-church',
+            'reforma':'fa-church','virtudes':'fa-star','martírio':'fa-cross',
+            'martirio':'fa-cross','morte':'fa-cross','canonização':'fa-certificate',
+            'canonizacao':'fa-certificate','beatificação':'fa-certificate',
+            'beatificacao':'fa-certificate','veneração':'fa-heart','veneracao':'fa-heart',
+            'padroeira':'fa-shield-halved','padroeiro':'fa-shield-halved',
+            'patronagem':'fa-shield-halved','obras':'fa-feather-pointed',
+            'escritos':'fa-feather-pointed','legado':'fa-landmark',
+            'herança espiritual':'fa-landmark','milagres':'fa-star-of-david',
+            'iconografia':'fa-image','relíquias':'fa-box','reliquias':'fa-box',
+            'culto':'fa-hands-praying','tentações':'fa-fire-flame-curved',
+            'tentacoes':'fa-fire-flame-curved','dom das lágrimas':'fa-droplet',
+            'ordem dominicana':'fa-om','fontes para vida':'fa-book',
+            'doutora da igreja':'fa-graduation-cap','doutor da igreja':'fa-graduation-cap'
+        };
 
-    fetch(url)
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .catch(function () { return null; })
-      .then(function (data) {
-        var el = document.getElementById('santo-container');
-        if (!data || !data.extract) {
-          el.innerHTML = '<div class="text-center py-4 text-muted">'
-            + '<p>Informações do santo do dia não disponíveis no momento. Consulte o <a href="https://pt.wikipedia.org/wiki/' + dia + '_de_' + mes + '" target="_blank" rel="noopener noreferrer">Calendário Litúrgico</a>.</p>'
-            + '</div>';
-          return;
+        function getIcon(title) {
+            if (!title) return 'fa-cross';
+            return SECTION_ICONS[title.toLowerCase().trim()] || 'fa-cross';
         }
-        var img = data.thumbnail ? '<img src="' + data.thumbnail.source + '" alt="' + (data.title || '') + '" class="float-end ms-3 mb-2 rounded" style="max-width:180px;max-height:220px;object-fit:cover" loading="lazy">' : '';
-        el.innerHTML = '<div class="row justify-content-center">'
-          + '<div class="col-lg-8">'
-          + '<h2 class="fw-bold mb-3" style="color:var(--primary-color)">' + (data.title || 'Santo do Dia') + '</h2>'
-          + img
-          + '<p class="lead">' + (data.extract || '') + '</p>'
-          + '<a href="' + (data.content_urls && data.content_urls.desktop ? data.content_urls.desktop.page : '#') + '" target="_blank" rel="noopener noreferrer" class="btn-default mt-3 d-inline-block"><span>Ver mais na Wikipedia</span></a>'
-          + '</div>'
-          + '</div>';
-      });
-  }
 
-  /* ── Evangelho do Dia (via Evangelizo / Liturgia API) ───────────────── */
-  function carregarEvangelho() {
-    var hoje  = new Date();
-    var data  = hoje.getFullYear()
-              + '-' + String(hoje.getMonth() + 1).padStart(2, '0')
-              + '-' + String(hoje.getDate()).padStart(2, '0');
-    var url = 'https://liturgia.up.railway.app/';
-
-    fetch(url)
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .catch(function () { return null; })
-      .then(function (d) {
-        var el = document.getElementById('evangelho-container');
-        if (!d || !d.evangelho) {
-          el.innerHTML = '<div class="text-center py-4 text-muted">'
-            + '<p>Evangelho do dia não disponível no momento.</p>'
-            + '<a href="agenda-liturgica.html?tab=liturgia" class="btn-default"><span>Ver na Agenda Litúrgica</span></a>'
-            + '</div>';
-          return;
+        function formatDate(d) {
+            return d.getDate() + ' de ' + MESES_PT[d.getMonth()] + ' de ' + d.getFullYear();
         }
-        var ev = d.evangelho;
-        el.innerHTML = '<div class="row justify-content-center">'
-          + '<div class="col-lg-8">'
-          + '<p class="text-uppercase small fw-bold mb-1" style="color:var(--primary-color)">'
-            + (d.liturgia || '') + ' · ' + (d.data || '') + '</p>'
-          + '<h2 class="fw-bold mb-2">' + (ev.titulo || 'Evangelho do Dia') + '</h2>'
-          + '<p class="text-muted mb-3"><em>' + (ev.referencia || '') + '</em></p>'
-          + '<div class="liturgia-texto lh-lg">' + (ev.texto || '').replace(/\n/g, '<br>') + '</div>'
-          + '<hr class="my-4">'
-          + '<p class="text-muted small text-end">Fonte: CNBB / liturgia.up.railway.app</p>'
-          + '</div>'
-          + '</div>';
-      });
-  }
 
-  /* ── Terço do Dia ───────────────────────────────────────────────────── */
-  function carregarTerco() {
-    /* Inline (sem import dinâmico para compatibilidade ampla) */
-    var MISTERIOS = {
-      gozosos:    { nome: 'Mistérios Gozosos',   subtitulo: 'Segunda-feira e Sábado', icone: 'fa-star',
-        lista: ['A Anunciação do Anjo Gabriel a Maria Santíssima','A Visitação de Nossa Senhora a Santa Isabel','O Nascimento de Jesus em Belém','A Apresentação de Jesus no Templo','Jesus encontrado entre os Doutores no Templo'] },
-      luminosos:  { nome: 'Mistérios Luminosos',  subtitulo: 'Quinta-feira', icone: 'fa-sun',
-        lista: ['O Batismo de Jesus no Rio Jordão','A Auto-revelação de Jesus nas Bodas de Caná','O Anúncio do Reino de Deus com apelo à conversão','A Transfiguração de Jesus no Monte Tabor','A Instituição da Eucaristia na Última Ceia'] },
-      sorridentes:{ nome: 'Mistérios Dolorosos',  subtitulo: 'Terça-feira e Sexta-feira', icone: 'fa-cross',
-        lista: ['A Agonia de Jesus no Jardim do Getsêmani','A Flagelação de Jesus na coluna','A Coroação de espinhos','Jesus carregando a Cruz até o Calvário','A Crucificação e Morte de Nosso Senhor Jesus Cristo'] },
-      gloriosos:  { nome: 'Mistérios Gloriosos',  subtitulo: 'Quarta-feira, Domingo e Sábado (alt.)', icone: 'fa-crown',
-        lista: ['A Ressurreição de Jesus Cristo','A Ascensão de Jesus ao Céu','A Vinda do Espírito Santo no Pentecostes','A Assunção de Nossa Senhora ao Céu','A Coroação de Nossa Senhora como Rainha do Universo'] },
-    };
-    var mapa = { 0:'gloriosos', 1:'gozosos', 2:'sorridentes', 3:'gloriosos', 4:'luminosos', 5:'sorridentes', 6:'gozosos' };
-    var chave = mapa[new Date().getDay()];
-    var m = MISTERIOS[chave];
+        function showLoading(msg) {
+            document.getElementById('sdLoading').removeAttribute('hidden');
+            document.getElementById('sdCard').setAttribute('hidden', '');
+            document.getElementById('sdError').setAttribute('hidden', '');
+            document.getElementById('sdSearchResults').setAttribute('hidden', '');
+            var txtEl = document.querySelector('#sdLoading p');
+            if (txtEl) txtEl.textContent = msg || 'Buscando o santo do dia…';
+        }
 
-    var misteriosHTML = m.lista.map(function (txt, i) {
-      return '<div class="mb-4 p-3 rounded-3 bg-light">'
-        + '<h6 class="fw-bold mb-1" style="color:var(--primary-color)">' + (i + 1) + 'º Mistério</h6>'
-        + '<p class="mb-0 fst-italic">' + txt + '</p>'
-        + '<small class="text-muted">Pai-Nosso · 10 Ave-Marias · Glória ao Pai</small>'
-        + '</div>';
-    }).join('');
+        function escHtml(s) {
+            return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
 
-    var el = document.getElementById('terco-container');
-    el.innerHTML = '<div class="row justify-content-center">'
-      + '<div class="col-lg-7">'
-      + '<div class="text-center mb-4">'
-      + '<i class="fas ' + m.icone + ' fa-3x mb-3" style="color:var(--primary-color)" aria-hidden="true"></i>'
-      + '<h2 class="fw-bold">' + m.nome + '</h2>'
-      + '<p class="text-muted">' + m.subtitulo + '</p>'
-      + '</div>'
-      + '<div class="alert border-0 mb-4" style="background:rgba(var(--primary-rgb,172,170,89),.08)">'
-      + '<strong>Como iniciar:</strong> Sinal da Cruz · Credo Apostólico · Pai-Nosso · 3 Ave-Marias · Glória ao Pai'
-      + '</div>'
-      + '<h5 class="fw-bold mb-3">Os 5 Mistérios de Hoje</h5>'
-      + misteriosHTML
-      + '<div class="p-4 rounded-3 bg-light mt-4">'
-      + '<h6 class="fw-bold">Encerramento — Salve Rainha</h6>'
-      + '<p class="small mb-0 fst-italic">Salve Rainha, Mãe de misericórdia, vida, doçura, esperança nossa, salve! A Vós bradamos, os degredados filhos de Eva; a Vós suspiramos, gemendo e chorando neste vale de lágrimas. Eia pois, Advogada nossa, esses Vossos olhos misericordiosos a nós voltai; e depois deste desterro, mostrai-nos Jesus, o fruto bendito do Vosso ventre. Ó clemente, ó piedosa, ó doce sempre Virgem Maria!</p>'
-      + '</div>'
-      + '</div>'
-      + '</div>';
-  }
+        function showError(customMsg) {
+            document.getElementById('sdLoading').setAttribute('hidden', '');
+            document.getElementById('sdCard').setAttribute('hidden', '');
+            document.getElementById('sdSearchResults').setAttribute('hidden', '');
+            var errEl = document.getElementById('sdError');
+            if (customMsg) {
+                errEl.innerHTML =
+                    '<i class="fa-solid fa-magnifying-glass fa-3x d-block mb-3" style="color:#ccc;"></i>' +
+                    '<p>' + customMsg + '</p>';
+            } else {
+                errEl.innerHTML =
+                    '<i class="fa-solid fa-church fa-3x d-block mb-3" style="color:#ccc;"></i>' +
+                    '<p>Não foi possível encontrar o santo do dia para esta data.<br>Tente outra data ou verifique sua conexão.</p>';
+            }
+            errEl.removeAttribute('hidden');
+        }
 
-  /* ── Lazy load das abas ─────────────────────────────────────────────── */
-  var carregado = { santo: false, evangelho: false, terco: false };
+        var _lastSearchResults = null;
 
-  document.addEventListener('shown.bs.tab', function (e) {
-    var target = e.target.getAttribute('data-bs-target');
-    if (target === '#painel-santo' && !carregado.santo) {
-      carregado.santo = true; carregarSanto();
-    } else if (target === '#painel-evangelho' && !carregado.evangelho) {
-      carregado.evangelho = true; carregarEvangelho();
-    } else if (target === '#painel-terco' && !carregado.terco) {
-      carregado.terco = true; carregarTerco();
-    }
-  });
+        function showCard(data, d, fromQuery) {
+            document.getElementById('sdLoading').setAttribute('hidden', '');
+            document.getElementById('sdError').setAttribute('hidden', '');
+            document.getElementById('sdSearchResults').setAttribute('hidden', '');
 
-  /* Carrega a aba ativa inicial */
-  var abaAtiva = document.querySelector('#devocoesTabs .nav-link.active');
-  if (abaAtiva) {
-    var targetId = abaAtiva.getAttribute('data-bs-target');
-    if (targetId === '#painel-santo')      { carregado.santo = true;      carregarSanto(); }
-    else if (targetId === '#painel-evangelho') { carregado.evangelho = true; carregarEvangelho(); }
-    else if (targetId === '#painel-terco') { carregado.terco = true;      carregarTerco(); }
-  }
-})();
-</script>
+            var backBtn = document.getElementById('sdBackBtn');
+            if (fromQuery && _lastSearchResults && _lastSearchResults.length > 1) {
+                backBtn._fromQuery = fromQuery;
+                backBtn.removeAttribute('hidden');
+            } else {
+                backBtn.setAttribute('hidden', '');
+            }
+
+            document.getElementById('sdCardDate').textContent = d ? 'Festa: ' + formatDate(d) : '';
+            document.getElementById('sdCardNome').textContent = data.nome || '';
+            document.getElementById('sdCardDescricao').textContent = data.descricao || '';
+
+            var imgEl = document.getElementById('sdCardImg');
+            var placeholder = document.getElementById('sdImgPlaceholder');
+            if (data.imagemGrande || data.imagem) {
+                imgEl.src = data.imagemGrande || data.imagem;
+                imgEl.alt = data.nome || 'Santo';
+                imgEl.removeAttribute('hidden');
+                if (placeholder) placeholder.style.display = 'none';
+            } else {
+                imgEl.setAttribute('hidden', '');
+                if (placeholder) placeholder.style.display = 'flex';
+            }
+
+            var contentEl = document.getElementById('sdContent');
+            contentEl.innerHTML = '';
+
+            if (data.bioHtml) {
+                contentEl.innerHTML = data.bioHtml;
+                if (data.secoes && data.secoes.length) {
+                    data.secoes.forEach(function (sec) {
+                        if (!sec.title || !sec.paras.length) return;
+                        var h = document.createElement('h3');
+                        h.textContent = sec.title;
+                        contentEl.appendChild(h);
+                        sec.paras.forEach(function (para) {
+                            var p = document.createElement('p');
+                            p.textContent = para;
+                            contentEl.appendChild(p);
+                        });
+                    });
+                }
+            } else if (data.secoes && data.secoes.length) {
+                data.secoes.forEach(function (sec, idx) {
+                    if (idx === 0) {
+                        sec.paras.forEach(function (para) {
+                            var p = document.createElement('p');
+                            p.textContent = para;
+                            contentEl.appendChild(p);
+                        });
+                        return;
+                    }
+                    if (!sec.paras.length) return;
+                    if (sec.title) {
+                        var h = document.createElement('h3');
+                        h.textContent = sec.title;
+                        contentEl.appendChild(h);
+                    }
+                    sec.paras.forEach(function (para) {
+                        var p = document.createElement('p');
+                        p.textContent = para;
+                        contentEl.appendChild(p);
+                    });
+                });
+            } else {
+                contentEl.innerHTML = '<p>Conteúdo biográfico não disponível para este santo.</p>';
+            }
+
+            document.getElementById('sdCard').removeAttribute('hidden');
+        }
+
+        function loadSanto(d) {
+            showLoading();
+            window.SantoDia.fetchForDate(d, function (data) { showCard(data, d, null); }, showError);
+        }
+
+        function loadSantoByTitle(title, fromQuery) {
+            document.getElementById('sdSearchResults').setAttribute('hidden', '');
+            showLoading('Carregando hagiografia…');
+            window.SantoDia.fetchForTitle(title, function (data) {
+                showCard(data, null, fromQuery);
+            }, function () {
+                showError('Não foi possível carregar os dados deste santo.<br>Verifique sua conexão e tente novamente.');
+            });
+        }
+
+        function showSearchResults(results, query) {
+            _lastSearchResults = results;
+            document.getElementById('sdLoading').setAttribute('hidden', '');
+            document.getElementById('sdCard').setAttribute('hidden', '');
+            document.getElementById('sdError').setAttribute('hidden', '');
+
+            var hint = document.getElementById('sdSearchHint');
+            hint.innerHTML =
+                '<i class="fa-solid fa-list-ul me-1"></i> ' +
+                results.length + ' resultado' + (results.length > 1 ? 's' : '') +
+                ' para <strong>"' + escHtml(query) + '"</strong> &mdash; selecione para ver a hagiografia:';
+
+            var list = document.getElementById('sdSearchList');
+            list.innerHTML = '';
+            results.forEach(function (r) {
+                var col = document.createElement('div');
+                col.className = 'col-lg-3 col-md-4 col-sm-6 col-6';
+                var hasImg = !!r.imagem;
+                col.innerHTML =
+                    '<div class="sd-result-card" role="button" tabindex="0" aria-label="Ver hagiografia de ' + escHtml(r.nome) + '">' +
+                        (hasImg
+                            ? '<div class="sd-result-img"><img src="' + escHtml(r.imagem) + '" alt="' + escHtml(r.nome) + '" loading="lazy"></div>'
+                            : '<div class="sd-result-img sd-result-img--placeholder"><i class="fa-solid fa-person-praying"></i></div>') +
+                        '<div class="sd-result-info">' +
+                            '<h5 class="sd-result-nome">' + escHtml(r.nome) + '</h5>' +
+                            (r.descricao ? '<p class="sd-result-desc">' + escHtml(r.descricao) + '</p>' : '') +
+                        '</div></div>';
+                var card = col.querySelector('.sd-result-card');
+                (function (title) {
+                    function select() { loadSantoByTitle(title, query); }
+                    card.addEventListener('click', select);
+                    card.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); }
+                    });
+                }(r.title));
+                list.appendChild(col);
+            });
+            document.getElementById('sdSearchResults').removeAttribute('hidden');
+        }
+
+        function searchSantos(query) {
+            if (!query.trim()) return;
+            showLoading('Buscando santos…');
+            window.SantoDia.searchSaints(query, function (results) {
+                if (results.length === 1) {
+                    loadSantoByTitle(results[0].title, null);
+                } else {
+                    showSearchResults(results, query);
+                }
+            }, function () {
+                showError('Nenhum santo encontrado para <strong>"' + escHtml(query) + '"</strong>.<br>Tente outro nome ou vocação.');
+            });
+        }
+
+        var _initDone = false;
+
+        function initSantoTab() {
+            var input     = document.getElementById('sdDateInput');
+            var textInput = document.getElementById('sdTextInput');
+            var btn       = document.getElementById('sdBuscarBtn');
+            var backBtn   = document.getElementById('sdBackBtn');
+            if (!input || !btn) return;
+
+            var today = new Date();
+            var yyyy = today.getFullYear();
+            var mm   = String(today.getMonth() + 1).padStart(2, '0');
+            var dd   = String(today.getDate()).padStart(2, '0');
+            input.value = yyyy + '-' + mm + '-' + dd;
+
+            if (!_initDone) {
+                _initDone = true;
+                loadSanto(today);
+
+                btn.addEventListener('click', function () {
+                    var txt = textInput ? textInput.value.trim() : '';
+                    if (txt) {
+                        searchSantos(txt);
+                    } else {
+                        var val = input.value;
+                        if (!val) return;
+                        var parts = val.split('-');
+                        var d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+                        loadSanto(d);
+                    }
+                });
+
+                [input, textInput].forEach(function (el) {
+                    if (!el) return;
+                    el.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter') btn.click();
+                    });
+                });
+
+                if (backBtn) {
+                    backBtn.querySelector('button').addEventListener('click', function () {
+                        document.getElementById('sdCard').setAttribute('hidden', '');
+                        if (_lastSearchResults && _lastSearchResults.length > 1) {
+                            showSearchResults(_lastSearchResults, backBtn._fromQuery || '');
+                        }
+                    });
+                }
+            }
+        }
+
+        function activateSantoTabIfHash() {
+            if (window.location.hash === '#santo-dia') {
+                var tab = document.getElementById('santo-dia-tab');
+                if (tab && typeof bootstrap !== 'undefined') {
+                    new bootstrap.Tab(tab).show();
+                }
+            }
+        }
+
+        /* ── Terço do Dia ─────────────────────────────────────────────────── */
+        var _tercoLoaded = false;
+
+        function carregarTerco() {
+            var MISTERIOS = {
+                gozosos:   { nome: 'Mistérios Gozosos',   subtitulo: 'Segunda-feira e Sábado', icone: 'fa-star',
+                    lista: ['A Anunciação do Anjo Gabriel a Maria Santíssima','A Visitação de Nossa Senhora a Santa Isabel','O Nascimento de Jesus em Belém','A Apresentação de Jesus no Templo','Jesus encontrado entre os Doutores no Templo'] },
+                luminosos: { nome: 'Mistérios Luminosos',  subtitulo: 'Quinta-feira', icone: 'fa-sun',
+                    lista: ['O Batismo de Jesus no Rio Jordão','A Auto-revelação de Jesus nas Bodas de Caná','O Anúncio do Reino de Deus com apelo à conversão','A Transfiguração de Jesus no Monte Tabor','A Instituição da Eucaristia na Última Ceia'] },
+                dolorosos: { nome: 'Mistérios Dolorosos',  subtitulo: 'Terça-feira e Sexta-feira', icone: 'fa-cross',
+                    lista: ['A Agonia de Jesus no Jardim do Getsêmani','A Flagelação de Jesus na coluna','A Coroação de espinhos','Jesus carregando a Cruz até o Calvário','A Crucificação e Morte de Nosso Senhor Jesus Cristo'] },
+                gloriosos: { nome: 'Mistérios Gloriosos',  subtitulo: 'Quarta-feira, Domingo e Sábado (alt.)', icone: 'fa-crown',
+                    lista: ['A Ressurreição de Jesus Cristo','A Ascensão de Jesus ao Céu','A Vinda do Espírito Santo no Pentecostes','A Assunção de Nossa Senhora ao Céu','A Coroação de Nossa Senhora como Rainha do Universo'] },
+            };
+            var mapa = { 0:'gloriosos', 1:'gozosos', 2:'dolorosos', 3:'gloriosos', 4:'luminosos', 5:'dolorosos', 6:'gozosos' };
+            var chave = mapa[new Date().getDay()];
+            var m = MISTERIOS[chave];
+
+            var misteriosHTML = m.lista.map(function (txt, i) {
+                return '<div class="mb-4 p-3 rounded-3 bg-light">'
+                    + '<h6 class="fw-bold mb-1" style="color:var(--primary-color)">' + (i + 1) + 'º Mistério</h6>'
+                    + '<p class="mb-0 fst-italic">' + txt + '</p>'
+                    + '<small class="text-muted">Pai-Nosso · 10 Ave-Marias · Glória ao Pai</small>'
+                    + '</div>';
+            }).join('');
+
+            var el = document.getElementById('terco-container');
+            if (!el) return;
+            el.innerHTML = '<div class="row justify-content-center">'
+                + '<div class="col-lg-7">'
+                + '<div class="text-center mb-4">'
+                + '<i class="fas ' + m.icone + ' fa-3x mb-3" style="color:var(--primary-color)" aria-hidden="true"></i>'
+                + '<h2 class="fw-bold">' + m.nome + '</h2>'
+                + '<p class="text-muted">' + m.subtitulo + '</p>'
+                + '</div>'
+                + '<div class="alert border-0 mb-4" style="background:rgba(var(--primary-rgb,172,170,89),.08)">'
+                + '<strong>Como iniciar:</strong> Sinal da Cruz · Credo Apostólico · Pai-Nosso · 3 Ave-Marias · Glória ao Pai'
+                + '</div>'
+                + '<h5 class="fw-bold mb-3">Os 5 Mistérios de Hoje</h5>'
+                + misteriosHTML
+                + '<div class="p-4 rounded-3 bg-light mt-4">'
+                + '<h6 class="fw-bold">Encerramento — Salve Rainha</h6>'
+                + '<p class="small mb-0 fst-italic">Salve Rainha, Mãe de misericórdia, vida, doçura, esperança nossa, salve! A Vós bradamos, os degredados filhos de Eva; a Vós suspiramos, gemendo e chorando neste vale de lágrimas. Eia pois, Advogada nossa, esses Vossos olhos misericordiosos a nós voltai; e depois deste desterro, mostrai-nos Jesus, o fruto bendito do Vosso ventre. Ó clemente, ó piedosa, ó doce sempre Virgem Maria!</p>'
+                + '</div>'
+                + '</div>'
+                + '</div>';
+        }
+
+        /* ── fixWow: garante visibilidade dos elementos .wow dentro de abas ─ */
+        function fixWowInTab(tabId) {
+            var pane = document.getElementById(tabId);
+            if (!pane) return;
+            pane.querySelectorAll('.wow').forEach(function (el) {
+                if (el.style.visibility === 'hidden' || getComputedStyle(el).visibility === 'hidden') {
+                    el.style.visibility = 'visible';
+                    el.style.opacity    = '1';
+                    if (!el.classList.contains('animated')) el.classList.add('animated');
+                }
+            });
+        }
+
+        /* ── Tab event listener (fixWow + lazy load do Terço) ─────────────── */
+        var tabEls = document.querySelectorAll('#devTab .nav-link');
+        tabEls.forEach(function (btn) {
+            btn.addEventListener('shown.bs.tab', function () {
+                var target = btn.getAttribute('data-bs-target');
+                if (target && target.charAt(0) === '#') fixWowInTab(target.slice(1));
+                if (target === '#terco' && !_tercoLoaded) {
+                    _tercoLoaded = true;
+                    carregarTerco();
+                }
+            });
+        });
+
+        /* ── Init Santo do Dia e ativação via hash ─────────────────────────── */
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function () { initSantoTab(); activateSantoTabIfHash(); });
+        } else {
+            initSantoTab();
+            activateSantoTabIfHash();
+        }
+
+        document.addEventListener('pjax:ready', function () {
+            _initDone = false;
+            _tercoLoaded = false;
+            initSantoTab();
+            activateSantoTabIfHash();
+        });
+    }());
+    </script>
 </body>
 </html>
