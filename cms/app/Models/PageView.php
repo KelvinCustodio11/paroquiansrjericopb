@@ -79,7 +79,7 @@ class PageView extends Model
             ->get()
             ->pluck('titulo', 'pagina');
 
-        return $paginas->map(function (string $titulo, string $pagina) {
+        return $paginas->map(function (?string $titulo, string $pagina) {
             return array_merge(['pagina' => $pagina, 'titulo' => $titulo ?: $pagina], static::contagens($pagina));
         })->values();
     }
