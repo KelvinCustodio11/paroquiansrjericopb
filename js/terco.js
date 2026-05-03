@@ -239,15 +239,17 @@
             badge: '2/2', badgeTip: 'Credo — 2.ª de 2 orações no Crucifixo' });
         passos.push({ tipo: 'oracao', key: 'painosso', conta: 'g0',
             label: 'Abertura do Terço' });
-        passos.push({ tipo: 'oracao', key: 'avemaria', conta: 'p1',
+        /* p3 = bead mais próximo da cruz (1.ª conta tocada subindo)
+           p1 = bead mais próximo do Pai-Nosso (3.ª conta, final) */
+        passos.push({ tipo: 'oracao', key: 'avemaria', conta: 'p3',
             badge: '1/3', label: 'pela Fé' });
         passos.push({ tipo: 'oracao', key: 'avemaria', conta: 'p2',
             badge: '2/3', label: 'pela Esperança' });
-        passos.push({ tipo: 'oracao', key: 'avemaria', conta: 'p3',
+        passos.push({ tipo: 'oracao', key: 'avemaria', conta: 'p1',
             badge: '3/3', label: 'pela Caridade' });
-        passos.push({ tipo: 'oracao', key: 'gloria', conta: 'p3',
+        passos.push({ tipo: 'oracao', key: 'gloria', conta: 'p1',
             label: 'Após as 3 Ave-Marias iniciais' });
-        passos.push({ tipo: 'oracao', key: 'fatima', conta: 'p3',
+        passos.push({ tipo: 'oracao', key: 'fatima', conta: 'p1',
             label: 'Após o Glória inicial' });
         /* 5 Décadas */
         for (var d = 0; d < 5; d++) {
@@ -260,9 +262,11 @@
                     badge: (a + 1) + '/10',
                     label: (a + 1) + '.ª Ave-Maria — ' + (d + 1) + '.ª Dezena' });
             }
-            passos.push({ tipo: 'oracao', key: 'gloria', conta: 'gd' + d,
+            /* Glória e Fátima ficam na ÚLTIMA Ave-Maria da dezena (a{d}_9),
+               pois não voltamos ao Pai-Nosso — continuamos à frente */
+            passos.push({ tipo: 'oracao', key: 'gloria', conta: 'a' + d + '_9',
                 badge: '1/2', label: 'Glória — ' + (d + 1) + '.ª Dezena' });
-            passos.push({ tipo: 'oracao', key: 'fatima', conta: 'gd' + d,
+            passos.push({ tipo: 'oracao', key: 'fatima', conta: 'a' + d + '_9',
                 badge: '2/2', label: 'Fátima — ' + (d + 1) + '.ª Dezena' });
         }
         /* Encerramento */
@@ -281,197 +285,218 @@
      * - Numeração suave das décadas dentro do anel
      */
     function buildSVG() {
-        var W = 270, H_SVG = 490;
-        var CX = 135, CY = 148;
-        var RX = 108, RY = 100;
-        var medY  = CY + RY;   /* 248: base do anel — juncao com rabicho */
-        var g0Y   = 286;       /* Pai-Nosso abertura */
-        var pYs   = [308, 328, 348]; /* 3 Ave-Marias abertura */
-        var cruzCY = 428;      /* centro da cruz */
-        var CORD  = '#1c0e02';
-        var CW    = 2.0;
-        var ORO   = '#c9a45a';
-        var H = '';
+        var W = 270, H_SVG = 500;
+        var CX = 135, CY = 150;
+        var RX = 105, RY = 96;
+        var medY   = CY + RY;       /* 246 — junção anel↔rabicho */
+        var g0Y    = 284;           /* Pai-Nosso abertura */
+        var pYs    = [308, 330, 352]; /* 3 Aves: p3 (baixo/cruz) → p1 (cima/PN) */
+        var cruzCY = 436;           /* centro vertical da cruz */
+        var CORD   = '#1c0e02';
+        var CW     = 1.8;
+        var ORO    = '#c9a45a';
+        var BASE   = 8, PER = 14;
+        var angMed  = Math.PI / 2;
+        var arcStep = (2 * Math.PI) / 5;
+        var ZIG    = 7;  /* offset radial p/ zigue-zague */
+        var H      = '';
 
         /* linha de cordão */
         function fio(x1, y1, x2, y2) {
-            return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2
-                +'" stroke="'+CORD+'" stroke-width="'+CW+'" stroke-linecap="round"/>';
+            return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2
+                + '" stroke="' + CORD + '" stroke-width="' + CW + '" stroke-linecap="round"/>';
         }
 
-        /* conta clicável: área transparente grande + esfera visual + badge opcional */
+        /* conta clicável: área transparente r+12 + esfera visual + badge */
         function conta(id, cx, cy, r, grad, cls, nav, title, badge) {
-            var oc = (nav >= 0) ? ' onclick="Terco.irPara('+nav+')"' : '';
+            var oc = (nav >= 0) ? ' onclick="Terco.irPara(' + nav + ')"' : '';
             var cu = (nav >= 0) ? 'pointer' : 'default';
             var bHtml = '';
             if (badge) {
-                var bx = cx + r * 0.7, by = cy - r * 0.7;
-                bHtml = '<rect x="'+(bx-7)+'" y="'+(by-5.5)+'" width="14" height="10"'
-                    +' rx="4.5" fill="'+ORO+'" opacity=".95" pointer-events="none"/>'
-                    +'<text x="'+bx+'" y="'+(by+2)+'" text-anchor="middle"'
-                    +' font-size="5.2" font-weight="700" fill="#2a0e00" pointer-events="none">'+badge+'</text>';
+                var bx = cx + r * 0.75, by = cy - r * 0.75;
+                bHtml = '<rect x="' + (bx - 7) + '" y="' + (by - 5.5) + '" width="14" height="10"'
+                    + ' rx="4.5" fill="' + ORO + '" opacity=".95" pointer-events="none"/>'
+                    + '<text x="' + bx + '" y="' + (by + 2) + '" text-anchor="middle"'
+                    + ' font-size="5.2" font-weight="700" fill="#2a0e00" pointer-events="none">' + badge + '</text>';
             }
-            return '<g id="'+id+'" class="rc-bead '+cls+'" data-g="'+grad+'"'+oc
-                +' style="cursor:'+cu+';" role="'+(nav>=0?'button':'img')+'"'
-                +(nav>=0?' tabindex="0" onkeydown="if(event.key===\'Enter\'||event.key===\' \')Terco.irPara('+nav+')"':'')+' >'
-                +'<title>'+title+'</title>'
-                +'<circle cx="'+cx+'" cy="'+cy+'" r="'+(r+12)+'" fill="transparent"/>'
-                +'<circle class="rc-vis" cx="'+cx+'" cy="'+cy+'" r="'+r
-                +'" fill="url(#'+grad+')" stroke="'+ORO+'" stroke-width="1.3" filter="url(#f-sh)"/>'
-                +bHtml
-                +'</g>';
+            return '<g id="' + id + '" class="rc-bead ' + cls + '" data-g="' + grad + '"' + oc
+                + ' style="cursor:' + cu + ';" role="' + (nav >= 0 ? 'button' : 'img') + '"'
+                + (nav >= 0 ? ' tabindex="0" onkeydown="if(event.key===\'Enter\'||event.key===\' \')Terco.irPara(' + nav + ')"' : '') + ' >'
+                + '<title>' + title + '</title>'
+                + '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r + 12) + '" fill="transparent"/>'
+                + '<circle class="rc-vis" cx="' + cx + '" cy="' + cy + '" r="' + r
+                + '" fill="url(#' + grad + ')" stroke="' + ORO + '" stroke-width="1.3" filter="url(#f-sh)"/>'
+                + bHtml
+                + '</g>';
         }
 
-        /* --- SVG root --- */
-        H += '<svg id="rosario-svg" viewBox="0 0 '+W+' '+H_SVG+'"'
-            +' xmlns="http://www.w3.org/2000/svg"'
-            +' style="width:100%;max-width:250px;display:block;margin:0 auto;"'
-            +' role="img" aria-label="Rosário interativo">';
-
-        /* --- Defs --- */
-        H += '<defs>'
-            /* pérola */
-            +'<radialGradient id="rg-am" cx="35%" cy="28%" r="68%">'
-            +'<stop offset="0%" stop-color="#fdf9f2"/>'
-            +'<stop offset="50%" stop-color="#ddc99c"/>'
-            +'<stop offset="100%" stop-color="#a07844"/>'
-            +'</radialGradient>'
-            /* ouro brilhante */
-            +'<radialGradient id="rg-pn" cx="35%" cy="26%" r="68%">'
-            +'<stop offset="0%" stop-color="#fff8b4"/>'
-            +'<stop offset="50%" stop-color="#d4a017"/>'
-            +'<stop offset="100%" stop-color="#5e3200"/>'
-            +'</radialGradient>'
-            /* metal dourado escuro (cruz/medal) */
-            +'<radialGradient id="rg-sp" cx="35%" cy="26%" r="68%">'
-            +'<stop offset="0%" stop-color="#f5cc5a"/>'
-            +'<stop offset="50%" stop-color="#9a6008"/>'
-            +'<stop offset="100%" stop-color="#3e1e00"/>'
-            +'</radialGradient>'
-            /* sombra */
-            +'<filter id="f-sh" x="-60%" y="-60%" width="220%" height="220%">'
-            +'<feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="rgba(0,0,0,.38)"/>'
-            +'</filter>'
-            /* brilho ativa */
-            +'<filter id="f-gw" x="-100%" y="-100%" width="300%" height="300%">'
-            +'<feGaussianBlur stdDeviation="5.5" result="b"/>'
-            +'<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>'
-            +'</filter>'
-            +'</defs>';
-
-        /* --- halo de fundo do anel --- */
-        H += '<ellipse cx="'+CX+'" cy="'+CY+'" rx="'+(RX+18)+'" ry="'+(RY+18)+'"'
-            +' fill="rgba(230,210,175,.10)" stroke="none"/>';
-
-        /* --- cordão do anel (oval) --- */
-        H += '<ellipse cx="'+CX+'" cy="'+CY+'" rx="'+RX+'" ry="'+RY+'"'
-            +' fill="none" stroke="'+CORD+'" stroke-width="'+CW+'"/>';
-
-        /* --- rabicho: medal → g0 → p1 → p2 → p3 → topo da cruz --- */
-        H += fio(CX, medY+14,   CX, g0Y-12);
-        H += fio(CX, g0Y+12,    CX, pYs[0]-9);
-        H += fio(CX, pYs[0]+9,  CX, pYs[1]-9);
-        H += fio(CX, pYs[1]+9,  CX, pYs[2]-9);
-        H += fio(CX, pYs[2]+9,  CX, cruzCY-34);
-
-        /* --- Crucifixo --- */
-        H += '<g id="rc-cruz" class="rc-bead rc-special" data-g="rg-sp"'
-            +' onclick="Terco.irPara(0)" style="cursor:pointer;" role="button" tabindex="0"'
-            +' onkeydown="if(event.key===\'Enter\'||event.key===\' \')Terco.irPara(0)">'
-            +'<title>Crucifixo — Sinal da Cruz (1/2) e Credo (2/2)</title>'
-            /* área de toque */
-            +'<rect x="'+(CX-24)+'" y="'+(cruzCY-38)+'" width="48" height="62" fill="transparent"/>'
-            /* braço vertical */
-            +'<rect class="rc-cruz-v" x="'+(CX-6)+'" y="'+(cruzCY-36)+'" width="12" height="46"'
-            +' rx="4.5" fill="url(#rg-sp)" stroke="'+ORO+'" stroke-width="1" filter="url(#f-sh)"/>'
-            /* braço horizontal */
-            +'<rect class="rc-cruz-h" x="'+(CX-20)+'" y="'+(cruzCY-19)+'" width="40" height="12"'
-            +' rx="4.5" fill="url(#rg-sp)" stroke="'+ORO+'" stroke-width="1" filter="url(#f-sh)"/>'
-            /* badge "2 or." */
-            +'<rect x="'+(CX+9)+'" y="'+(cruzCY-42)+'" width="22" height="11" rx="5" fill="'+ORO+'" opacity=".95"/>'
-            +'<text x="'+(CX+20)+'" y="'+(cruzCY-34)+'" text-anchor="middle"'
-            +' font-size="6" font-weight="700" fill="#2a0e00" pointer-events="none">2 or.</text>'
-            +'</g>';
-
-        /* --- Medal (junção anel com rabicho) --- */
-        H += conta('rc-medalha', CX, medY, 14, 'rg-sp', 'rc-special', 70,
-            'Medal — Salve Rainha e Oração Final', null);
-        H += '<text x="'+CX+'" y="'+(medY+5)+'" text-anchor="middle"'
-            +' font-size="13" fill="#ffe8a0" pointer-events="none"'
-            +' font-family="Georgia,serif" font-weight="bold">✦</text>';
-
-        /* --- Abertura: Pai-Nosso g0 --- */
-        H += conta('rc-g0', CX, g0Y, 12, 'rg-pn', 'rc-pn', 2,
-            'Pai-Nosso — abertura', null);
-
-        /* --- Abertura: 3 Ave-Marias --- */
-        var amOpenTitles = ['Ave-Maria 1/3 — pela Fé','Ave-Maria 2/3 — pela Esperança','Ave-Maria 3/3 — pela Caridade'];
-        var amOpenBadges = ['1/3','2/3','3/3'];
-        for (var i = 0; i < 3; i++) {
-            H += conta('rc-p'+(i+1), CX, pYs[i], 9, 'rg-am', 'rc-am', 3+i,
-                amOpenTitles[i], amOpenBadges[i]);
-        }
-
-        /* --- 5 Décadas no anel ---
-         * Sentido anti-horário partindo da medal (ângulo π/2 = base do anel).
-         * Cada grupo: Pai-Nosso (conta grande) + 10 Ave-Marias.
-         * O Pai-Nosso fica no início de cada arco de 72°.
-         * As 10 Aves preenchem o restante do arco.
-         */
-        var BASE = 8, PER = 14;
-        var angMed = Math.PI / 2;
-        var arcStep = (2 * Math.PI) / 5;
+        /* ── Pré-computa posições do anel (5 décadas × zigzag) ── */
+        var ringData = [];
         for (var d = 0; d < 5; d++) {
-            /* Pai-Nosso: inicia 8% no arco para não sobrepor medal */
             var angPN  = angMed - d * arcStep - arcStep * 0.08;
             var angEnd = angMed - (d + 1) * arcStep + arcStep * 0.08;
             var pnX = Math.round(CX + RX * Math.cos(angPN));
             var pnY = Math.round(CY + RY * Math.sin(angPN));
-            H += conta('rc-gd'+d, pnX, pnY, 12, 'rg-pn', 'rc-pn',
-                BASE + d * PER,
-                'Pai-Nosso — '+(d+1)+'.ª Dezena', null);
-            /* badge do número da dezena */
-            var nbx = pnX + 12, nby = pnY - 12;
-            H += '<rect x="'+(nbx-8)+'" y="'+(nby-5)+'" width="16" height="10"'
-                +' rx="4" fill="'+ORO+'" opacity=".9" pointer-events="none"/>'
-                +'<text x="'+nbx+'" y="'+(nby+2.5)+'" text-anchor="middle"'
-                +' font-size="5.5" font-weight="700" fill="#2a0e00" pointer-events="none">'+(d+1)+'.ª</text>';
-            /* 10 Ave-Marias */
+            var aves = [];
             for (var a = 0; a < 10; a++) {
                 var frac = (a + 1) / 11;
                 var angA = angPN + frac * (angEnd - angPN);
-                var amX  = Math.round(CX + RX * Math.cos(angA));
-                var amY  = Math.round(CY + RY * Math.sin(angA));
-                H += conta('rc-a'+d+'_'+a, amX, amY, 7, 'rg-am', 'rc-am',
-                    BASE + d * PER + 2 + a,
-                    (a+1)+'.ª Ave-Maria — '+(d+1)+'.ª Dezena', null);
+                var zOff = (a % 2 === 0) ? ZIG : -ZIG;
+                aves.push({
+                    x: Math.round(CX + (RX + zOff) * Math.cos(angA)),
+                    y: Math.round(CY + (RY + zOff) * Math.sin(angA))
+                });
+            }
+            ringData.push({ pnX: pnX, pnY: pnY, aves: aves });
+        }
+
+        /* ── SVG root ── */
+        H += '<svg id="rosario-svg" viewBox="0 0 ' + W + ' ' + H_SVG + '"'
+            + ' xmlns="http://www.w3.org/2000/svg"'
+            + ' style="width:100%;max-width:260px;display:block;margin:0 auto;"'
+            + ' role="img" aria-label="Rosário interativo">';
+
+        /* ── Defs ── */
+        H += '<defs>'
+            + '<radialGradient id="rg-am" cx="35%" cy="28%" r="68%">'
+            + '<stop offset="0%" stop-color="#fdf9f2"/>'
+            + '<stop offset="50%" stop-color="#ddc99c"/>'
+            + '<stop offset="100%" stop-color="#a07844"/>'
+            + '</radialGradient>'
+            + '<radialGradient id="rg-pn" cx="35%" cy="26%" r="68%">'
+            + '<stop offset="0%" stop-color="#fff8b4"/>'
+            + '<stop offset="50%" stop-color="#d4a017"/>'
+            + '<stop offset="100%" stop-color="#5e3200"/>'
+            + '</radialGradient>'
+            + '<radialGradient id="rg-sp" cx="35%" cy="26%" r="68%">'
+            + '<stop offset="0%" stop-color="#f5cc5a"/>'
+            + '<stop offset="50%" stop-color="#9a6008"/>'
+            + '<stop offset="100%" stop-color="#3e1e00"/>'
+            + '</radialGradient>'
+            + '<filter id="f-sh" x="-60%" y="-60%" width="220%" height="220%">'
+            + '<feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="rgba(0,0,0,.38)"/>'
+            + '</filter>'
+            + '<filter id="f-gw" x="-100%" y="-100%" width="300%" height="300%">'
+            + '<feGaussianBlur stdDeviation="5.5" result="b"/>'
+            + '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>'
+            + '</filter>'
+            + '</defs>';
+
+        /* ── Camada 1: halo suave ao redor do anel ── */
+        H += '<ellipse cx="' + CX + '" cy="' + CY + '" rx="' + (RX + 20) + '" ry="' + (RY + 20) + '"'
+            + ' fill="rgba(230,210,175,.08)" stroke="none"/>';
+
+        /* ── Camada 2: TODOS OS CORDÕES (desenhados antes das contas) ── */
+
+        /* Cordão do anel — segmentos zigue-zague entre contas */
+        H += fio(CX, medY, ringData[0].pnX, ringData[0].pnY);
+        for (var d = 0; d < 5; d++) {
+            var rd = ringData[d];
+            H += fio(rd.pnX, rd.pnY, rd.aves[0].x, rd.aves[0].y);
+            for (var a = 0; a < 9; a++) {
+                H += fio(rd.aves[a].x, rd.aves[a].y, rd.aves[a + 1].x, rd.aves[a + 1].y);
+            }
+            if (d < 4) {
+                H += fio(rd.aves[9].x, rd.aves[9].y, ringData[d + 1].pnX, ringData[d + 1].pnY);
+            } else {
+                H += fio(rd.aves[9].x, rd.aves[9].y, CX, medY);
             }
         }
 
-        /* --- Numeração tênue das décadas dentro do anel --- */
+        /* Cordão do rabicho — vertical da medal até o topo da cruz */
+        H += fio(CX, medY + 14,  CX, g0Y - 12);
+        H += fio(CX, g0Y + 12,   CX, pYs[0] - 9);
+        H += fio(CX, pYs[0] + 9, CX, pYs[1] - 9);
+        H += fio(CX, pYs[1] + 9, CX, pYs[2] - 9);
+        H += fio(CX, pYs[2] + 9, CX, cruzCY - 34);
+
+        /* ── Camada 3: crucifixo (mais ao fundo; beads ficam sobre ele) ── */
+        H += '<g id="rc-cruz" class="rc-bead rc-special" data-g="rg-sp"'
+            + ' onclick="Terco.irPara(0)" style="cursor:pointer;" role="button" tabindex="0"'
+            + ' onkeydown="if(event.key===\'Enter\'||event.key===\' \')Terco.irPara(0)">'
+            + '<title>Crucifixo — Sinal da Cruz (1/2) e Credo (2/2)</title>'
+            + '<rect x="' + (CX - 24) + '" y="' + (cruzCY - 38) + '" width="48" height="62" fill="transparent"/>'
+            + '<rect class="rc-cruz-v" x="' + (CX - 6) + '" y="' + (cruzCY - 36) + '" width="12" height="46"'
+            + ' rx="4.5" fill="url(#rg-sp)" stroke="' + ORO + '" stroke-width="1" filter="url(#f-sh)"/>'
+            + '<rect class="rc-cruz-h" x="' + (CX - 20) + '" y="' + (cruzCY - 19) + '" width="40" height="12"'
+            + ' rx="4.5" fill="url(#rg-sp)" stroke="' + ORO + '" stroke-width="1" filter="url(#f-sh)"/>'
+            + '<rect x="' + (CX + 9) + '" y="' + (cruzCY - 42) + '" width="22" height="11" rx="5" fill="' + ORO + '" opacity=".95"/>'
+            + '<text x="' + (CX + 20) + '" y="' + (cruzCY - 34) + '" text-anchor="middle"'
+            + ' font-size="6" font-weight="700" fill="#2a0e00" pointer-events="none">2 or.</text>'
+            + '</g>';
+
+        /* ── Camada 4: contas do anel (dezenas) ── */
+        for (var d = 0; d < 5; d++) {
+            var rd = ringData[d];
+            /* 10 Ave-Marias */
+            for (var a = 0; a < 10; a++) {
+                H += conta('rc-a' + d + '_' + a, rd.aves[a].x, rd.aves[a].y, 6, 'rg-am', 'rc-am',
+                    BASE + d * PER + 2 + a,
+                    (a + 1) + '.ª Ave-Maria — ' + (d + 1) + '.ª Dezena', null);
+            }
+            /* Pai-Nosso (desenhado depois para ficar sobre as Aves) */
+            H += conta('rc-gd' + d, rd.pnX, rd.pnY, 11, 'rg-pn', 'rc-pn',
+                BASE + d * PER,
+                'Pai-Nosso — ' + (d + 1) + '.ª Dezena', null);
+            /* badge do número da dezena */
+            var nbx = rd.pnX + 13, nby = rd.pnY - 13;
+            H += '<rect x="' + (nbx - 8) + '" y="' + (nby - 5) + '" width="16" height="10"'
+                + ' rx="4" fill="' + ORO + '" opacity=".9" pointer-events="none"/>'
+                + '<text x="' + nbx + '" y="' + (nby + 2.5) + '" text-anchor="middle"'
+                + ' font-size="5.5" font-weight="700" fill="#2a0e00" pointer-events="none">' + (d + 1) + '.ª</text>';
+        }
+
+        /* ── Camada 5: contas do rabicho (abertura) ── */
+
+        /* 3 Ave-Marias (p1=topo/próx. Pai-Nosso, p3=base/próx. cruz) */
+        var amTit = [
+            'Ave-Maria 3/3 — pela Caridade (próx. Pai-Nosso)',
+            'Ave-Maria 2/3 — pela Esperança',
+            'Ave-Maria 1/3 — pela Fé (próx. cruz)'
+        ];
+        var amBdg = ['3/3', '2/3', '1/3'];
+        /* navStep 5 = p1 (3ª Ave), 4 = p2, 3 = p3 (1ª Ave) */
+        var amNav = [5, 4, 3];
+        for (var i = 0; i < 3; i++) {
+            H += conta('rc-p' + (i + 1), CX, pYs[i], 9, 'rg-am', 'rc-am',
+                amNav[i], amTit[i], amBdg[i]);
+        }
+
+        /* Pai-Nosso de abertura (g0) */
+        H += conta('rc-g0', CX, g0Y, 12, 'rg-pn', 'rc-pn', 2,
+            'Pai-Nosso — abertura do Terço', null);
+
+        /* ── Camada 6: medal (sobre cordão e contas do anel) ── */
+        H += conta('rc-medalha', CX, medY, 14, 'rg-sp', 'rc-special', 70,
+            'Medal — Salve Rainha e Oração Final', null);
+        H += '<text x="' + CX + '" y="' + (medY + 5) + '" text-anchor="middle"'
+            + ' font-size="13" fill="#ffe8a0" pointer-events="none"'
+            + ' font-family="Georgia,serif" font-weight="bold">✦</text>';
+
+        /* ── Camada 7: numeração tênue das décadas (texto sobre tudo) ── */
         for (var nd = 0; nd < 5; nd++) {
             var angL = angMed - nd * arcStep - arcStep * 0.5;
-            var lx = Math.round(CX + (RX - 32) * Math.cos(angL));
-            var ly = Math.round(CY + (RY - 32) * Math.sin(angL));
-            H += '<text x="'+lx+'" y="'+(ly+5)+'" text-anchor="middle"'
-                +' font-size="12" font-weight="700" fill="rgba(160,100,20,.18)"'
-                +' pointer-events="none">'+(nd+1)+'</text>';
+            var lx = Math.round(CX + (RX - 30) * Math.cos(angL));
+            var ly = Math.round(CY + (RY - 30) * Math.sin(angL));
+            H += '<text x="' + lx + '" y="' + (ly + 5) + '" text-anchor="middle"'
+                + ' font-size="13" font-weight="700" fill="rgba(160,100,20,.13)"'
+                + ' pointer-events="none">' + (nd + 1) + '</text>';
         }
 
         H += '</svg>';
 
-        /* --- Legenda --- */
-        H += '<div style="margin-top:10px;font-size:.64rem;color:#999;text-align:center;line-height:2.2;">'
-            +'<span style="display:inline-flex;align-items:center;gap:3px;margin-right:8px;">'
-            +'<span style="width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,#fff8b4,#d4a017);border:1px solid #c9a45a;display:inline-block;"></span>Pai-Nosso</span>'
-            +'<span style="display:inline-flex;align-items:center;gap:3px;margin-right:8px;">'
-            +'<span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#fdf9f2,#ddc99c);border:1px solid #c9a45a;display:inline-block;"></span>Ave-Maria</span>'
-            +'<span style="display:inline-flex;align-items:center;gap:3px;">'
-            +'<span style="width:10px;height:10px;border-radius:50%;background:var(--primary-color);box-shadow:0 0 5px var(--primary-color);display:inline-block;"></span>Ativa</span>'
-            +'<br>Toque em qualquer conta para navegar.</div>';
+        /* ── Legenda ── */
+        H += '<div style="margin-top:8px;font-size:.63rem;color:#999;text-align:center;line-height:2.2;">'
+            + '<span style="display:inline-flex;align-items:center;gap:3px;margin-right:8px;">'
+            + '<span style="width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,#fff8b4,#d4a017);border:1px solid #c9a45a;display:inline-block;"></span>Pai-Nosso</span>'
+            + '<span style="display:inline-flex;align-items:center;gap:3px;margin-right:8px;">'
+            + '<span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#fdf9f2,#ddc99c);border:1px solid #c9a45a;display:inline-block;"></span>Ave-Maria</span>'
+            + '<span style="display:inline-flex;align-items:center;gap:3px;">'
+            + '<span style="width:10px;height:10px;border-radius:50%;background:var(--primary-color);box-shadow:0 0 5px var(--primary-color);display:inline-block;"></span>Ativa</span>'
+            + '<br>Toque em qualquer conta para navegar.</div>';
+
         return H;
     }
-
 
     /* ── Destaque no SVG ────────────────────────────────────────────────── */
     function highlightBead(contaId) {
@@ -637,13 +662,13 @@
 
         /* Layout: rosário + oração */
         h += '<div class="row g-4 align-items-start">';
-        /* Coluna SVG (visível somente em md+) */
-        h += '<div class="col-md-5 col-lg-4 d-none d-md-block">';
-        h += '<div style="position:sticky;top:90px;">';
+        /* Coluna SVG — visível em todos os tamanhos */
+        h += '<div class="col-12 col-md-5 col-lg-4">';
+        h += '<div style="text-align:center;">';
         h += buildSVG();
         h += '</div></div>';
         /* Coluna passo a passo */
-        h += '<div class="col-md-7 col-lg-8">';
+        h += '<div class="col-12 col-md-7 col-lg-8">';
         h += '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;">';
         h += '<h5 style="margin:0;font-weight:700;font-size:1rem;"><i class="fa-solid fa-hands-praying me-2" style="color:var(--primary-color);" aria-hidden="true"></i>Rezar acompanhando</h5>';
         h += '<button onclick="Terco.irPara(0);" style="font-size:.77rem;padding:5px 14px;border-radius:20px;background:#f4f4f4;border:1px solid #ddd;cursor:pointer;"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Recomeçar</button>';
