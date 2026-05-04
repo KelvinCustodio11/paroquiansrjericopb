@@ -232,20 +232,12 @@ class ContentExport extends Command
         }
 
         if ($this->option('build')) {
-            $this->info('Regenerando HTMLs estaticos (build-content.js)...');
-            exec('cd '.escapeshellarg($repoRoot).' && node scripts/build-content.js 2>&1', $out, $code);
-            foreach ($out as $line) { $this->line($line); }
-            if ($code !== 0) {
-                $this->error('build-content.js falhou.');
+            $this->info('Regenerando HTMLs estáticos (PHP puro)...');
+            $result = $this->call('content:build-php');
+            if ($result !== self::SUCCESS) {
+                $this->error('content:build-php falhou.');
 
                 return self::FAILURE;
-            }
-
-            $this->info('Propagando partials (build.js)...');
-            exec('cd '.escapeshellarg($repoRoot).' && node build.js 2>&1', $out2, $code2);
-            foreach ($out2 as $line) { $this->line($line); }
-            if ($code2 !== 0) {
-                $this->warn('build.js retornou erro (partials podem estar desatualizados).');
             }
         }
 
