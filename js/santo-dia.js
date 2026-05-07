@@ -37,6 +37,16 @@
         'leitura adicional'
     ];
 
+    /* Seções que complementam a bio sem repeti-la (usadas quando bioHtml já existe) */
+    var SUPPLEMENTARY_SECTIONS = [
+        'canonização', 'canonizacao', 'beatificação', 'beatificacao',
+        'veneração', 'veneracao', 'legado', 'herança espiritual',
+        'milagres', 'iconografia', 'relíquias', 'reliquias', 'culto',
+        'patronagem', 'padroeira', 'padroeiro',
+        'doutora da igreja', 'doutor da igreja',
+        'obras', 'escritos', 'ordem dominicana'
+    ];
+
     /* ── Filtro de descrições inválidas ─────────────────────────── */
     var SKIP_DESC = [
         'imagem de', 'imagem da', 'imagem mariana', 'imagem de maria',
@@ -249,6 +259,58 @@
         }).catch(function () { onError(); });
     }
 
+    /* ── Busca apenas seções complementares (sem intro) para enriquecer bioHtml ── */
+
+    function fetchSupplementarySections(pageTitle, onSuccess, onError) {
+        var wikiApi = 'https://pt.wikipedia.org/w/api.php';
+        var encoded = encodeURIComponent(pageTitle.replace(/ /g, '_'));
+
+        fetchJson(
+            wikiApi + '?action=parse&page=' + encoded +
+            '&prop=sections&format=json&origin=*',
+            12000
+        ).then(function (data) {
+            var sections = (data.parse && data.parse.sections) || [];
+            var wanted = [];
+
+            sections.forEach(function (sec) {
+                var plain = (sec.line || '').replace(/<[^>]+>/g, '').toLowerCase().trim();
+                if (SKIP_SECTIONS.indexOf(plain) >= 0) return;
+                for (var i = 0; i < SUPPLEMENTARY_SECTIONS.length; i++) {
+                    if (plain.indexOf(SUPPLEMENTARY_SECTIONS[i]) >= 0 ||
+                        SUPPLEMENTARY_SECTIONS[i].indexOf(plain) >= 0) {
+                        wanted.push({
+                            index: sec.index,
+                            title: sec.line.replace(/<[^>]+>/g, ''),
+                            level: sec.level
+                        });
+                        return;
+                    }
+                }
+            });
+
+            if (!wanted.length) { onSuccess([]); return; }
+
+            var promises = wanted.slice(0, 6).map(function (sec) {
+                return fetchJson(
+                    wikiApi + '?action=parse&page=' + encoded +
+                    '&prop=text&section=' + sec.index +
+                    '&format=json&origin=*',
+                    12000
+                ).then(function (d) {
+                    var html = (d.parse && d.parse.text && d.parse.text['*']) || '';
+                    var cleaned = cleanWikiHtml(html);
+                    var paras = extractParagraphs(cleaned);
+                    return paras.length ? { title: sec.title, level: sec.level, paras: paras } : null;
+                }).catch(function () { return null; });
+            });
+
+            return Promise.all(promises);
+        }).then(function (results) {
+            onSuccess((results || []).filter(function (r) { return r !== null; }));
+        }).catch(function () { onSuccess([]); });
+    }
+
     /* ── Constrói resultado a partir de um summary Wikipedia ────── */
 
     function buildSaintResult(summary, d, onSuccess, onError) {
@@ -293,24 +355,25 @@
 
     /* ── Tenta um nome pelo REST summary; usa search se ambíguo ─── */
 
-    function trySaintByName(name, onFound, onFail) {
+    function trySaintByName(name, onFound, onFail, strict) {
         fetch('https://pt.wikipedia.org/api/rest_v1/page/summary/' +
             encodeURIComponent(name.replace(/ /g, '_')))
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (summary) {
             if (summary && summary.type === 'disambiguation') {
                 // Tenta pesquisa para desambiguar
-                trySaintBySearch(name, onFound, onFail);
+                trySaintBySearch(name, onFound, onFail, strict);
                 return;
             }
-            if (isValidSaint(summary)) { onFound(summary); } else { onFail(); }
+            var validator = strict ? isValidSaintSearch : isValidSaint;
+            if (validator(summary)) { onFound(summary); } else { onFail(); }
         })
         .catch(function () { onFail(); });
     }
 
     /* ── Pesquisa Wikipedia quando o título é ambíguo ───────────── */
 
-    function trySaintBySearch(name, onFound, onFail) {
+    function trySaintBySearch(name, onFound, onFail, strict) {
         fetchJson(
             'https://pt.wikipedia.org/w/api.php?action=query&list=search' +
             '&srsearch=' + encodeURIComponent(name) +
@@ -322,6 +385,8 @@
             var pending = hits.length;
             if (!pending) { onFail(); return; }
 
+            var validator = strict ? isValidSaintSearch : isValidSaint;
+
             // Tenta o primeiro resultado que seja artigo válido
             function tryNext(idx) {
                 if (idx >= hits.length) { onFail(); return; }
@@ -330,7 +395,7 @@
                     encodeURIComponent(hit.title.replace(/ /g, '_')))
                 .then(function (r) { return r.ok ? r.json() : null; })
                 .then(function (s) {
-                    if (!found && isValidSaint(s)) {
+                    if (!found && validator(s)) {
                         found = true;
                         onFound(s);
                     } else if (!found) {
@@ -409,12 +474,13 @@
             if (!saints.length) throw new Error('no_saints');
 
             // Reutiliza tryCRGSaints sem índice de calendário (lista vinda da Wikipedia)
+            // strict=true: exige termo positivo católico para evitar santos ortodoxos/anglicanos
             var idx = 0;
             function tryNext() {
                 if (idx >= Math.min(saints.length, 8)) { onError(); return; }
                 trySaintByName(saints[idx++], function (summary) {
                     buildSaintResult(summary, d, onSuccess, onError);
-                }, tryNext);
+                }, tryNext, true);
             }
             tryNext();
         })
@@ -489,7 +555,14 @@
                     };
                 }
 
-                fetchFullArticle(wikiName, function (secoes) {
+                /* Quando a Evangelizo já entregou bio rica, busca apenas seções
+                 * complementares da Wikipedia (canonização, legado, milagres…)
+                 * que não duplicam o conteúdo da bio. */
+                var enrichFn = (bioHtml && bioHtml.length > 200)
+                    ? fetchSupplementarySections
+                    : fetchFullArticle;
+
+                enrichFn(wikiName, function (secoes) {
                     var r = buildResult(secoes);
                     saveToCache(d, r);
                     onSuccess(r);

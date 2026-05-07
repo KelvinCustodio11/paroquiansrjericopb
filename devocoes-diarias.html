@@ -591,9 +591,13 @@
 
             if (data.bioHtml) {
                 contentEl.innerHTML = data.bioHtml;
-                if (data.secoes && data.secoes.length) {
-                    data.secoes.forEach(function (sec) {
-                        if (!sec.title || !sec.paras.length) return;
+                var supplementary = (data.secoes || []).filter(function (s) { return s.title && s.paras.length; });
+                if (supplementary.length) {
+                    var divider = document.createElement('div');
+                    divider.className = 'sd-supplement-divider';
+                    divider.innerHTML = '<span><i class="fa-solid fa-book-open-reader me-1" aria-hidden="true"></i>Aprofunde-se</span>';
+                    contentEl.appendChild(divider);
+                    supplementary.forEach(function (sec) {
                         var h = document.createElement('h3');
                         h.textContent = sec.title;
                         contentEl.appendChild(h);
