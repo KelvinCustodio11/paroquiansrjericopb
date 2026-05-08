@@ -73,7 +73,7 @@
         `;
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    function init() {
         const containers = document.querySelectorAll('[data-component="agenda-pastoral"]');
         if (!containers.length) return;
         fetch(dataPath(), { cache: 'no-cache' })
@@ -99,5 +99,12 @@
                 console.warn('[agenda-pastoral] Erro ao carregar:', err);
                 containers.forEach(c => { c.innerHTML = '<p class="text-muted small">Não foi possível carregar a agenda no momento.</p>'; });
             });
-    });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+    document.addEventListener('pjax:ready', init);
 })();

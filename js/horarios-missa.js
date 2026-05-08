@@ -85,7 +85,7 @@
         return subDirs.some(d => p.includes(d)) ? '../data/horarios-missa.json' : 'data/horarios-missa.json';
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    function init() {
         const containers = document.querySelectorAll('[data-component="horarios-missa"]');
         if (!containers.length) return;
         fetch(dataPath(), { cache: 'no-cache' })
@@ -95,5 +95,12 @@
                 console.warn('[horarios-missa] Erro ao carregar:', err);
                 containers.forEach(c => { c.innerHTML = '<p class="text-muted small">Não foi possível carregar os horários no momento.</p>'; });
             });
-    });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+    document.addEventListener('pjax:ready', init);
 })();
