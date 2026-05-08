@@ -289,7 +289,7 @@
                 }
             });
 
-            if (!wanted.length) { onSuccess([]); return; }
+            if (!wanted.length) { onSuccess([]); return null; }  /* null sinaliza: já resolvido */
 
             var promises = wanted.slice(0, 6).map(function (sec) {
                 return fetchJson(
@@ -307,7 +307,8 @@
 
             return Promise.all(promises);
         }).then(function (results) {
-            onSuccess((results || []).filter(function (r) { return r !== null; }));
+            if (results === null) return;  /* já resolvido no .then() anterior */
+            onSuccess(results.filter(function (r) { return r !== null; }));
         }).catch(function () { onSuccess([]); });
     }
 
