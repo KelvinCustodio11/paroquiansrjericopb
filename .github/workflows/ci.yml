@@ -28,6 +28,9 @@ jobs:
       - name: Build partials (header / footer / scripts)
         run: node build.js
 
+      - name: Update SEO blocks
+        run: node scripts/seo-fill.js
+
       - name: Verify generated files are committed (no drift)
         run: |
           if [ -n "$(git status --porcelain)" ]; then
