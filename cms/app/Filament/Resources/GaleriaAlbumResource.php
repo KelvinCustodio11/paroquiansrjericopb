@@ -60,8 +60,8 @@ class GaleriaAlbumResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('capa_imagem')
                     ->label('Imagem de capa')
-                    ->disk('site_static')
-                    ->directory('images/uploads/galeria')
+                    ->disk('public')
+                    ->directory('uploads/galeria')
                     ->visibility('public')
                     ->image()
                     ->imageEditor()
@@ -69,7 +69,7 @@ class GaleriaAlbumResource extends Resource
                     ->maxSize(5120)
                     ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
                         if (is_string($state) && $state !== '') {
-                            $component->state([ltrim($state, '/')]);
+                            $component->state([ltrim(preg_replace('#^storage/#', '', $state), '/')]);
                         } elseif (! is_array($state)) {
                             $component->state([]);
                         }
@@ -77,7 +77,7 @@ class GaleriaAlbumResource extends Resource
                     ->dehydrateStateUsing(function ($state): ?string {
                         if (is_array($state)) {
                             $val = reset($state);
-                            return $val !== false ? ltrim((string) $val, '/') : null;
+                            return $val !== false ? 'storage/' . ltrim((string) $val, '/') : null;
                         }
                         return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
                     })
@@ -99,7 +99,7 @@ class GaleriaAlbumResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('capa_imagem')
                     ->label('Capa')
-                    ->disk('site_static')
+                    ->disk('public')
                     ->square()
                     ->width(64)
                     ->height(64),

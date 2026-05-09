@@ -106,8 +106,8 @@ class EventoResource extends Resource
                             ->columnSpanFull(),
                         Forms\Components\FileUpload::make('imagem_capa')
                             ->label('Imagem de Capa')
-                            ->disk('site_static')
-                            ->directory('images/uploads/events')
+                            ->disk('public')
+                            ->directory('uploads/events')
                             ->visibility('public')
                             ->image()
                             ->imageEditor()
@@ -122,7 +122,7 @@ class EventoResource extends Resource
                             ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
                                 // FileUpload trabalha internamente com array; string vinda do banco precisa ser envolvida
                                 if (is_string($state) && $state !== '') {
-                                    $component->state([ltrim($state, '/')]);
+                                    $component->state([ltrim(preg_replace('#^storage/#', '', $state), '/')]);
                                 } elseif (! is_array($state)) {
                                     $component->state([]);
                                 }
@@ -131,7 +131,7 @@ class EventoResource extends Resource
                                 // Salva como string simples no banco
                                 if (is_array($state)) {
                                     $val = reset($state);
-                                    return $val !== false ? ltrim((string) $val, '/') : null;
+                                    return $val !== false ? 'storage/' . ltrim((string) $val, '/') : null;
                                 }
                                 return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
                             })
@@ -204,8 +204,8 @@ class EventoResource extends Resource
                             ->schema([
                                 Forms\Components\FileUpload::make('url')
                                     ->label('Imagem')
-                                    ->disk('site_static')
-                                    ->directory('images/uploads/events')
+                                    ->disk('public')
+                                    ->directory('uploads/events')
                                     ->visibility('public')
                                     ->image()
                                     ->imageEditor()
@@ -214,7 +214,7 @@ class EventoResource extends Resource
                                     ->required()
                                     ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
                                         if (is_string($state) && $state !== '') {
-                                            $component->state([ltrim($state, '/')]);
+                                            $component->state([ltrim(preg_replace('#^storage/#', '', $state), '/')]);
                                         } elseif (! is_array($state)) {
                                             $component->state([]);
                                         }
@@ -222,7 +222,7 @@ class EventoResource extends Resource
                                     ->dehydrateStateUsing(function ($state): ?string {
                                         if (is_array($state)) {
                                             $val = reset($state);
-                                            return $val !== false ? ltrim((string) $val, '/') : null;
+                                            return $val !== false ? 'storage/' . ltrim((string) $val, '/') : null;
                                         }
                                         return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
                                     }),

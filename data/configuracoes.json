@@ -1,10 +1,10 @@
 {
     "cor_principal": "#acaa59",
-    "header_cta_texto": "Ouça agora",
+    "header_cta_texto": "Ouça agora 1",
     "header_cta_link": "#",
     "hero_imagem": "images/uploads/hero/01KQKBNP0D8V88N21E0KNCJ934.jpg",
     "hero_tagline": "Paróquia Nossa Senhora dos Remédios — Jericó/PB",
-    "hero_titulo": "Bem-vindo",
+    "hero_titulo": "Bem-vindo 1234",
     "hero_descricao": "Uma comunidade de fé com mais de 66 anos de história, erguida em torno da devoção à Nossa Senhora dos Remédios, padroeira de Jericó, no sertão da Paraíba.",
     "hero_btn1_texto": "Horários",
     "hero_btn1_link": "agenda-liturgica.html",
@@ -22,9 +22,9 @@
     "cor_fundo_claro": "#FFF4F1",
     "cor_texto": "#525252",
     "logo_cor": "#acaa59",
-    "logo_header_img": "images/logo.png",
-    "logo_footer_img": "images/footer-logo.png",
-    "logo_loader_img": null,
+    "logo_header_img": "storage/uploads/logos/01KR6DPKERQGJDDWTBH4D8GP7E.png",
+    "logo_footer_img": "storage/uploads/logos/01KR6DVRWEMETFKE9YT8BCTPH0.png",
+    "logo_loader_img": "storage/uploads/logos/01KR6DVRWEMETFKE9YT8BCTPH1.png",
     "hero_titulos": [
         {
             "texto": "Fé e Amor",

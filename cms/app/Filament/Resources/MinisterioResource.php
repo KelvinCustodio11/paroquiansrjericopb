@@ -45,8 +45,8 @@ class MinisterioResource extends Resource
                 IconPickerField::make('icone')->label('Ícone'),
                 Forms\Components\FileUpload::make('imagem')
                     ->label('Imagem do Ministério')
-                    ->disk('site_static')
-                    ->directory('images/uploads/ministerios')
+                    ->disk('public')
+                    ->directory('uploads/ministerios')
                     ->visibility('public')
                     ->image()
                     ->imageEditor()
@@ -59,7 +59,7 @@ class MinisterioResource extends Resource
                     ->hint('Ideal: 800 × 600 px (4:3) | JPG, PNG ou WebP | Máx. 2 MB')
                     ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
                         if (is_string($state) && $state !== '') {
-                            $component->state([ltrim($state, '/')]);
+                            $component->state([ltrim(preg_replace('#^storage/#', '', $state), '/')]);
                         } elseif (! is_array($state)) {
                             $component->state([]);
                         }
@@ -67,7 +67,7 @@ class MinisterioResource extends Resource
                     ->dehydrateStateUsing(function ($state): ?string {
                         if (is_array($state)) {
                             $val = reset($state);
-                            return $val !== false ? ltrim((string) $val, '/') : null;
+                            return $val !== false ? 'storage/' . ltrim((string) $val, '/') : null;
                         }
                         return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
                     })

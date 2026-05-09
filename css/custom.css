@@ -356,8 +356,16 @@ body{
 	position: absolute;
 	top: 50%;
 	left: 50%;
+	width: 66px;
 	max-width: 66px;
 	transform: translate(-50%, -50%);
+}
+
+#loading-icon img{
+	width: 100%;
+	height: auto;
+	display: block;
+	filter: brightness(0) invert(1);
 }
 
 @keyframes rotate-loading{

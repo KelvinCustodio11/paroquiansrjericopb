@@ -330,7 +330,7 @@ class ContentBuildPhp extends Command
     private function enrichEvento(array $item): array
     {
         $imgCapa = is_string($item['imagem_capa'] ?? null)
-            ? ['url' => $item['imagem_capa'] ? '/' . ltrim($item['imagem_capa'], '/') : '', 'alt' => $item['titulo'] ?? '']
+            ? ['url' => $item['imagem_capa'] ? '/' . $this->resolveStorageAsset($item['imagem_capa'], 'events') : '', 'alt' => $item['titulo'] ?? '']
             : ($item['imagem_capa'] ?? ['url' => '', 'alt' => '']);
 
         $local = is_string($item['local'] ?? null)
@@ -350,7 +350,7 @@ class ContentBuildPhp extends Command
         if (! empty($item['galeria']['imagens'])) {
             $galeria = array_merge($item['galeria'], [
                 'imagens' => array_map(fn ($img) => [
-                    'url' => $img['url'] ? '/' . ltrim($img['url'], '/') : '',
+                    'url' => $img['url'] ? '/' . $this->resolveStorageAsset($img['url'], 'galeria') : '',
                     'alt' => $img['alt'] ?? '',
                 ], $item['galeria']['imagens']),
             ]);
@@ -396,7 +396,7 @@ class ContentBuildPhp extends Command
     private function enrichArtigo(array $item): array
     {
         $imgCapa = is_string($item['imagem_capa'] ?? null)
-            ? ['url' => $item['imagem_capa'] ? '/' . ltrim($item['imagem_capa'], '/') : '', 'alt' => $item['titulo'] ?? '']
+            ? ['url' => $item['imagem_capa'] ? '/' . $this->resolveStorageAsset($item['imagem_capa'], 'artigos') : '', 'alt' => $item['titulo'] ?? '']
             : ($item['imagem_capa'] ?? ['url' => '', 'alt' => '']);
 
         return array_merge($item, [
@@ -410,7 +410,7 @@ class ContentBuildPhp extends Command
     private function enrichHomilia(array $item): array
     {
         if (is_string($item['imagem_capa'] ?? null)) {
-            $imgCapaUrl = $item['imagem_capa'] ? '/' . ltrim($item['imagem_capa'], '/') : '';
+            $imgCapaUrl = $item['imagem_capa'] ? '/' . $this->resolveStorageAsset($item['imagem_capa'], 'homilias') : '';
         } else {
             $imgCapaUrl = $item['imagem_capa']['url'] ?? '';
         }
@@ -510,7 +510,7 @@ class ContentBuildPhp extends Command
         if (! $img) {
             return 'images/event-image.jpg';
         }
-        return ltrim((string) $img, '/');
+        return $this->resolveStorageAsset((string) $img, 'events');
     }
 
     private function ourEventHtml(array $ev, bool $reverseLayout): string
@@ -856,12 +856,16 @@ HTML;
     {
         $imgKey = "logo_{$type}_img";
         if (! empty($cfg[$imgKey])) {
-            $src = htmlspecialchars(ltrim($cfg[$imgKey], '/'), ENT_QUOTES, 'UTF-8');
-            return match ($type) {
-                'header' => "<img src=\"{$src}\" alt=\"Logo Paróquia Nossa Senhora dos Remédios\" style=\"max-height:55px;\" loading=\"lazy\">",
-                'loader' => "<img src=\"{$src}\" alt=\"\">",
-                default  => "<img src=\"{$src}\" alt=\"Paróquia Nossa Senhora dos Remédios\" style=\"height:auto;max-height:80px;width:auto;\" loading=\"lazy\">",
-            };
+            $src = $this->resolveStorageAsset($cfg[$imgKey], 'logos');
+
+            if ($src !== '') {
+                $srcEsc = htmlspecialchars($src, ENT_QUOTES, 'UTF-8');
+                return match ($type) {
+                    'header' => "<img src=\"{$srcEsc}\" alt=\"Logo Paróquia Nossa Senhora dos Remédios\" style=\"max-height:55px;\" loading=\"lazy\">",
+                    'loader' => "<img src=\"{$srcEsc}\" alt=\"\" style=\"width:66px;height:auto;\">",
+                    default  => "<img src=\"{$srcEsc}\" alt=\"Paróquia Nossa Senhora dos Remédios\" style=\"height:auto;max-height:80px;width:auto;\" loading=\"lazy\">",
+                };
+            }
         }
 
         // SVG inline com troca de cor
@@ -885,6 +889,46 @@ HTML;
             'loader' => '<img src="images/loader.png" alt="">',
             default  => '<img src="images/footer-logo.png" alt="Paróquia Nossa Senhora dos Remédios" width="200" height="102" style="height:auto;max-height:80px;width:auto;">',
         };
+    }
+
+    /**
+     * Resolve um caminho de imagem salvo pelo CMS.
+     *
+     * Caminhos que começam com "storage/" foram enviados via disco "public" do Laravel
+     * e vivem em cms/storage/app/public/{rest}. Este método:
+     *   1. Copia o arquivo para {siteRoot}/images/uploads/{destSubDir}/{filename}
+     *   2. Retorna o caminho relativo para uso no HTML ("images/uploads/{destSubDir}/{filename}")
+     *
+     * Caminhos que já começam com "images/" são retornados sem modificação.
+     *
+     * @param  string  $path       Valor armazenado no JSON/banco (ex: "storage/uploads/logos/x.png")
+     * @param  string  $destSubDir Subpasta de destino em images/uploads/ (ex: "artigos")
+     * @return string              Caminho relativo para uso em src=""
+     */
+    private function resolveStorageAsset(string $path, string $destSubDir): string
+    {
+        $path = ltrim($path, '/');
+
+        if (! str_starts_with($path, 'storage/')) {
+            return $path; // caminho legado (images/uploads/...) — usar como está
+        }
+
+        $relativeToPub  = substr($path, strlen('storage/')); // ex: "uploads/artigos/x.jpg"
+        $cmsStoragePath = storage_path('app/public/' . $relativeToPub);
+        $filename       = basename($cmsStoragePath);
+        $destDir        = "{$this->root}/images/uploads/{$destSubDir}/";
+        $destPath       = $destDir . $filename;
+
+        if (file_exists($cmsStoragePath)) {
+            if (! is_dir($destDir)) {
+                mkdir($destDir, 0775, true);
+            }
+            if (! file_exists($destPath) || md5_file($cmsStoragePath) !== md5_file($destPath)) {
+                copy($cmsStoragePath, $destPath);
+            }
+        }
+
+        return "images/uploads/{$destSubDir}/{$filename}";
     }
 
     // ─── Rebuild de partials (propaga header/footer em todas as páginas) ──────

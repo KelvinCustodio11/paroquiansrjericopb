@@ -29,8 +29,8 @@ class ParocoResource extends Resource
                 Forms\Components\DatePicker::make('data_inicio_paroquia')->label('Início na paróquia')->displayFormat('d/m/Y'),
                 Forms\Components\FileUpload::make('foto')
                     ->label('Foto do Pároco')
-                    ->disk('site_static')
-                    ->directory('images/uploads/paroco')
+                    ->disk('public')
+                    ->directory('uploads/paroco')
                     ->visibility('public')
                     ->image()
                     ->imageEditor()
@@ -44,7 +44,7 @@ class ParocoResource extends Resource
                     ->hint('Ideal: 600 × 800 px (retrato 3:4) | JPG, PNG ou WebP | Máx. 2 MB')
                     ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
                         if (is_string($state) && $state !== '') {
-                            $component->state([ltrim($state, '/')]);
+                            $component->state([ltrim(preg_replace('#^storage/#', '', $state), '/')]);
                         } elseif (! is_array($state)) {
                             $component->state([]);
                         }
@@ -52,7 +52,7 @@ class ParocoResource extends Resource
                     ->dehydrateStateUsing(function ($state): ?string {
                         if (is_array($state)) {
                             $val = reset($state);
-                            return $val !== false ? ltrim((string) $val, '/') : null;
+                            return $val !== false ? 'storage/' . ltrim((string) $val, '/') : null;
                         }
                         return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
                     })

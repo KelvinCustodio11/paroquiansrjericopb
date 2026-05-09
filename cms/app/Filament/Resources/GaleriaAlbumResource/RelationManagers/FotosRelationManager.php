@@ -23,8 +23,8 @@ class FotosRelationManager extends RelationManager
         return $form->schema([
             Forms\Components\FileUpload::make('arquivo')
                 ->label('Arquivo')
-                ->disk('site_static')
-                ->directory('images/uploads/galeria')
+                ->disk('public')
+                ->directory('uploads/galeria')
                 ->visibility('public')
                 ->image()
                 ->imageEditor()
@@ -33,7 +33,7 @@ class FotosRelationManager extends RelationManager
                 ->required()
                 ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
                     if (is_string($state) && $state !== '') {
-                        $component->state([ltrim($state, '/')]);
+                        $component->state([ltrim(preg_replace('#^storage/#', '', $state), '/')]);
                     } elseif (! is_array($state)) {
                         $component->state([]);
                     }
@@ -41,7 +41,7 @@ class FotosRelationManager extends RelationManager
                 ->dehydrateStateUsing(function ($state): ?string {
                     if (is_array($state)) {
                         $val = reset($state);
-                        return $val !== false ? ltrim((string) $val, '/') : null;
+                        return $val !== false ? 'storage/' . ltrim((string) $val, '/') : null;
                     }
                     return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
                 })
@@ -70,7 +70,7 @@ class FotosRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\ImageColumn::make('arquivo')
                     ->label('Imagem')
-                    ->disk('site_static')
+                    ->disk('public')
                     ->square()
                     ->width(80)
                     ->height(80),
@@ -87,8 +87,8 @@ class FotosRelationManager extends RelationManager
                         Forms\Components\FileUpload::make('arquivos')
                             ->label('Selecione as imagens')
                             ->multiple()
-                            ->disk('site_static')
-                            ->directory('images/uploads/galeria')
+                            ->disk('public')
+                            ->directory('uploads/galeria')
                             ->visibility('public')
                             ->image()
                             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])

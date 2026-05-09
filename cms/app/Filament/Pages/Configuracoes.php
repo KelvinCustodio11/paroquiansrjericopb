@@ -11,6 +11,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Artisan;
 
 class Configuracoes extends Page implements HasForms
 {
@@ -71,71 +72,85 @@ class Configuracoes extends Page implements HasForms
                                 Forms\Components\FileUpload::make('logo_header_img')
                                     ->label('Logo do cabeçalho')
                                     ->helperText('Substitui o logo no menu de navegação. Deixe vazio para usar o padrão. Recomendado: max-height 55px, fundo transparente.')
-                                    ->disk('site_static')
-                                    ->directory('images/uploads/logos')
+                                    ->disk('public')
+                                    ->directory('uploads/logos')
                                     ->visibility('public')
                                     ->image()
                                     ->acceptedFileTypes(['image/png', 'image/svg+xml', 'image/webp'])
                                     ->maxSize(2048)
                                     ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
-                                        if (is_string($state) && $state !== '') {
-                                            $component->state([ltrim($state, '/')]);
-                                        } elseif (! is_array($state)) {
-                                            $component->state([]);
-                                        }
-                                    })
-                                    ->dehydrateStateUsing(function ($state): ?string {
+                                        // Array = estado interno do Filament/Livewire (temp ou existente) → não mexe.
                                         if (is_array($state)) {
-                                            $val = reset($state);
-                                            return $val !== false ? ltrim((string) $val, '/') : null;
+                                            return;
                                         }
-                                        return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
+                                        // String com storage/ → arquivo salvo no disco public → strip prefix.
+                                        if (is_string($state) && str_starts_with($state, 'storage/')) {
+                                            $component->state([substr($state, strlen('storage/'))]);
+                                            return;
+                                        }
+                                        // Path legado ou vazio → limpa.
+                                        $component->state([]);
+                                    })
+                                    ->dehydrateStateUsing(function ($state, Forms\Get $get): ?string {
+                                        $val = is_array($state) ? (reset($state) ?: null) : (is_string($state) && $state !== '' ? $state : null);
+                                        // Novo arquivo enviado → prefixar com storage/
+                                        if ($val) {
+                                            return str_starts_with($val, 'storage/') ? $val : 'storage/' . $val;
+                                        }
+                                        // Nenhum arquivo novo → preservar valor atual do banco
+                                        return Configuracao::current()->logo_header_img ?? null;
                                     }),
                                 Forms\Components\FileUpload::make('logo_footer_img')
                                     ->label('Logo do rodapé')
                                     ->helperText('Substitui o logo no rodapé. Deixe vazio para usar o padrão. Recomendado: max-height 80px, fundo transparente.')
-                                    ->disk('site_static')
-                                    ->directory('images/uploads/logos')
+                                    ->disk('public')
+                                    ->directory('uploads/logos')
                                     ->visibility('public')
                                     ->image()
                                     ->acceptedFileTypes(['image/png', 'image/svg+xml', 'image/webp'])
                                     ->maxSize(2048)
                                     ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
-                                        if (is_string($state) && $state !== '') {
-                                            $component->state([ltrim($state, '/')]);
-                                        } elseif (! is_array($state)) {
-                                            $component->state([]);
+                                        if (is_array($state)) {
+                                            return;
                                         }
+                                        if (is_string($state) && str_starts_with($state, 'storage/')) {
+                                            $component->state([substr($state, strlen('storage/'))]);
+                                            return;
+                                        }
+                                        $component->state([]);
                                     })
                                     ->dehydrateStateUsing(function ($state): ?string {
-                                        if (is_array($state)) {
-                                            $val = reset($state);
-                                            return $val !== false ? ltrim((string) $val, '/') : null;
+                                        $val = is_array($state) ? (reset($state) ?: null) : (is_string($state) && $state !== '' ? $state : null);
+                                        if ($val) {
+                                            return str_starts_with($val, 'storage/') ? $val : 'storage/' . $val;
                                         }
-                                        return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
+                                        return Configuracao::current()->logo_footer_img ?? null;
                                     }),
                                 Forms\Components\FileUpload::make('logo_loader_img')
                                     ->label('Logo do carregamento inicial (Preloader)')
                                     ->helperText('Substitui o ícone giratório na tela de carregamento. Deixe vazio para usar o padrão. Recomendado: 66×86px, fundo transparente.')
-                                    ->disk('site_static')
-                                    ->directory('images/uploads/logos')
+                                    ->disk('public')
+                                    ->directory('uploads/logos')
                                     ->visibility('public')
                                     ->image()
                                     ->acceptedFileTypes(['image/png', 'image/svg+xml', 'image/webp'])
                                     ->maxSize(1024)
                                     ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
-                                        if (is_string($state) && $state !== '') {
-                                            $component->state([ltrim($state, '/')]);
-                                        } elseif (! is_array($state)) {
-                                            $component->state([]);
+                                        if (is_array($state)) {
+                                            return;
                                         }
+                                        if (is_string($state) && str_starts_with($state, 'storage/')) {
+                                            $component->state([substr($state, strlen('storage/'))]);
+                                            return;
+                                        }
+                                        $component->state([]);
                                     })
                                     ->dehydrateStateUsing(function ($state): ?string {
-                                        if (is_array($state)) {
-                                            $val = reset($state);
-                                            return $val !== false ? ltrim((string) $val, '/') : null;
+                                        $val = is_array($state) ? (reset($state) ?: null) : (is_string($state) && $state !== '' ? $state : null);
+                                        if ($val) {
+                                            return str_starts_with($val, 'storage/') ? $val : 'storage/' . $val;
                                         }
-                                        return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
+                                        return Configuracao::current()->logo_loader_img ?? null;
                                     }),
                             ])
                             ->columns(2),
@@ -160,8 +175,8 @@ class Configuracoes extends Page implements HasForms
                             ->schema([
                                 Forms\Components\FileUpload::make('hero_imagem')
                                     ->label('Imagem de fundo do banner')
-                                    ->disk('site_static')
-                                    ->directory('images/uploads/hero')
+                                    ->disk('public')
+                                    ->directory('uploads/hero')
                                     ->visibility('public')
                                     ->image()
                                     ->imageEditor()
@@ -169,18 +184,21 @@ class Configuracoes extends Page implements HasForms
                                     ->maxSize(8192)
                                     ->helperText('Recomendado: 1920×1080px, máx. 8 MB.')
                                     ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
-                                        if (is_string($state) && $state !== '') {
-                                            $component->state([ltrim($state, '/')]);
-                                        } elseif (! is_array($state)) {
-                                            $component->state([]);
+                                        if (is_array($state)) {
+                                            return;
                                         }
+                                        if (is_string($state) && str_starts_with($state, 'storage/')) {
+                                            $component->state([substr($state, strlen('storage/'))]);
+                                            return;
+                                        }
+                                        $component->state([]);
                                     })
                                     ->dehydrateStateUsing(function ($state): ?string {
-                                        if (is_array($state)) {
-                                            $val = reset($state);
-                                            return $val !== false ? ltrim((string) $val, '/') : null;
+                                        $val = is_array($state) ? (reset($state) ?: null) : (is_string($state) && $state !== '' ? $state : null);
+                                        if ($val) {
+                                            return str_starts_with($val, 'storage/') ? $val : 'storage/' . $val;
                                         }
-                                        return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
+                                        return Configuracao::current()->hero_imagem ?? null;
                                     })
                                     ->columnSpanFull(),
                                 Forms\Components\TextInput::make('hero_tagline')
@@ -426,10 +444,20 @@ class Configuracoes extends Page implements HasForms
         $data = $this->form->getState();
         Configuracao::updateOrCreate(['id' => 1], $data);
 
-        Notification::make()
-            ->title('Configurações salvas com sucesso!')
-            ->body('Clique em "Publicar Site" para aplicar as alterações no site.')
-            ->success()
-            ->send();
+        try {
+            // content:export grava configuracoes.json e depois chama content:build-php
+            Artisan::call('content:export', ['--build' => true]);
+            Notification::make()
+                ->title('Configurações salvas e site publicado!')
+                ->body('As alterações já estão no ar.')
+                ->success()
+                ->send();
+        } catch (\Throwable $e) {
+            Notification::make()
+                ->title('Configurações salvas!')
+                ->body('Não foi possível publicar automaticamente. Acesse "Publicar Site" para aplicar as alterações. Erro: ' . $e->getMessage())
+                ->warning()
+                ->send();
+        }
     }
 }

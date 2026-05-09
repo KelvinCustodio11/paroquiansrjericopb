@@ -72,8 +72,8 @@ class ArtigoResource extends Resource
                         Forms\Components\TextInput::make('autor_papel')->label('Papel / Função'),
                         Forms\Components\FileUpload::make('autor_foto')
                             ->label('Foto do Autor')
-                            ->disk('site_static')
-                            ->directory('images/uploads/autores')
+                            ->disk('public')
+                            ->directory('uploads/autores')
                             ->visibility('public')
                             ->image()
                             ->imageEditor()
@@ -86,7 +86,7 @@ class ArtigoResource extends Resource
                             ->hint('Ideal: 200 × 200 px (1:1) | Máx. 1 MB')
                             ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
                                 if (is_string($state) && $state !== '') {
-                                    $component->state([ltrim($state, '/')]);
+                                    $component->state([ltrim(preg_replace('#^storage/#', '', $state), '/')]);
                                 } elseif (! is_array($state)) {
                                     $component->state([]);
                                 }
@@ -94,7 +94,7 @@ class ArtigoResource extends Resource
                             ->dehydrateStateUsing(function ($state): ?string {
                                 if (is_array($state)) {
                                     $val = reset($state);
-                                    return $val !== false ? ltrim((string) $val, '/') : null;
+                                    return $val !== false ? 'storage/' . ltrim((string) $val, '/') : null;
                                 }
                                 return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
                             }),
@@ -115,8 +115,8 @@ class ArtigoResource extends Resource
                     ->schema([
                         Forms\Components\FileUpload::make('imagem_capa_url')
                             ->label('Imagem de Capa')
-                            ->disk('site_static')
-                            ->directory('images/uploads/artigos')
+                            ->disk('public')
+                            ->directory('uploads/artigos')
                             ->visibility('public')
                             ->image()
                             ->imageEditor()
@@ -130,7 +130,7 @@ class ArtigoResource extends Resource
                             ->hint('Ideal: 1200 × 628 px (16:9) | JPG, PNG ou WebP | Máx. 3 MB')
                             ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
                                 if (is_string($state) && $state !== '') {
-                                    $component->state([ltrim($state, '/')]);
+                                    $component->state([ltrim(preg_replace('#^storage/#', '', $state), '/')]);
                                 } elseif (! is_array($state)) {
                                     $component->state([]);
                                 }
@@ -138,7 +138,7 @@ class ArtigoResource extends Resource
                             ->dehydrateStateUsing(function ($state): ?string {
                                 if (is_array($state)) {
                                     $val = reset($state);
-                                    return $val !== false ? ltrim((string) $val, '/') : null;
+                                    return $val !== false ? 'storage/' . ltrim((string) $val, '/') : null;
                                 }
                                 return is_string($state) && $state !== '' ? ltrim($state, '/') : null;
                             })
