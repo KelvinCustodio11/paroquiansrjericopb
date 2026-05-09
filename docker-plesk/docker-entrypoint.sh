@@ -16,14 +16,17 @@ CMS="/var/www/vhosts/paroquia.local/cms"
 echo "[entrypoint] Ajustando permissões para www-data..."
 
 # Pastas do site estático onde o CMS precisa gravar JSONs e HTMLs
+# Usa chmod g+w nos DIRETÓRIOS apenas (não nos arquivos) para evitar
+# contaminar o fileMode do git no host via bind-mount
 for dir in data artigos eventos homilias images/uploads partials css; do
     if [ -d "$HTTPDOCS/$dir" ]; then
-        chmod -R 777 "$HTTPDOCS/$dir" 2>/dev/null || true
+        find "$HTTPDOCS/$dir" -type d -exec chmod 777 {} \; 2>/dev/null || true
+        find "$HTTPDOCS/$dir" -type f -exec chmod 666 {} \; 2>/dev/null || true
     fi
 done
 
 # Arquivos HTML raiz que o CMS pode reescrever
-chmod 777 "$HTTPDOCS"/*.html 2>/dev/null || true
+find "$HTTPDOCS" -maxdepth 1 -name "*.html" -exec chmod 666 {} \; 2>/dev/null || true
 
 # Pastas do Laravel que precisam de escrita (logs, cache, sessions, views)
 for dir in storage bootstrap/cache database; do
