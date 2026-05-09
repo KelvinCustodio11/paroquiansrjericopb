@@ -20,6 +20,7 @@ Site institucional da **Paróquia Nossa Senhora dos Remédios — Jericó/PB**, 
 
 | Arquivo | Quando consultar |
 |---|---|
+| [`AMBIENTE.md`](../AMBIENTE.md) | **Sempre** que envolver Docker, build, CI/CD, deploy, permissões ou branches |
 | [`MELHORIAS_GERAIS.md`](../MELHORIAS_GERAIS.md) | Visão geral, bugs catalogados, plano de URLs PT-BR, roadmap |
 | [`PADRONIZACAO_LAYOUT.md`](../PADRONIZACAO_LAYOUT.md) | Tokens de design, componentes reutilizáveis, regras visuais |
 | [`PADRONIZACAO_POST_BLOG.md`](../PADRONIZACAO_POST_BLOG.md) | Antes de criar/editar artigo |
