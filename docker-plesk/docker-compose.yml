@@ -1,0 +1,63 @@
+# =============================================================================
+# docker-compose.yml — Ambiente local Paróquia NSR Jericó
+#
+# Replica produção (Plesk Napoleon):
+#   - Site estático : http://localhost:8080  (= pascomjerico.com.br)
+#   - CMS Admin     : http://localhost:8081  (= admin.pascomjerico.com.br)
+#
+# Estrutura de pastas dentro do container (IDÊNTICA ao servidor):
+#   /var/www/vhosts/paroquia.local/
+#     httpdocs/   ← repo raiz (site estático)
+#     cms/        ← pasta cms/ (FORA de httpdocs — igual ao Plesk)
+#
+# PRIMEIRO USO:
+#   1. docker compose -f docker-plesk/docker-compose.yml up -d --build
+#   2. docker compose -f docker-plesk/docker-compose.yml exec plesk bash /setup.sh
+#
+# APÓS ALTERAR docker-compose.yml ou Dockerfile:
+#   docker compose -f docker-plesk/docker-compose.yml up -d --build --force-recreate
+# =============================================================================
+
+services:
+  plesk:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: paroquia-plesk-sim
+    restart: unless-stopped
+    ports:
+      - "8080:80"   # Site estático  → http://localhost:8080
+      - "8081:81"   # CMS Admin      → http://localhost:8081
+    volumes:
+      # ── Site estático (httpdocs) ─────────────────────────────────────────
+      # O repo INTEIRO é montado como httpdocs (Apache bloqueia cms/ dentro dele)
+      - ../:/var/www/vhosts/paroquia.local/httpdocs:rw
+
+      # ── CMS Laravel (irmão de httpdocs — igual ao Plesk) ─────────────────────
+      # Localmente: /root/dev/paroquia-cms/ → symlink para /root/dev/paroquiansrjericopb/cms/
+      # No servidor: /var/www/vhosts/pedisys.com.br/cms/ (sibling de httpdocs/)
+      - ../../paroquia-cms:/var/www/vhosts/paroquia.local/cms:rw
+
+      # ── Configuração Apache (bind-mount de arquivos individuais) ──────────
+      - ./apache/httpdocs.conf:/etc/apache2/sites-available/000-httpdocs.conf:ro
+      - ./apache/cms.conf:/etc/apache2/sites-available/001-cms.conf:ro
+
+      # ── .env do CMS (montado como arquivo, somente leitura) ───────────────
+      - ./.env.docker:/var/www/vhosts/paroquia.local/cms/.env:ro
+      # Cópia extra acessível pelo setup.sh (para bootstrapping)
+      - ./.env.docker:/docker-plesk-env:ro
+
+      # ── Scripts de setup/debug ────────────────────────────────────────────
+      - ./setup.sh:/setup.sh:ro
+      - ./debug-node.sh:/debug-node.sh:ro
+
+      # ── Logs Apache (volume nomeado — não poluir o repo) ─────────────────
+      - plesk-logs:/var/log/apache2
+
+    environment:
+      APP_ENV: production
+      SITE_ROOT: /var/www/vhosts/paroquia.local/httpdocs
+      CMS_ROOT: /var/www/vhosts/paroquia.local/cms
+
+volumes:
+  plesk-logs:
