@@ -13,13 +13,13 @@ Site institucional da Paróquia NSR de Jericó (Paraíba), construído sobre o t
 
 | Arquivo | Conteúdo |
 |---|---|
-| [AMBIENTE.md](AMBIENTE.md) | **Leia primeiro** — arquitetura completa, Docker, CI/CD, deploy, armadilhas |
-| [MELHORIAS_GERAIS.md](MELHORIAS_GERAIS.md) | Auditoria técnica completa, plano de correções, roadmap |
-| [PADRONIZACAO_LAYOUT.md](PADRONIZACAO_LAYOUT.md) | Design system, componentes reutilizáveis, regras visuais |
-| [PADRONIZACAO_POST_BLOG.md](PADRONIZACAO_POST_BLOG.md) | Padrão de novos posts, SEO, imagens, checklist editorial |
-| [PADRONIZACAO_EVENTOS.md](PADRONIZACAO_EVENTOS.md) | Padrão de novos eventos, mapa, CTAs, Schema.org Event |
-| [SUGESTAO_CMS.md](SUGESTAO_CMS.md) | Comparativo de CMS e recomendação (Laravel + Filament) |
-| [AGENTES_SKILLS.md](AGENTES_SKILLS.md) | Papéis especializados e skills para evolução do projeto |
+| [AMBIENTE.md](docs/AMBIENTE.md) | **Leia primeiro** — arquitetura completa, Docker, CI/CD, deploy, armadilhas |
+| [MELHORIAS_GERAIS.md](docs/MELHORIAS_GERAIS.md) | Auditoria técnica completa, plano de correções, roadmap |
+| [PADRONIZACAO_LAYOUT.md](docs/PADRONIZACAO_LAYOUT.md) | Design system, componentes reutilizáveis, regras visuais |
+| [PADRONIZACAO_POST_BLOG.md](docs/PADRONIZACAO_POST_BLOG.md) | Padrão de novos posts, SEO, imagens, checklist editorial |
+| [PADRONIZACAO_EVENTOS.md](docs/PADRONIZACAO_EVENTOS.md) | Padrão de novos eventos, mapa, CTAs, Schema.org Event |
+| [SUGESTAO_CMS.md](docs/SUGESTAO_CMS.md) | Comparativo de CMS e recomendação (Laravel + Filament) |
+| [AGENTES_SKILLS.md](docs/AGENTES_SKILLS.md) | Papéis especializados e skills para evolução do projeto |
 
 ## Antes de subir qualquer mudança
 
@@ -27,7 +27,7 @@ Site institucional da Paróquia NSR de Jericó (Paraíba), construído sobre o t
 npm run all   # validate → build-content → build → seo
 ```
 
-Leia o **[AMBIENTE.md](AMBIENTE.md)** para entender o pipeline completo e as armadilhas.
+Leia o **[docs/AMBIENTE.md](docs/AMBIENTE.md)** para entender o pipeline completo e as armadilhas.
 
 ## Build (partials → HTML estático)
 

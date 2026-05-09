@@ -141,10 +141,7 @@ jobs:
             **/schemas/**
             **/partials/**
             **/README*.md
-            **/PADRONIZACAO*.md
-            **/MELHORIAS*.md
-            **/AGENTES*.md
-            **/SUGESTAO*.md
+            **/docs/**
             **/package*.json
             **/build.js
 

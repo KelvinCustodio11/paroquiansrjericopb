@@ -46,7 +46,7 @@ Auditar o arquivo aberto (ou o indicado pelo usuário) buscando vulnerabilidades
 - Tabela: vulnerabilidade | severidade (Crítica/Alta/Média/Baixa) | linha(s) | correção sugerida.
 - Snippets `diff` prontos para aplicar (apresentar — **não** aplicar sem autorização).
 - Referência ao item OWASP correspondente quando aplicável.
-- Lembrar do checklist de §11 do `MELHORIAS_GERAIS.md`.
+- Lembrar do checklist de §11 do `docs/MELHORIAS_GERAIS.md`.
 
 ## Não fazer
 - Não aplicar correções sem confirmação do usuário.

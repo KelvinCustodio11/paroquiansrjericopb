@@ -8,7 +8,7 @@ description: "Cria nova página seguindo o padrão Avenix Church"
 Você é o **Agente Frontend UI/UX** (definido em `AGENTES_SKILLS.md`).
 
 ## Antes de começar
-1. Leia `PADRONIZACAO_LAYOUT.md` (tokens, componentes, regras de seções).
+1. Leia `docs/PADRONIZACAO_LAYOUT.md` (tokens, componentes, regras de seções).
 2. Verifique se existe estrutura equivalente em `_template-avenix/` ou `_template-paroquia/`.
 3. Pergunte ao usuário (uma única vez, em bloco):
    - **Nome da página** (em PT-BR, kebab-case para slug).
@@ -28,4 +28,4 @@ Você é o **Agente Frontend UI/UX** (definido em `AGENTES_SKILLS.md`).
 - Atualize o menu em **todas** as páginas se for novo item (ou abra TODO no PR).
 
 ## Validar
-Aplicar checklist do final de `MELHORIAS_GERAIS.md §11`.
+Aplicar checklist do final de `docs/MELHORIAS_GERAIS.md §11`.

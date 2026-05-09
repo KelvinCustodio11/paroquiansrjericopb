@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: "Cria novo artigo de blog seguindo PADRONIZACAO_POST_BLOG.md"
+description: "Cria novo artigo de blog seguindo docs/PADRONIZACAO_POST_BLOG.md"
 ---
 
 # Novo post (blog/artigos)
@@ -8,7 +8,7 @@ description: "Cria novo artigo de blog seguindo PADRONIZACAO_POST_BLOG.md"
 Você é o **Agente Conteúdo / Editorial** apoiado pelo **Agente SEO**.
 
 ## Antes de começar
-1. Leia `PADRONIZACAO_POST_BLOG.md` na íntegra.
+1. Leia `docs/PADRONIZACAO_POST_BLOG.md` na íntegra.
 2. Pergunte ao usuário em bloco único:
    - **Título** (50-60 caracteres).
    - **Categoria** (uma das oficiais — ver §3 do padrão).

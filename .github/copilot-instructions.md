@@ -20,13 +20,13 @@ Site institucional da **Paróquia Nossa Senhora dos Remédios — Jericó/PB**, 
 
 | Arquivo | Quando consultar |
 |---|---|
-| [`AMBIENTE.md`](../AMBIENTE.md) | **Sempre** que envolver Docker, build, CI/CD, deploy, permissões ou branches |
-| [`MELHORIAS_GERAIS.md`](../MELHORIAS_GERAIS.md) | Visão geral, bugs catalogados, plano de URLs PT-BR, roadmap |
-| [`PADRONIZACAO_LAYOUT.md`](../PADRONIZACAO_LAYOUT.md) | Tokens de design, componentes reutilizáveis, regras visuais |
-| [`PADRONIZACAO_POST_BLOG.md`](../PADRONIZACAO_POST_BLOG.md) | Antes de criar/editar artigo |
-| [`PADRONIZACAO_EVENTOS.md`](../PADRONIZACAO_EVENTOS.md) | Antes de criar/editar evento |
-| [`SUGESTAO_CMS.md`](../SUGESTAO_CMS.md) | Discussões sobre futuro CMS (Laravel + Filament recomendado) |
-| [`AGENTES_SKILLS.md`](../AGENTES_SKILLS.md) | Definição dos papéis especializados |
+| [`docs/AMBIENTE.md`](../docs/AMBIENTE.md) | **Sempre** que envolver Docker, build, CI/CD, deploy, permissões ou branches |
+| [`docs/MELHORIAS_GERAIS.md`](../docs/MELHORIAS_GERAIS.md) | Visão geral, bugs catalogados, plano de URLs PT-BR, roadmap |
+| [`docs/PADRONIZACAO_LAYOUT.md`](../docs/PADRONIZACAO_LAYOUT.md) | Tokens de design, componentes reutilizáveis, regras visuais |
+| [`docs/PADRONIZACAO_POST_BLOG.md`](../docs/PADRONIZACAO_POST_BLOG.md) | Antes de criar/editar artigo |
+| [`docs/PADRONIZACAO_EVENTOS.md`](../docs/PADRONIZACAO_EVENTOS.md) | Antes de criar/editar evento |
+| [`docs/SUGESTAO_CMS.md`](../docs/SUGESTAO_CMS.md) | Discussões sobre futuro CMS (Laravel + Filament recomendado) |
+| [`docs/AGENTES_SKILLS.md`](../docs/AGENTES_SKILLS.md) | Definição dos papéis especializados |
 
 ## Templates de referência (somente leitura)
 
@@ -79,9 +79,23 @@ Quando precisar copiar HTML/CSS de um bloco existente do template, **prefira cop
 - [ ] JSON-LD apropriado (`Organization`, `Article`, `Event`, `BreadcrumbList`).
 - [ ] Página adicionada ao `sitemap.xml`.
 
-## URLs
+## Manutenção de documentação — regra obrigatória
 
-- Plano de migração para PT-BR documentado em [`MELHORIAS_GERAIS.md §6`](../MELHORIAS_GERAIS.md).
+Após **qualquer** mudança de código, configuração ou conteúdo, verifique se algum doc precisa ser atualizado:
+
+| Se você alterou... | Atualize... |
+|---|---|
+| Docker, CI/CD, build pipeline, permissões | `docs/AMBIENTE.md` |
+| Bug listado em MELHORIAS_GERAIS | Marque como `✅ resolvido — <data>` em `docs/MELHORIAS_GERAIS.md` |
+| Componente visual, token de cor, layout | `docs/PADRONIZACAO_LAYOUT.md` |
+| Template de artigo, campos de `data/artigos.json` | `docs/PADRONIZACAO_POST_BLOG.md` |
+| Template de evento, campos de `data/eventos.json` | `docs/PADRONIZACAO_EVENTOS.md` |
+| Novo agente, skill ou prompt `/comando` | `docs/AGENTES_SKILLS.md` |
+| Roadmap, nova feature planejada | `docs/MELHORIAS_GERAIS.md` (seção de sugestões) |
+
+**Não feche uma tarefa sem verificar se o doc correspondente reflete o estado atual.**
+
+- Plano de migração para PT-BR documentado em [`docs/MELHORIAS_GERAIS.md §6`](../docs/MELHORIAS_GERAIS.md).
 - **Não renomear** arquivos `.html` sem ativar redirect 301 no `.htaccess`.
 - Padrão de URL nova: kebab-case, sem acentos, em português.
 

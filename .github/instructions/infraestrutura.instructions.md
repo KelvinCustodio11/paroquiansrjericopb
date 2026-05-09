@@ -1,9 +1,9 @@
 ---
-applyTo: "docker-plesk/**,docker-plesk/**/*,.github/workflows/**,build.js,scripts/**,package.json,AMBIENTE.md"
+applyTo: "docker-plesk/**,docker-plesk/**/*,.github/workflows/**,build.js,scripts/**,package.json,docs/AMBIENTE.md"
 description: "Arquitetura de ambiente, Docker, CI/CD e pipeline de build"
 ---
 
-Leia o arquivo [AMBIENTE.md](../../AMBIENTE.md) antes de propor qualquer mudança neste contexto.
+Leia o arquivo [docs/AMBIENTE.md](../../docs/AMBIENTE.md) antes de propor qualquer mudança neste contexto.
 
 ## Resumo dos pontos críticos
 

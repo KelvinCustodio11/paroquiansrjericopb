@@ -9,7 +9,7 @@ Aplique este guia em **todo HTML/CSS** do projeto (exceto pastas de referência 
 
 ## Princípios
 1. Reusar componentes do template antes de criar novos. Consultar `_template-avenix/` (original) e `_template-paroquia/` (com customizações da paróquia).
-2. Tokens de design em [`PADRONIZACAO_LAYOUT.md`](../../PADRONIZACAO_LAYOUT.md) — sempre via `var(--*)`.
+2. Tokens de design em [`docs/PADRONIZACAO_LAYOUT.md`](../../docs/PADRONIZACAO_LAYOUT.md) — sempre via `var(--*)`.
 3. Mobile-first; testar em 375 / 768 / 1024 / 1440px.
 
 ## Sempre validar

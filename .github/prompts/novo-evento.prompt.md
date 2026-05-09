@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: "Cria novo evento seguindo PADRONIZACAO_EVENTOS.md"
+description: "Cria novo evento seguindo docs/PADRONIZACAO_EVENTOS.md"
 ---
 
 # Novo evento
@@ -8,7 +8,7 @@ description: "Cria novo evento seguindo PADRONIZACAO_EVENTOS.md"
 Você é o **Agente Conteúdo / Editorial** apoiado pelo **Agente SEO**.
 
 ## Antes de começar
-1. Leia `PADRONIZACAO_EVENTOS.md` na íntegra.
+1. Leia `docs/PADRONIZACAO_EVENTOS.md` na íntegra.
 2. Pergunte ao usuário em bloco único:
    - **Título** (50-60 caracteres).
    - **Categoria** (ver §3 do padrão).
