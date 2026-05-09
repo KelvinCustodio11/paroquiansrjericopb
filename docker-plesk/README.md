@@ -18,6 +18,11 @@ paroquia.local/              ← /var/www/vhosts/paroquia.local/
 ## Primeiro uso
 
 ```bash
+# 0. Criar symlink para cms/ (necessário uma única vez por máquina)
+#    O docker-compose.yml monta ../../paroquia-cms como cms/ — que deve apontar
+#    para /root/dev/paroquiansrjericopb/cms/
+ln -sfn /root/dev/paroquiansrjericopb/cms /root/dev/paroquia-cms
+
 # 1. Construir e subir
 docker compose -f docker-plesk/docker-compose.yml up -d --build
 
@@ -52,18 +57,29 @@ docker compose -f docker-plesk/docker-compose.yml exec plesk \
 docker compose -f docker-plesk/docker-compose.yml up -d --build --force-recreate
 ```
 
-## Permissões após `git pull` (se CMS não conseguir gravar)
+## Como as permissões funcionam
+
+O `docker-entrypoint.sh` roda **antes do Apache** e faz `chown -R www-data:www-data`
+nas pastas que o CMS precisa gravar (`data/`, `artigos/`, `eventos/`, `homilias/`,
+`images/uploads/`, `partials/`, `css/` e os `*.html` raiz). Isso torna `www-data`
+**dono** dessas pastas — arquivos criados ou reescritos pelo CMS continuam pertencendo
+a `www-data`, evitando `Permission denied` em publicações subsequentes.
+
+Em caso de problemas de permissão persistentes, basta reiniciar o container
+(o entrypoint reaplicará o `chown`):
 
 ```bash
-docker compose -f docker-plesk/docker-compose.yml exec plesk bash -c "
-  chmod -R 777 /var/www/vhosts/paroquia.local/httpdocs/data \
-               /var/www/vhosts/paroquia.local/httpdocs/eventos \
-               /var/www/vhosts/paroquia.local/httpdocs/artigos \
-               /var/www/vhosts/paroquia.local/httpdocs/homilias
-  chown -R www-data:www-data /var/www/vhosts/paroquia.local/cms/storage \
-                              /var/www/vhosts/paroquia.local/cms/database
-"
+docker compose -f docker-plesk/docker-compose.yml restart
 ```
+
+Ou forçar rebuild completo:
+
+```bash
+docker compose -f docker-plesk/docker-compose.yml up -d --build --force-recreate
+```
+
+> **Não use** `chmod 777` em arquivos do bind-mount — isso contamina o `fileMode`
+> do git e vai aparecer como diff em todos os arquivos modificados.
 
 ## Arquivos desta pasta
 

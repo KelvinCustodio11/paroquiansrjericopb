@@ -3,15 +3,17 @@
 Site institucional da Paróquia NSR de Jericó (Paraíba), construído sobre o template **Avenix Church (ThemeForest)**.
 
 ## Stack atual
-- HTML5 estático (21 páginas)
-- CSS (Bootstrap 5 + custom)
-- JavaScript (jQuery + plugins do template + scripts próprios)
+- HTML5 estático (múltiplas páginas) + CSS (Bootstrap 5 + custom) + JavaScript (jQuery + plugins)
+- **CMS**: Laravel 11 + Filament 3 (pasta `cms/`, admin em `admin.pascomjerico.com.br`)
+- Banco de dados: SQLite (somente CMS)
 - 1 endpoint PHP de contato (`form-process.php`)
+- Build: Node.js (sem frontend framework — scripts puros)
 
 ## Documentação técnica
 
 | Arquivo | Conteúdo |
 |---|---|
+| [AMBIENTE.md](AMBIENTE.md) | **Leia primeiro** — arquitetura completa, Docker, CI/CD, deploy, armadilhas |
 | [MELHORIAS_GERAIS.md](MELHORIAS_GERAIS.md) | Auditoria técnica completa, plano de correções, roadmap |
 | [PADRONIZACAO_LAYOUT.md](PADRONIZACAO_LAYOUT.md) | Design system, componentes reutilizáveis, regras visuais |
 | [PADRONIZACAO_POST_BLOG.md](PADRONIZACAO_POST_BLOG.md) | Padrão de novos posts, SEO, imagens, checklist editorial |
@@ -20,7 +22,12 @@ Site institucional da Paróquia NSR de Jericó (Paraíba), construído sobre o t
 | [AGENTES_SKILLS.md](AGENTES_SKILLS.md) | Papéis especializados e skills para evolução do projeto |
 
 ## Antes de subir qualquer mudança
-Leia o **checklist de aceite** em [MELHORIAS_GERAIS.md §11](MELHORIAS_GERAIS.md).
+
+```bash
+npm run all   # validate → build-content → build → seo
+```
+
+Leia o **[AMBIENTE.md](AMBIENTE.md)** para entender o pipeline completo e as armadilhas.
 
 ## Build (partials → HTML estático)
 
