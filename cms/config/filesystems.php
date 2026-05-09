@@ -63,14 +63,16 @@ return [
         /*
          * Disco que aponta para a raiz do site estático.
          * Uploads ficam em images/uploads/{tipo}/ dentro do site.
-         * APP_STATIC_URL deve ser a URL base do site estático (ex.: http://localhost:8000).
+         * STATIC_DISK_ROOT — caminho absoluto da raiz do site estático (produção:
+         *   /var/www/vhosts/pedisys.com.br/httpdocs). Fallback: pasta-pai do CMS.
+         * APP_STATIC_URL  — URL base do site estático (ex.: https://pascomjerico.com.br).
          */
         'site_static' => [
             'driver' => 'local',
-            'root'   => dirname(base_path()), // /root/dev/paroquiansrjericopb/
+            'root'   => env('STATIC_DISK_ROOT', dirname(base_path())),
             'url'    => env('APP_STATIC_URL', 'http://localhost:8000'),
             'visibility' => 'public',
-            'throw' => false,
+            'throw' => true,
         ],
 
     ],
