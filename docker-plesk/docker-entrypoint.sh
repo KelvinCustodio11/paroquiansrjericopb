@@ -13,20 +13,21 @@ set -e
 HTTPDOCS="/var/www/vhosts/paroquia.local/httpdocs"
 CMS="/var/www/vhosts/paroquia.local/cms"
 
-echo "[entrypoint] Ajustando permissões para www-data..."
+echo "[entrypoint] Transferindo posse para www-data nas pastas de conteúdo..."
 
-# Pastas do site estático onde o CMS precisa gravar JSONs e HTMLs
-# Usa chmod g+w nos DIRETÓRIOS apenas (não nos arquivos) para evitar
-# contaminar o fileMode do git no host via bind-mount
+# Transfere ownership para www-data nas pastas que o CMS precisa gravar.
+# Com www-data como dono, qualquer arquivo criado/reescrito pelo CMS
+# continua pertencendo a www-data — sem depender de chmod e sem problema
+# de "permission denied" em reescrituras subsequentes.
 for dir in data artigos eventos homilias images/uploads partials css; do
     if [ -d "$HTTPDOCS/$dir" ]; then
-        find "$HTTPDOCS/$dir" -type d -exec chmod 777 {} \; 2>/dev/null || true
-        find "$HTTPDOCS/$dir" -type f -exec chmod 666 {} \; 2>/dev/null || true
+        chown -R www-data:www-data "$HTTPDOCS/$dir" 2>/dev/null || true
     fi
 done
 
-# Arquivos HTML raiz que o CMS pode reescrever
-find "$HTTPDOCS" -maxdepth 1 -name "*.html" -exec chmod 666 {} \; 2>/dev/null || true
+# HTMLs raiz que o CMS pode reescrever
+find "$HTTPDOCS" -maxdepth 1 -name "*.html" \
+    -exec chown www-data:www-data {} \; 2>/dev/null || true
 
 # Pastas do Laravel que precisam de escrita (logs, cache, sessions, views)
 for dir in storage bootstrap/cache database; do

@@ -70,6 +70,9 @@ RUN mkdir -p /var/www/vhosts/paroquia.local/httpdocs \
     && mkdir -p /var/www/vhosts/paroquia.local/cms \
     && chown -R www-data:www-data /var/www/vhosts
 
+# ServerName global (suprime warning do Apache) ───────────────────────────────
+RUN echo "ServerName paroquia.local" >> /etc/apache2/apache2.conf
+
 # ── Configuração Apache ───────────────────────────────────────────────────────
 COPY apache/httpdocs.conf /etc/apache2/sites-available/000-httpdocs.conf
 COPY apache/cms.conf      /etc/apache2/sites-available/001-cms.conf
