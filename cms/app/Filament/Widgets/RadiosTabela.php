@@ -2,39 +2,85 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources;
+namespace App\Filament\Widgets;
 
-use App\Filament\Clusters\Radio as RadioCluster;
-use App\Filament\Resources\RadioResource\Pages;
 use App\Models\Radio;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Widgets\TableWidget as BaseWidget;
 
-class RadioResource extends Resource
+class RadiosTabela extends BaseWidget
 {
-    protected static ?string $model = Radio::class;
+    // Não aparece no dashboard nem na descoberta automática do painel
+    protected static bool $isDiscovered = false;
 
-    protected static ?string $cluster = RadioCluster::class;
+    protected int|string|array $columnSpan = 'full';
 
-    // Navegação gerida pela Page \App\Filament\Pages\Radios
-    protected static bool $shouldRegisterNavigation = false;
-
-    protected static ?string $navigationIcon = 'heroicon-o-radio';
-
-    protected static ?string $navigationLabel = 'Rádios';
-
-    protected static ?int $navigationSort = 10;
-
-    protected static ?string $pluralModelLabel = 'Rádios';
-
-    protected static ?string $modelLabel = 'Rádio';
-
-    public static function form(Form $form): Form
+    public function table(Table $table): Table
     {
-        return $form->schema([
+        return $table
+            ->query(Radio::query())
+            ->heading(null)
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->label('Nova Rádio')
+                    ->model(Radio::class)
+                    ->form(self::formSchema()),
+            ])
+            ->columns([
+                Tables\Columns\TextColumn::make('ordem')
+                    ->label('#')
+                    ->sortable()
+                    ->width('60px'),
+
+                Tables\Columns\TextColumn::make('nome')
+                    ->label('Nome')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('url')
+                    ->label('Stream')
+                    ->limit(50),
+
+                Tables\Columns\IconColumn::make('destaque')
+                    ->label('Destaque')
+                    ->boolean(),
+
+                Tables\Columns\BadgeColumn::make('categoria')
+                    ->label('Categoria'),
+
+                Tables\Columns\TextColumn::make('estado')
+                    ->label('UF')
+                    ->default('—'),
+
+                Tables\Columns\TextColumn::make('hora_inicio')
+                    ->label('Transmissão')
+                    ->formatStateUsing(fn ($record) => $record->hora_inicio
+                        ? substr($record->hora_inicio, 0, 5) . ' – ' . substr($record->hora_fim ?? '', 0, 5)
+                        : '—')
+                    ->default('—'),
+
+                Tables\Columns\IconColumn::make('ativa')
+                    ->label('Ativa')
+                    ->boolean(),
+            ])
+            ->defaultSort('ordem')
+            ->reorderable('ordem')
+            ->actions([
+                Tables\Actions\EditAction::make()
+                    ->form(self::formSchema()),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function formSchema(): array
+    {
+        return [
             Forms\Components\TextInput::make('nome')
                 ->label('Nome da Rádio')
                 ->required()
@@ -61,23 +107,21 @@ class RadioResource extends Resource
                 ->label('URL da programação ao vivo (opcional)')
                 ->url()
                 ->maxLength(500)
-                ->helperText('URL de API JSON com {"programa":"..."}. Se informada, sobrepõe o campo Programação em tempo real.'),
+                ->helperText('URL de API JSON com {"programa":"..."}. Sobrepõe o campo Programação em tempo real.'),
 
             Forms\Components\Section::make('Janela de transmissão')
-                ->description('Defina o período em que esta rádio fica no ar. Aparece como horário no player e na lista.')
+                ->description('Período em que esta rádio fica no ar. Aparece como horário no player e na lista.')
                 ->columns(2)
                 ->schema([
                     Forms\Components\TimePicker::make('hora_inicio')
                         ->label('Início da transmissão')
                         ->seconds(false)
-                        ->placeholder('08:00')
-                        ->helperText('Ex: 08:00 — horário de início da missa/programa'),
+                        ->placeholder('08:00'),
 
                     Forms\Components\TimePicker::make('hora_fim')
                         ->label('Fim da transmissão')
                         ->seconds(false)
-                        ->placeholder('09:30')
-                        ->helperText('Ex: 09:30 — horário de encerramento'),
+                        ->placeholder('09:30'),
                 ]),
 
             Forms\Components\TextInput::make('favicon')
@@ -127,67 +171,6 @@ class RadioResource extends Resource
                 ->label('Cidade de origem')
                 ->maxLength(80)
                 ->nullable(),
-        ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('ordem')
-                    ->label('#')
-                    ->sortable()
-                    ->width('60px'),
-
-                Tables\Columns\TextColumn::make('nome')
-                    ->label('Nome')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('url')
-                    ->label('Stream')
-                    ->limit(60),
-
-                Tables\Columns\IconColumn::make('destaque')
-                    ->label('Destaque')
-                    ->boolean(),
-
-                Tables\Columns\BadgeColumn::make('categoria')
-                    ->label('Categoria'),
-
-                Tables\Columns\TextColumn::make('estado')
-                    ->label('UF')
-                    ->default('—'),
-
-                Tables\Columns\TextColumn::make('hora_inicio')
-                    ->label('Transmissão')
-                    ->formatStateUsing(fn ($record) => $record->hora_inicio
-                        ? substr($record->hora_inicio, 0, 5).' – '.substr($record->hora_fim ?? '', 0, 5)
-                        : '—')
-                    ->default('—'),
-
-                Tables\Columns\IconColumn::make('ativa')
-                    ->label('Ativa')
-                    ->boolean(),
-            ])
-            ->defaultSort('ordem')
-            ->reorderable('ordem')
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index'  => Pages\ListRadios::route('/'),
-            'create' => Pages\CreateRadio::route('/create'),
-            'edit'   => Pages\EditRadio::route('/{record}/edit'),
         ];
     }
 }
