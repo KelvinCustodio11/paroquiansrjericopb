@@ -89,4 +89,48 @@ class PageView extends Model
             return array_merge(['pagina' => $pagina, 'titulo' => $titulo ?: $pagina], static::contagens($pagina, $unicos));
         })->values();
     }
+
+    /**
+     * Contagens diárias dos últimos 30 dias para o gráfico de tendência.
+     *
+     * @return array<string, int>  chave: 'YYYY-MM-DD', valor: contagem
+     */
+    public static function ultimos30Dias(bool $unicos = false): array
+    {
+        $inicio      = now()->subDays(29)->startOfDay();
+        $colContagem = $unicos ? 'COUNT(DISTINCT ip_hash)' : 'COUNT(*)';
+
+        $dados = static::query()
+            ->where('viewed_at', '>=', $inicio)
+            ->selectRaw("DATE(viewed_at) as dia, {$colContagem} as total")
+            ->groupBy('dia')
+            ->orderBy('dia')
+            ->get()
+            ->pluck('total', 'dia')
+            ->map(fn ($v) => (int) $v)
+            ->toArray();
+
+        $resultado = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $dia             = now()->subDays($i)->format('Y-m-d');
+            $resultado[$dia] = $dados[$dia] ?? 0;
+        }
+
+        return $resultado;
+    }
+
+    /**
+     * Total de visitas/visitantes em um intervalo de datas personalizado.
+     */
+    public static function contagensPersonalizado(string $inicio, string $fim, bool $unicos = false): int
+    {
+        $q = static::query()->whereBetween('viewed_at', [
+            $inicio . ' 00:00:00',
+            $fim . ' 23:59:59',
+        ]);
+
+        return $unicos
+            ? $q->distinct('ip_hash')->count('ip_hash')
+            : $q->count();
+    }
 }
