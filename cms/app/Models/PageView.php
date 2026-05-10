@@ -49,29 +49,35 @@ class PageView extends Model
     /**
      * Retorna contagens agrupadas por período para uma ou todas as páginas.
      *
+     * @param  bool $unicos  Se true, conta apenas ip_hash distintos (visitas únicas).
      * @return array{hoje: int, semana: int, mes: int, ano: int, geral: int}
      */
-    public static function contagens(?string $pagina = null): array
+    public static function contagens(?string $pagina = null, bool $unicos = false): array
     {
         $base = $pagina
             ? static::where('pagina', $pagina)
             : static::query();
 
+        $contar = $unicos
+            ? fn (Builder $q) => $q->distinct('ip_hash')->count('ip_hash')
+            : fn (Builder $q) => $q->count();
+
         return [
-            'hoje'   => (clone $base)->hoje()->count(),
-            'semana' => (clone $base)->estaSemana()->count(),
-            'mes'    => (clone $base)->esteMes()->count(),
-            'ano'    => (clone $base)->esteAno()->count(),
-            'geral'  => (clone $base)->count(),
+            'hoje'   => $contar((clone $base)->hoje()),
+            'semana' => $contar((clone $base)->estaSemana()),
+            'mes'    => $contar((clone $base)->esteMes()),
+            'ano'    => $contar((clone $base)->esteAno()),
+            'geral'  => $contar(clone $base),
         ];
     }
 
     /**
      * Lista todas as páginas com suas contagens.
      *
+     * @param  bool $unicos  Se true, conta apenas ip_hash distintos (visitas únicas).
      * @return \Illuminate\Support\Collection<int, array{pagina: string, titulo: string, ...}>
      */
-    public static function porPagina(): \Illuminate\Support\Collection
+    public static function porPagina(bool $unicos = false): \Illuminate\Support\Collection
     {
         $paginas = static::selectRaw('pagina, MAX(titulo) as titulo')
             ->groupBy('pagina')
@@ -79,8 +85,8 @@ class PageView extends Model
             ->get()
             ->pluck('titulo', 'pagina');
 
-        return $paginas->map(function (?string $titulo, string $pagina) {
-            return array_merge(['pagina' => $pagina, 'titulo' => $titulo ?: $pagina], static::contagens($pagina));
+        return $paginas->map(function (?string $titulo, string $pagina) use ($unicos) {
+            return array_merge(['pagina' => $pagina, 'titulo' => $titulo ?: $pagina], static::contagens($pagina, $unicos));
         })->values();
     }
 }

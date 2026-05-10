@@ -16,6 +16,12 @@ class Visualizacoes extends Page
     protected static ?int    $navigationSort  = 95;
     protected static string  $view            = 'filament.pages.visualizacoes';
 
+    /** Oculta do menu lateral (conteúdo migrado para widget no Dashboard) */
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     /** Dados calculados no mount e usados na view */
     public array $totais  = [];
     public array $paginas = [];
