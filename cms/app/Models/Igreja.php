@@ -14,12 +14,10 @@ class Igreja extends Model
 
     protected $fillable = [
         'slug', 'nome', 'endereco', 'bairro', 'tipo', 'ativa',
-        'historia_titulo', 'historia_subtitulo', 'historia_secoes',
     ];
 
     protected $casts = [
-        'ativa'           => 'boolean',
-        'historia_secoes' => 'array',
+        'ativa' => 'boolean',
     ];
 
     public function horarios(): HasMany

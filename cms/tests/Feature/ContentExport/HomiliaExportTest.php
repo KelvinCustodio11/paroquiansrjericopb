@@ -6,6 +6,7 @@ namespace Tests\Feature\ContentExport;
 
 use App\Models\Homilia;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class HomiliaExportTest extends TestCase
@@ -15,10 +16,10 @@ class HomiliaExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dataDir = base_path('../data');
+        $this->dataDir = rtrim(config('site.root'), '/') . '/data';
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportHomiliaPublicada(): void
     {
         Homilia::factory()->publicado()->create([
@@ -35,7 +36,7 @@ class HomiliaExportTest extends TestCase
         $this->assertContains('homilia-do-domingo-test', $slugs);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldNotExportHomiliaRascunho(): void
     {
         Homilia::factory()->rascunho()->create(['slug' => 'homilia-rascunho-xyz']);

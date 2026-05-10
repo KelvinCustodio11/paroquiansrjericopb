@@ -6,6 +6,7 @@ namespace Tests\Feature\ContentExport;
 
 use App\Models\Evento;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class EventoExportTest extends TestCase
@@ -15,10 +16,10 @@ class EventoExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dataDir = base_path('../data');
+        $this->dataDir = rtrim(config('site.root'), '/') . '/data';
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportEventoToJson(): void
     {
         Evento::factory()->publicado()->create([
@@ -35,7 +36,7 @@ class EventoExportTest extends TestCase
         $this->assertContains('evento-de-teste', $slugs);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldNotExportRascunhoEvento(): void
     {
         Evento::factory()->rascunho()->create(['slug' => 'evento-rascunho-xyz']);
@@ -48,7 +49,7 @@ class EventoExportTest extends TestCase
         $this->assertNotContains('evento-rascunho-xyz', $slugs);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldIncludeRequiredFieldsInEventoJson(): void
     {
         Evento::factory()->publicado()->create(['slug' => 'evento-campos-test']);

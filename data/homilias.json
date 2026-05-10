@@ -12,7 +12,8 @@
             "leitura_evangelho": {
                 "referencia": "Jo 3,16",
                 "texto": "Ex illum qui quis ad perspiciatis omnis aspernatur nemo. Similique in temporibus non est est. Et dicta asperiores tempore at."
-            }
+            },
+            "imagem_capa": "images/uploads/altar.jpeg"
         },
         {
             "slug": "homilia-pascoa-2026",
@@ -26,7 +27,8 @@
             "leitura_evangelho": {
                 "referencia": "Jo 20,1-9",
                 "texto": "No primeiro dia da semana, Maria Madalena foi ao túmulo bem cedo, quando ainda estava escuro..."
-            }
+            },
+            "imagem_capa": "images/uploads/demo/sermons-img-1-1.jpg"
         }
     ]
 }

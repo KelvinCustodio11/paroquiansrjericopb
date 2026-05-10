@@ -15,15 +15,12 @@ class IgrejaFactory extends Factory
     public function definition(): array
     {
         return [
-            'slug'    => 'paroquia-nsr-jerico-'.Str::random(4),
-            'nome'    => 'Paróquia Nossa Senhora dos Remédios',
-            'endereco'=> 'Praça Matriz, s/n',
-            'bairro'  => 'Centro',
-            'tipo'    => 'matriz',
-            'ativa'   => true,
-            'historia_titulo'    => null,
-            'historia_subtitulo' => null,
-            'historia_secoes'    => null,
+            'slug'     => 'paroquia-nsr-jerico-'.Str::random(4),
+            'nome'     => 'Paróquia Nossa Senhora dos Remédios',
+            'endereco' => 'Praça Matriz, s/n',
+            'bairro'   => 'Centro',
+            'tipo'     => 'matriz',
+            'ativa'    => true,
         ];
     }
 }

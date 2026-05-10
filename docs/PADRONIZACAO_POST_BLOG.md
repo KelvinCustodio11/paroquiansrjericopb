@@ -21,6 +21,12 @@ autor:
   foto: "/images/autores/padre-joao.webp"
 data_publicacao: "2026-04-30"     # ISO 8601
 data_atualizacao: "2026-04-30"
+# NOTA: imagem_capa em data/artigos.json aceita dois formatos:
+#   Formato string (gerado pelo CMS — ContentBuildPhp):
+#     "imagem_capa": "images/uploads/artigos/nome-do-arquivo.jpg"
+#   Formato objeto (legado / manual):
+#     "imagem_capa": { "url": "...", "alt": "..." }
+# Ambos são aceitos pelo schema (artigo.schema.json) e normalizados pelos scripts de build.
 imagem_destaque:
   url: "/images/artigos/2026/04/titulo-do-artigo-destaque.webp"
   alt: "Descrição da imagem em PT-BR"

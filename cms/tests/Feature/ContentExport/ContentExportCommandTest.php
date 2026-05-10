@@ -6,6 +6,7 @@ namespace Tests\Feature\ContentExport;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ContentExportCommandTest extends TestCase
@@ -15,10 +16,11 @@ class ContentExportCommandTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dataDir = base_path('../data');
+        // SITE_ROOT é /tmp/paroquia-test-site em teste (phpunit.xml)
+        $this->dataDir = rtrim(config('site.root'), '/') . '/data';
     }
 
-    /** @test */
+    #[Test]
     public function testShouldRunContentExportCommandWithoutError(): void
     {
         $exitCode = Artisan::call('content:export');
@@ -26,7 +28,7 @@ class ContentExportCommandTest extends TestCase
         $this->assertEquals(0, $exitCode);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldCreateDataDirectoryIfNotExists(): void
     {
         // Garantir que o diretório existe (o próprio command cria)
@@ -35,7 +37,7 @@ class ContentExportCommandTest extends TestCase
         $this->assertDirectoryExists($this->dataDir);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportAllRequiredJsonFiles(): void
     {
         $this->artisan('content:export')->assertSuccessful();
@@ -48,10 +50,10 @@ class ContentExportCommandTest extends TestCase
             'radios.json',
             'configuracoes.json',
             'galeria.json',
-            'paroco.json',
             'horarios-missa.json',
             'menu.json',
             'testemunhos.json',
+            'historia.json',
         ];
 
         foreach ($expectedFiles as $file) {
@@ -62,7 +64,7 @@ class ContentExportCommandTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function testShouldGenerateValidJsonInAllExportedFiles(): void
     {
         $this->artisan('content:export')->assertSuccessful();

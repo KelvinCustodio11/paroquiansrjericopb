@@ -10,6 +10,7 @@ use App\Models\Configuracao;
 use App\Models\Evento;
 use App\Models\GaleriaAlbum;
 use App\Models\Homilia;
+use App\Models\HistoriaPagina;
 use App\Models\Igreja;
 use App\Models\MenuItem;
 use App\Models\Ministerio;
@@ -203,22 +204,12 @@ class ContentExport extends Command
             json_encode(['testemunhos' => $testemunhos], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK testemunhos.json ('.count($testemunhos).' aprovado(s))');
 
-        // História (primeira Igreja ativa com seções preenchidas)
-        $igrejaHistoria = Igreja::where('ativa', true)
-            ->whereNotNull('historia_secoes')
-            ->first();
-        if ($igrejaHistoria && $igrejaHistoria->historia_secoes) {
-            $historiaData = [
-                'titulo'    => $igrejaHistoria->historia_titulo,
-                'subtitulo' => $igrejaHistoria->historia_subtitulo,
-                'secoes'    => $igrejaHistoria->historia_secoes,
-            ];
-            File::put($dataDir.'/historia.json',
-                json_encode($historiaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
-            $this->info('OK historia.json ('.count($igrejaHistoria->historia_secoes).' seção(ões))');
-        } else {
-            $this->warn('Nenhuma seção de história cadastrada — historia.json não atualizado.');
-        }
+        // História da paróquia (singleton HistoriaPagina)
+        $historiaPagina = HistoriaPagina::current();
+        $historiaData = $historiaPagina->toJsonExport();
+        File::put($dataDir.'/historia.json',
+            json_encode($historiaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
+        $this->info('OK historia.json (HistoriaPagina id='.$historiaPagina->id.')');
 
         if ($this->option('validate')) {
             $this->info('Validando com schemas...');

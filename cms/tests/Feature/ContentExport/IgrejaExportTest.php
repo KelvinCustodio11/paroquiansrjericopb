@@ -6,8 +6,13 @@ namespace Tests\Feature\ContentExport;
 
 use App\Models\Igreja;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
+/**
+ * Testa a exportação de igrejas e horários de missa para horarios-missa.json.
+ * A história da paróquia agora é gerenciada pelo HistoriaPagina (ver HistoriaPaginaExportTest).
+ */
 class IgrejaExportTest extends TestCase
 {
     private string $dataDir;
@@ -15,67 +20,79 @@ class IgrejaExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dataDir = base_path('../data');
+        $this->dataDir = rtrim(config('site.root'), '/') . '/data';
     }
 
-    /** @test */
-    public function testShouldExportHistoriaJson(): void
+    #[Test]
+    public function exportaIgrejaAtivaParaHorariosMissaJson(): void
     {
         Igreja::factory()->create([
-            'ativa'              => true,
-            'historia_titulo'    => 'Nossa Trajetória',
-            'historia_subtitulo' => '200 anos de fé',
-            'historia_secoes'    => [
-                ['titulo' => 'Fundação', 'texto' => 'Fundada em 1800...', 'imagem' => ''],
-            ],
+            'slug'  => 'matriz-teste',
+            'nome'  => 'Igreja Matriz Teste',
+            'ativa' => true,
         ]);
 
         $this->artisan('content:export')->assertSuccessful();
 
-        $this->assertFileExists($this->dataDir.'/historia.json');
-        $content = json_decode(File::get($this->dataDir.'/historia.json'), true);
+        $this->assertFileExists($this->dataDir.'/horarios-missa.json');
+        $content = json_decode(File::get($this->dataDir.'/horarios-missa.json'), true);
+        $slugs = array_column($content['igrejas'] ?? [], 'slug');
 
-        $this->assertEquals('Nossa Trajetória', $content['titulo']);
-        $this->assertEquals('200 anos de fé', $content['subtitulo']);
-        $this->assertCount(1, $content['secoes']);
-        $this->assertEquals('Fundação', $content['secoes'][0]['titulo']);
+        $this->assertContains('matriz-teste', $slugs);
     }
 
-    /** @test */
-    public function testShouldNotExportHistoriaWhenHistoriaSecoesIsEmpty(): void
+    #[Test]
+    public function naoExportaIgrejaInativa(): void
     {
         Igreja::factory()->create([
-            'ativa'           => true,
-            'historia_secoes' => null,
+            'slug'  => 'igreja-inativa-xyz',
+            'ativa' => false,
         ]);
 
-        // Remover arquivo previamente existente para garantir o teste
-        if (File::exists($this->dataDir.'/historia.json')) {
-            File::delete($this->dataDir.'/historia.json');
+        $this->artisan('content:export')->assertSuccessful();
+
+        $content = json_decode(File::get($this->dataDir.'/horarios-missa.json'), true);
+        $slugs = array_column($content['igrejas'] ?? [], 'slug');
+
+        $this->assertNotContains('igreja-inativa-xyz', $slugs);
+    }
+
+    #[Test]
+    public function horariosMissaJsonContemCamposObrigatorios(): void
+    {
+        Igreja::factory()->create(['slug' => 'matriz-campos-test', 'ativa' => true]);
+
+        $this->artisan('content:export')->assertSuccessful();
+
+        $content = json_decode(File::get($this->dataDir.'/horarios-missa.json'), true);
+        $igreja = collect($content['igrejas'] ?? [])->firstWhere('slug', 'matriz-campos-test');
+
+        $this->assertNotNull($igreja);
+        foreach (['slug', 'nome', 'tipo', 'horarios'] as $campo) {
+            $this->assertArrayHasKey($campo, $igreja, "Campo '{$campo}' ausente em horarios-missa.json.");
         }
-
-        $this->artisan('content:export')->assertSuccessful();
-
-        $this->assertFileDoesNotExist($this->dataDir.'/historia.json');
     }
 
-    /** @test */
-    public function testShouldIncludeAllSecoesFieldsInHistoriaJson(): void
+    #[Test]
+    public function horariosMissaJsonTemArrayDeHorarios(): void
     {
-        Igreja::factory()->create([
-            'ativa'           => true,
-            'historia_secoes' => [
-                ['titulo' => 'Século XIX', 'texto' => 'Texto longo...', 'imagem' => 'images/historia1.jpg'],
-            ],
-        ]);
+        Igreja::factory()->create(['slug' => 'matriz-horarios-test', 'ativa' => true]);
 
         $this->artisan('content:export')->assertSuccessful();
 
-        $content = json_decode(File::get($this->dataDir.'/historia.json'), true);
-        $secao = $content['secoes'][0] ?? [];
+        $content = json_decode(File::get($this->dataDir.'/horarios-missa.json'), true);
+        $igreja = collect($content['igrejas'] ?? [])->firstWhere('slug', 'matriz-horarios-test');
 
-        foreach (['titulo', 'texto', 'imagem'] as $campo) {
-            $this->assertArrayHasKey($campo, $secao, "Campo '{$campo}' ausente em historia.json[secoes].");
-        }
+        $this->assertIsArray($igreja['horarios']);
+    }
+
+    #[Test]
+    public function igrejaModelNaoPossuiCamposDeHistoria(): void
+    {
+        $igreja = Igreja::factory()->create();
+
+        $this->assertArrayNotHasKey('historia_titulo',    $igreja->toArray());
+        $this->assertArrayNotHasKey('historia_subtitulo', $igreja->toArray());
+        $this->assertArrayNotHasKey('historia_secoes',    $igreja->toArray());
     }
 }

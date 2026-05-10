@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ConfiguracaoSeeder::class,
             MenuItemSeeder::class,
             TestemunhoSeeder::class,
+            HistoriaPaginaSeeder::class,
         ]);
     }
 }

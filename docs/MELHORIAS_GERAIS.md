@@ -70,6 +70,15 @@ Inexistentes: `README.md`, `.gitignore`, `robots.txt`, `sitemap.xml`, `.htaccess
 | B11 | Ícones-only no footer | `<i>` sem `aria-label` | 🟡 Média (a11y) | ⏳ Pendente |
 | B12 | `images/uploads/` | Imagens sem compressão/WebP | 🟡 Média | ⏳ Pendente |
 | B13 | Página 404 | Servidor servindo 404 customizado | 🟢 Baixa | ✅ Configurado via .htaccess |
+| B14 | `data/configuracoes.json` | `logo_*_img` nulos causavam SVG inline nas partials | 🔴 Alta | ✅ Corrigido — 2026-05-09 |
+| B15 | `schemas/artigo.schema.json`, `homilia.schema.json` | `imagem_capa` declarada como `type: object`; CMS exporta string | 🟡 Média | ✅ Corrigido — 2026-05-09 |
+| B16 | `cms/tests/Feature/ContentBuildPhpHistoriaTest.php` | Testes `pipelineCompleto*` apontavam para site root real, zerando `data/artigos.json` | 🔴 Alta | ✅ Corrigido — 2026-05-09 |
+
+> **B14 detalhes**: `build-content.js` usa SVG fallback quando `logo_header_img`, `logo_footer_img` ou `logo_loader_img` são `null` em `data/configuracoes.json`. Corrigido preenchendo com paths reais (`images/uploads/logos/*.png`). Requer 2 passadas de `npm run all` ao mudar logos — ver `PADRONIZACAO_LAYOUT.md §3.6`.
+>
+> **B15 detalhes**: `ContentBuildPhp::enrichArtigo()` exporta `imagem_capa` como string (path relativo). Schemas agora aceitam `"type": ["string", "object"]`. Ambos os formatos normalizados pelos scripts Node e PHP.
+>
+> **B16 detalhes**: Dois testes explicitamente faziam `config(['site.root' => realpath(base_path('..'))])` para apontar ao site real. Corrigidos para usar `$this->tmpRoot` isolado com cópia do template real via `copiaTemplateReal()`.
 
 ---
 
@@ -355,8 +364,9 @@ Redirect 301 /eventos.html      /eventos/
 
 ### 12.9 — Sobre / História Gerenciável via CMS
 - **O quê**: página `historia.html` com seções editáveis (título, texto, imagem) via CMS — mesma estrutura já existente na página, mas com controle de conteúdo.
-- **CMS**: `IgrejaResource` → novas seções de história como repetidor.
-- **Build**: exporta `data/historia.json` → template `templates/historia.html` gera `historia.html`.
+- ~~**CMS**: `IgrejaResource` → novas seções de história como repetidor.~~
+- **✅ resolvido — 2026-05-09**: Implementação completa com recurso singleton dedicado `HistoriaPaginaResource` (9 abas, ~40 campos). Migração cria tabela `historia_pagina`, campos historia removidos de `igrejas`. Build via `buildSinglePageTemplates()` em `ContentBuildPhp`. Testes unitários e de integração com 100% de cobertura dos cenários: `tests/Unit/HistoriaPaginaModelTest.php` (43 testes) + `tests/Feature/ContentExport/HistoriaPaginaExportTest.php` (14 testes) + `tests/Feature/ContentBuildPhpHistoriaTest.php` (22 testes).
+- **Bug extra corrigido**: `injectDynamicSections()` em `ContentBuildPhp` crashava com `TypeError` quando havia exatamente 1 evento publicado (null padding em `array_map` com arrays de tamanhos diferentes).
 
 ### 12.10 — Pastoral Gerenciável via CMS (com Catequese/Estudos)
 - **O quê**: página `ministerios.html` / nova `pastoral.html` com seções de catequese e estudos bíblicos editáveis (título, descrição, horários, responsável).

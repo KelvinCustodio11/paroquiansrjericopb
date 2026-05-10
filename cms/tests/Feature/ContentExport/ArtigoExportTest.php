@@ -6,6 +6,7 @@ namespace Tests\Feature\ContentExport;
 
 use App\Models\Artigo;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ArtigoExportTest extends TestCase
@@ -15,10 +16,10 @@ class ArtigoExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dataDir = base_path('../data');
+        $this->dataDir = rtrim(config('site.root'), '/') . '/data';
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportArtigoToJson(): void
     {
         $artigo = Artigo::factory()->publicado()->create([
@@ -35,7 +36,7 @@ class ArtigoExportTest extends TestCase
         $this->assertContains('artigo-de-teste', $slugs);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldNotExportUnpublishedArtigo(): void
     {
         $artigo = Artigo::factory()->rascunho()->create([
@@ -51,7 +52,7 @@ class ArtigoExportTest extends TestCase
         $this->assertNotContains('artigo-rascunho-xyz', $slugs);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldIncludeAllRequiredFieldsInArtigoJson(): void
     {
         Artigo::factory()->publicado()->create(['slug' => 'artigo-campos-test']);
@@ -67,7 +68,7 @@ class ArtigoExportTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportArtigosOrderedByDateDesc(): void
     {
         Artigo::factory()->publicado()->create(['slug' => 'artigo-antigo', 'data_publicacao' => now()->subDays(10)]);

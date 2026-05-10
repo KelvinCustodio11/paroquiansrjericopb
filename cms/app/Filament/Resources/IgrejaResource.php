@@ -56,35 +56,6 @@ class IgrejaResource extends Resource
                     ->addActionLabel('Adicionar horário')
                     ->reorderable(false),
             ]),
-            Forms\Components\Section::make('História da Paróquia')
-                ->description('Seções editáveis exibidas na página Sobre/História.')
-                ->schema([
-                    Forms\Components\TextInput::make('historia_titulo')
-                        ->label('Título da seção de história')
-                        ->maxLength(120),
-                    Forms\Components\TextInput::make('historia_subtitulo')
-                        ->label('Subtítulo')
-                        ->maxLength(200),
-                    Forms\Components\Repeater::make('historia_secoes')
-                        ->label('Seções')
-                        ->schema([
-                            Forms\Components\TextInput::make('titulo')
-                                ->label('Título da seção')
-                                ->required()
-                                ->maxLength(120),
-                            Forms\Components\Textarea::make('texto')
-                                ->label('Texto')
-                                ->required()
-                                ->rows(4),
-                            Forms\Components\TextInput::make('imagem')
-                                ->label('Caminho da imagem (ex: images/historia/foto.jpg)')
-                                ->maxLength(300),
-                        ])
-                        ->columns(1)
-                        ->addActionLabel('Adicionar seção')
-                        ->collapsible()
-                        ->defaultItems(0),
-                ]),
         ]);
     }
 

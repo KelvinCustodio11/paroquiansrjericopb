@@ -41,6 +41,14 @@ local:
     embed_iframe: "<iframe src='https://www.google.com/maps/embed?pb=...' width='100%' height='400' style='border:0;' allowfullscreen='' loading='lazy'></iframe>"
 
 # Imagens
+# NOTA: imagem_capa aceita dois formatos:
+#   Formato string (obrigatório quando gerado pelo CMS — ContentBuildPhp):
+#     imagem_capa: "images/uploads/events/nome-do-arquivo.png"
+#   Formato objeto (legado, editado manualmente em data/eventos.json):
+#     imagem_capa:
+#       url: "/images/eventos/2026/05/assembleia-pascom-2026-capa.webp"
+#       alt: "Cartaz da Assembleia da PASCOM 2026"
+# O build-content.js (Node) e ContentBuildPhp (PHP) normalizam ambos os formatos.
 imagem_capa:
   url: "/images/eventos/2026/05/assembleia-pascom-2026-capa.webp"
   alt: "Cartaz da Assembleia da PASCOM 2026"

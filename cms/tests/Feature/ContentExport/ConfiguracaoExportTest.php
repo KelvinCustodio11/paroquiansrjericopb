@@ -6,6 +6,7 @@ namespace Tests\Feature\ContentExport;
 
 use App\Models\Configuracao;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ConfiguracaoExportTest extends TestCase
@@ -15,10 +16,10 @@ class ConfiguracaoExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dataDir = base_path('../data');
+        $this->dataDir = rtrim(config('site.root'), '/') . '/data';
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportConfiguracaoToJson(): void
     {
         Configuracao::updateOrCreate(['id' => 1], [
@@ -36,7 +37,7 @@ class ConfiguracaoExportTest extends TestCase
         $this->assertEquals('Bem-vindo', $content['hero_titulo']);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportHabilitarFlagsInConfiguracaoJson(): void
     {
         Configuracao::updateOrCreate(['id' => 1], [
@@ -56,7 +57,7 @@ class ConfiguracaoExportTest extends TestCase
         $this->assertTrue($content['habilitar_testemunhos']);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportContatoCoordenasInConfiguracaoJson(): void
     {
         Configuracao::updateOrCreate(['id' => 1], [
@@ -73,7 +74,7 @@ class ConfiguracaoExportTest extends TestCase
         $this->assertEquals('-37.8475', $content['contato_coordenadas_lng']);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportHeroTitulosAsArrayInConfiguracaoJson(): void
     {
         Configuracao::updateOrCreate(['id' => 1], [

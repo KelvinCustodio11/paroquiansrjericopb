@@ -6,6 +6,7 @@ namespace Tests\Feature\ContentExport;
 
 use App\Models\Radio;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RadioExportTest extends TestCase
@@ -15,10 +16,10 @@ class RadioExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dataDir = base_path('../data');
+        $this->dataDir = rtrim(config('site.root'), '/') . '/data';
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportRadioWithCategoriaEstadoCidade(): void
     {
         Radio::factory()->create([
@@ -41,7 +42,7 @@ class RadioExportTest extends TestCase
         $this->assertEquals('João Pessoa', $radio['cidade']);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldNotExportRadioInativa(): void
     {
         Radio::factory()->create(['nome' => 'Rádio Inativa', 'ativa' => false]);
@@ -54,7 +55,7 @@ class RadioExportTest extends TestCase
         $this->assertNotContains('Rádio Inativa', $nomes);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportRadioOrderedByDestaqueDesc(): void
     {
         Radio::factory()->create(['nome' => 'Normal', 'ativa' => true, 'destaque' => false, 'ordem' => 2]);

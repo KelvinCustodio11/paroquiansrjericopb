@@ -138,6 +138,9 @@ class ContentBuildPhp extends Command
         // ── Seções dinâmicas ────────────────────────────────────────────────
         $this->injectDynamicSections();
 
+        // ── Single-page templates (historia.html, etc.) ──────────────────────
+        $this->buildSinglePageTemplates();
+
         // ── Configurações ───────────────────────────────────────────────────
         $this->applyConfiguracoes();
 
@@ -455,10 +458,11 @@ class ContentBuildPhp extends Command
 
         // 3. eventos.html: our-event destaques
         if ($visiveis) {
+            $top2 = array_slice($visiveis, 0, 2);
             $html = implode("\n", array_map(
                 fn ($ev, $i) => $this->ourEventHtml($ev, $i % 2 !== 0),
-                array_slice($visiveis, 0, 2),
-                [0, 1]
+                $top2,
+                array_keys($top2)  // garante que os dois arrays têm o mesmo tamanho
             ));
         } else {
             $html = $this->ourEventHtmlVazio('próximos eventos', 'Nenhum evento <span>agendado</span>', 'contato.html', 'fale conosco');
@@ -771,6 +775,10 @@ HTML;
 
         $cssContent = ":root {\n    --accent-color:    {$corAcento};\n    --primary-color:   {$corEscuro};\n    --secondary-color: {$corClaro};\n    --text-color:      {$corTexto};\n}\n";
         $themeCssPath = "{$this->root}/css/theme-cms.css";
+        $themeCssDir  = dirname($themeCssPath);
+        if (! is_dir($themeCssDir)) {
+            mkdir($themeCssDir, 0755, true);
+        }
         if (! file_exists($themeCssPath) || file_get_contents($themeCssPath) !== $cssContent) {
             file_put_contents($themeCssPath, $cssContent);
             $this->line("  ✓ css/theme-cms.css");
@@ -929,6 +937,58 @@ HTML;
         }
 
         return "images/uploads/{$destSubDir}/{$filename}";
+    }
+
+    // ─── Single-page templates ────────────────────────────────────────────────
+
+    /**
+     * Processa templates que geram um único arquivo HTML na raiz do site
+     * (ex: historia.html). O JSON correspondente representa um objeto único,
+     * não uma coleção.
+     *
+     * Plano: [dataFile => templates/X.html => raiz/Y.html]
+     * - Sem rewrite de paths (ficheiro fica na raiz, caminhos relativos já corretos)
+     * - Sem remoção de órfãos (arquivo é único e fixo)
+     */
+    private function buildSinglePageTemplates(): void
+    {
+        $this->line("\n  - Processando single-page templates...");
+
+        $plan = [
+            [
+                'dataFile' => 'historia.json',
+                'template' => 'historia.html',
+                'outFile'  => 'historia.html',
+            ],
+        ];
+
+        foreach ($plan as $p) {
+            $dataPath = "{$this->data}/{$p['dataFile']}";
+            $tplPath  = "{$this->tpl}/{$p['template']}";
+
+            if (! file_exists($dataPath) || ! file_exists($tplPath)) {
+                $this->line("  · pulando {$p['template']} (data ou template ausente)");
+                continue;
+            }
+
+            $data     = json_decode(file_get_contents($dataPath), true) ?? [];
+            $tpl      = file_get_contents($tplPath);
+            $rendered = $this->render($tpl, $data);
+            $rendered = $this->expandPartials($rendered);
+            // single-pages ficam na raiz — sem rewritePaths
+
+            $banner  = "<!-- GENERATED FROM data/{$p['dataFile']} — DO NOT EDIT MANUALLY. Run: php artisan content:build-php -->\n";
+            $out     = $banner . $rendered;
+            $outPath = "{$this->root}/{$p['outFile']}";
+
+            $before = file_exists($outPath) ? file_get_contents($outPath) : null;
+            if ($before !== $out) {
+                file_put_contents($outPath, $out);
+                $this->line("  ✓ {$p['outFile']} (single-page)");
+            } else {
+                $this->line("  · {$p['outFile']} (single-page, sem alterações)");
+            }
+        }
     }
 
     // ─── Rebuild de partials (propaga header/footer em todas as páginas) ──────

@@ -170,6 +170,32 @@ Blocos do footer Avenix:
 └── ...
 ```
 
+### 3.6. Logos do Site — Gestão via `data/configuracoes.json`
+
+Os logos da paróquia são configurados em `data/configuracoes.json` pelos campos:
+
+| Campo | Onde é usado | Fallback (quando `null`) |
+|---|---|---|
+| `logo_header_img` | Navbar / header | SVG inline de `images/logo.svg` |
+| `logo_footer_img` | Footer (coluna 1) | SVG inline de `images/footer-logo.svg` |
+| `logo_loader_img` | Preloader / splash | SVG inline de `images/loader.svg` |
+
+Valor esperado: **caminho relativo à raiz do site**, prefixado por `images/` (obrigatório para que páginas em subdiretórios tenham o caminho reescrito corretamente pelo `build-content.js`).
+
+```json
+"logo_header_img": "images/uploads/logos/nome-do-arquivo.png",
+"logo_footer_img": "images/uploads/logos/nome-do-arquivo.png",
+"logo_loader_img": "images/uploads/logos/nome-do-arquivo.png"
+```
+
+**⚠️ Atenção — Dois passes necessários**: o `build-content.js` injeta os logos nos arquivos de `partials/` **após** gerar as páginas de subdiretório (`artigos/`, `eventos/`, `homilias/`). Por isso, ao alterar `configuracoes.json`, execute `npm run all` **duas vezes** para que as páginas em subdiretórios recebam os logos atualizados:
+
+```bash
+npm run all  # 1ª passada: atualiza partials/header.html e partials/footer.html
+npm run all  # 2ª passada: regera artigos/, eventos/ e homilias/ com as partials corretas
+npm run all  # 3ª passada (verificação): deve mostrar apenas "(sem alteracoes)"
+```
+
 ---
 
 ## 4. Regras para Novas Páginas

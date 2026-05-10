@@ -6,6 +6,7 @@ namespace Tests\Feature\ContentExport;
 
 use App\Models\Ministerio;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MinisterioExportTest extends TestCase
@@ -15,10 +16,10 @@ class MinisterioExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dataDir = base_path('../data');
+        $this->dataDir = rtrim(config('site.root'), '/') . '/data';
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportMinisterioWithCategoria(): void
     {
         Ministerio::factory()->create([
@@ -38,7 +39,7 @@ class MinisterioExportTest extends TestCase
         $this->assertEquals('ministerio', $ministerio['categoria']);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldNotExportMinisterioInativo(): void
     {
         Ministerio::factory()->create(['nome' => 'Ministerio Inativo', 'ativo' => false]);
@@ -51,7 +52,7 @@ class MinisterioExportTest extends TestCase
         $this->assertNotContains('Ministerio Inativo', $nomes);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportPastoralJsonSeparately(): void
     {
         Ministerio::factory()->create(['nome' => 'Catequese Teste', 'ativo' => true, 'categoria' => 'catequese']);

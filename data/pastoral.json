@@ -1,28 +1,3 @@
 {
-    "itens": [
-        {
-            "slug": "corrupti-repudiandae-autem-ePCq",
-            "nome": "Catequese Teste",
-            "categoria": "catequese",
-            "descricao": "Soluta eos et sint voluptatum qui aut modi.",
-            "icone": "fa-church",
-            "ativo": true
-        },
-        {
-            "slug": "sunt-delectus-pariatur-B9Ia",
-            "nome": "Catequese Teste",
-            "categoria": "catequese",
-            "descricao": "Atque consectetur eum officia sed occaecati eius dolorem ipsa magni.",
-            "icone": "fa-church",
-            "ativo": true
-        },
-        {
-            "slug": "fugiat-autem-quia-DzDu",
-            "nome": "Catequese Teste",
-            "categoria": "catequese",
-            "descricao": "Quod consequatur et est ut eos voluptas eius.",
-            "icone": "fa-church",
-            "ativo": true
-        }
-    ]
+    "itens": []
 }

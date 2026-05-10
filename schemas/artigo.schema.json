@@ -21,7 +21,7 @@
     "tags": { "type": "array", "items": { "type": "string" } },
     "resumo": { "type": "string", "minLength": 30, "maxLength": 320 },
     "imagem_capa": {
-      "type": "object",
+      "type": ["string", "object"],
       "required": ["url", "alt"],
       "properties": {
         "url": { "type": "string" },

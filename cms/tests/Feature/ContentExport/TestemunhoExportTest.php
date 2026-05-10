@@ -6,6 +6,7 @@ namespace Tests\Feature\ContentExport;
 
 use App\Models\Testemunho;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class TestemunhoExportTest extends TestCase
@@ -15,10 +16,10 @@ class TestemunhoExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dataDir = base_path('../data');
+        $this->dataDir = rtrim(config('site.root'), '/') . '/data';
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportAprovadoTestemunho(): void
     {
         Testemunho::factory()->aprovado()->create([
@@ -35,7 +36,7 @@ class TestemunhoExportTest extends TestCase
         $this->assertContains('Maria Silva', $nomes);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldNotExportPendenteTestemunho(): void
     {
         Testemunho::factory()->pendente()->create(['nome' => 'João Pendente']);
@@ -48,7 +49,7 @@ class TestemunhoExportTest extends TestCase
         $this->assertNotContains('João Pendente', $nomes);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldNotExportRejeitadoTestemunho(): void
     {
         Testemunho::factory()->rejeitado()->create(['nome' => 'Pedro Rejeitado']);
@@ -61,7 +62,7 @@ class TestemunhoExportTest extends TestCase
         $this->assertNotContains('Pedro Rejeitado', $nomes);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldNotExportEmailInTestemunhoJson(): void
     {
         Testemunho::factory()->aprovado()->create([
@@ -78,7 +79,7 @@ class TestemunhoExportTest extends TestCase
         $this->assertArrayNotHasKey('email', $testemunho, 'E-mail NÃO deve ser exportado por LGPD.');
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportTestemunhosOrderedByAprovadoEmDesc(): void
     {
         Testemunho::factory()->aprovado()->create(['nome' => 'Antigo', 'aprovado_em' => now()->subDays(10)]);

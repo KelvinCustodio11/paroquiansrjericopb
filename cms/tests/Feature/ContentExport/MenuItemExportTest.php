@@ -6,6 +6,7 @@ namespace Tests\Feature\ContentExport;
 
 use App\Models\MenuItem;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MenuItemExportTest extends TestCase
@@ -15,10 +16,10 @@ class MenuItemExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dataDir = base_path('../data');
+        $this->dataDir = rtrim(config('site.root'), '/') . '/data';
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportMenuItemsToJson(): void
     {
         MenuItem::factory()->create(['titulo' => 'Início', 'link' => 'index.html', 'visivel' => true, 'ordem' => 1]);
@@ -33,7 +34,7 @@ class MenuItemExportTest extends TestCase
         $this->assertContains('Início', $titulos);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldNotExportMenuItemInvisivel(): void
     {
         MenuItem::factory()->create(['titulo' => 'Oculto', 'visivel' => false]);
@@ -46,7 +47,7 @@ class MenuItemExportTest extends TestCase
         $this->assertNotContains('Oculto', $titulos);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportMenuItemWithFilhosNested(): void
     {
         $pai = MenuItem::factory()->create(['titulo' => 'Sobre', 'visivel' => true, 'pai_id' => null]);
@@ -63,7 +64,7 @@ class MenuItemExportTest extends TestCase
         $this->assertContains('Nossa História', $titulos);
     }
 
-    /** @test */
+    #[Test]
     public function testShouldExportMenuItemsOrderedByOrdem(): void
     {
         MenuItem::factory()->create(['titulo' => 'Último', 'visivel' => true, 'ordem' => 99]);
