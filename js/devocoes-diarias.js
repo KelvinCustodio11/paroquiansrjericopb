@@ -303,6 +303,23 @@
     /* carregarTerco() e toda a lógica do terço estão em js/terco.js     */
     var _tercoLoaded = false;
 
+    function initTercoTab() {
+        if (_tercoLoaded) return;
+        _tercoLoaded = true;
+        if (typeof window.carregarTerco === 'function') {
+            window.carregarTerco();
+        } else {
+            /* terco.js ainda não carregou — aguarda e tenta novamente */
+            _tercoLoaded = false;
+            setTimeout(function () {
+                if (!_tercoLoaded && typeof window.carregarTerco === 'function') {
+                    _tercoLoaded = true;
+                    window.carregarTerco();
+                }
+            }, 300);
+        }
+    }
+
     /* ── fixWow: garante visibilidade dos elementos .wow dentro de abas ─ */
     function fixWowInTab(tabId) {
         var pane = document.getElementById(tabId);
@@ -316,36 +333,47 @@
         });
     }
 
-    /* ── Tab event listener (fixWow + lazy load do Terço) ─────────────── */
+    /* ── Tab event listener (fixWow + fallback para Santo do Dia e Terço) ── */
     var tabEls = document.querySelectorAll('#devTab .nav-link');
     tabEls.forEach(function (btn) {
         btn.addEventListener('shown.bs.tab', function () {
             var target = btn.getAttribute('data-bs-target');
             if (target && target.charAt(0) === '#') fixWowInTab(target.slice(1));
-            if (target === '#terco' && !_tercoLoaded) {
-                _tercoLoaded = true;
-                if (typeof window.carregarTerco === 'function') window.carregarTerco();
+
+            if (target === '#terco') {
+                initTercoTab();
+            }
+
+            /* Fallback: se initSantoTab() falhou por algum motivo (ex.: PJAX
+             * timing), re-tenta ao mostrar a aba Santo do Dia. */
+            if (target === '#santo-dia' && !_initDone) {
+                initSantoTab();
             }
         });
     });
 
     /* ── Init Santo do Dia e ativação via hash ─────────────────────────── */
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function () { initSantoTab(); activateSantoTabIfHash(); });
-    } else {
+    function runInit() {
         initSantoTab();
+        /* Terço: pré-carrega em background para evitar loading na 1ª abertura */
+        initTercoTab();
         activateSantoTabIfHash();
     }
 
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runInit);
+    } else {
+        runInit();
+    }
+
     /* pjax:ready: só reinicia se ainda não foi iniciado nesta navegação.
-     * Quando o PJAX re-executa este script, initSantoTab() já foi chamado
+     * Quando o PJAX re-executa este script, runInit() já foi chamado
      * diretamente acima (readyState !== 'loading'), então _initDone === true
      * e este handler vira no-op. Em navegações futuras de volta a esta página,
      * um novo IIFE rodará e _initDone recomeça em false. */
     document.addEventListener('pjax:ready', function () {
         if (!_initDone) {
-            initSantoTab();
-            activateSantoTabIfHash();
+            runInit();
         }
     });
 
