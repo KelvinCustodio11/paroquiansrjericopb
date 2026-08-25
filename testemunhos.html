@@ -489,6 +489,11 @@
     contador.style.color = n > 1800 ? 'var(--color-danger, #dc3545)' : '';
   });
 
+  var csrfToken = '';
+  fetch('testemunho-process.php?action=token', { credentials: 'same-origin' })
+    .then(function (r) { return r.json(); })
+    .then(function (data) { csrfToken = data.csrf_token || ''; });
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -514,6 +519,7 @@
       texto:              textarea.value.trim(),
       consentimento_lgpd: '1',
       tipo:               'testemunho',
+      csrf_token:         csrfToken,
     });
 
     fetch('testemunho-process.php', {

@@ -57,6 +57,10 @@ function tsnSanitizeStr(string $value, int $max): string
 /* ─── Método ────────────────────────────────────────────────────────────── */
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['action'] ?? '') === 'token') {
+        $_SESSION['tsn_csrf_token'] ??= bin2hex(random_bytes(32));
+        tsnRespond(200, 'Token gerado.', ['csrf_token' => $_SESSION['tsn_csrf_token']]);
+    }
     tsnRespond(405, 'Método não permitido.');
 }
 
@@ -75,7 +79,7 @@ if (!empty($_POST['website'])) {
 
 /* ─── Rate limiting por IP ──────────────────────────────────────────────── */
 
-$ip  = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+$ip  = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 $key = 'tsn_rate_' . hash('sha256', $ip);
 
 if (!isset($_SESSION[$key])) {
@@ -99,6 +103,11 @@ $cidade = tsnSanitizeStr($_POST['cidade'] ?? '', 100);
 $texto  = tsnSanitizeStr($_POST['texto']  ?? '', TSN_MAX_TEXTO_LEN);
 $email  = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL) ?: null;
 $lgpd   = !empty($_POST['consentimento_lgpd']);
+$csrfToken = (string) ($_POST['csrf_token'] ?? '');
+
+if ($csrfToken === '' || !hash_equals((string) ($_SESSION['tsn_csrf_token'] ?? ''), $csrfToken)) {
+    tsnRespond(403, 'Sessão expirada. Recarregue a página e tente novamente.');
+}
 
 if (mb_strlen($nome) < 2) {
     tsnRespond(422, 'Por favor, informe seu nome completo.');

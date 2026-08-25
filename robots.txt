@@ -4,6 +4,7 @@
 User-agent: *
 Allow: /
 Disallow: /form-process.php
+Disallow: /testemunho-process.php
 Disallow: /partials/
 Disallow: /data/
 Disallow: /_template-avenix/

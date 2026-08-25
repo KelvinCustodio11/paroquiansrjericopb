@@ -6,7 +6,7 @@
 # --- Habilitar reescrita ---
 RewriteEngine On
 
-# --- Forçar HTTPS (descomente em produção quando SSL estiver ativo) ---
+# --- Forçar HTTPS ---
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 

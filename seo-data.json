@@ -3,7 +3,7 @@
   "_global": {
     "site_name": "Paróquia Nossa Senhora dos Remédios — Jericó/PB",
     "site_url": "https://pascomjerico.com.br",
-    "default_image": "/images/og-default.jpg",
+    "default_image": "/images/logo.png",
     "locale": "pt_BR",
     "twitter_card": "summary_large_image",
     "twitter_site": ""
@@ -14,7 +14,7 @@
       "description": "Paróquia Nossa Senhora dos Remédios em Jericó/PB: missas, eventos, agenda litúrgica, ministérios e contato. Acompanhe nossa comunidade de fé.",
       "url": "/",
       "type": "website",
-      "image": "/images/og-home.jpg",
+      "image": "/images/logo.png",
       "keywords": "Paróquia, Nossa Senhora dos Remédios, Jericó, PB, igreja católica, missa, agenda litúrgica"
     },
     "historia.html": {
@@ -22,7 +22,7 @@
       "description": "Conheça a história, missão e devoção da Paróquia Nossa Senhora dos Remédios em Jericó/PB. Tradição de fé construída com a comunidade.",
       "url": "/historia.html",
       "type": "website",
-      "image": "/images/og-historia.jpg",
+      "image": "/images/logo.png",
       "keywords": "história, paróquia, Nossa Senhora dos Remédios, Jericó, devoção"
     },
     "paroco.html": {
@@ -30,7 +30,7 @@
       "description": "Conheça o pároco e a equipe sacerdotal da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/paroco.html",
       "type": "profile",
-      "image": "/images/og-paroco.jpg",
+      "image": "/images/logo.png",
       "keywords": "pároco, sacerdote, padre, paróquia, Jericó"
     },
     "sacramentos.html": {
@@ -38,7 +38,7 @@
       "description": "Sacramentos celebrados na Paróquia Nossa Senhora dos Remédios: batismo, eucaristia, crisma, matrimônio, unção dos enfermos.",
       "url": "/sacramentos.html",
       "type": "website",
-      "image": "/images/og-pastoral.jpg",
+      "image": "/images/logo.png",
       "keywords": "pastoral, sacramentos, batismo, crisma, matrimônio, eucaristia"
     },
     "sacramento-detalhe.html": {
@@ -46,7 +46,7 @@
       "description": "Detalhes sobre o serviço pastoral oferecido pela Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/sacramento-detalhe.html",
       "type": "article",
-      "image": "/images/og-pastoral.jpg",
+      "image": "/images/logo.png",
       "keywords": "pastoral, serviço, paróquia"
     },
     "ministerios.html": {
@@ -54,7 +54,7 @@
       "description": "Conheça os ministérios e pastorais da Paróquia Nossa Senhora dos Remédios em Jericó/PB. Participe da vida da comunidade.",
       "url": "/ministerios.html",
       "type": "website",
-      "image": "/images/og-ministerios.jpg",
+      "image": "/images/logo.png",
       "keywords": "ministérios, pastorais, voluntários, comunidade católica"
     },
     "ministerio-detalhe.html": {
@@ -62,7 +62,7 @@
       "description": "Saiba mais sobre o ministério da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/ministerio-detalhe.html",
       "type": "article",
-      "image": "/images/og-ministerios.jpg",
+      "image": "/images/logo.png",
       "keywords": "ministério, pastoral, paróquia"
     },
     "eventos.html": {
@@ -70,7 +70,7 @@
       "description": "Próximos eventos, encontros, retiros e celebrações na Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/eventos.html",
       "type": "website",
-      "image": "/images/og-eventos.jpg",
+      "image": "/images/logo.png",
       "keywords": "eventos católicos, paróquia, retiros, encontros, celebrações"
     },
     "evento-detalhe.html": {
@@ -78,7 +78,7 @@
       "description": "Detalhes do evento da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/evento-detalhe.html",
       "type": "article",
-      "image": "/images/og-eventos.jpg",
+      "image": "/images/logo.png",
       "keywords": "evento, paróquia, Jericó"
     },
     "evento-single-pascom.html": {
@@ -86,7 +86,7 @@
       "description": "Encontro da Pastoral da Comunicação na Paróquia Nossa Senhora dos Remédios. Inscreva-se e participe.",
       "url": "/evento-single-pascom.html",
       "type": "article",
-      "image": "/images/og-pascom.jpg",
+      "image": "/images/logo.png",
       "keywords": "Pascom, comunicação, evento, paróquia"
     },
     "agenda-liturgica.html": {
@@ -94,7 +94,7 @@
       "description": "Agenda litúrgica completa, liturgia do dia, santo do dia e calendário romano da Paróquia Nossa Senhora dos Remédios.",
       "url": "/agenda-liturgica.html",
       "type": "website",
-      "image": "/images/og-liturgia.jpg",
+      "image": "/images/logo.png",
       "keywords": "liturgia, agenda litúrgica, santo do dia, calendário romano, missas"
     },
     "artigos.html": {
@@ -102,7 +102,7 @@
       "description": "Reflexões, notícias e artigos da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/artigos.html",
       "type": "website",
-      "image": "/images/og-blog.jpg",
+      "image": "/images/logo.png",
       "keywords": "blog católico, reflexões, notícias paróquia"
     },
     "artigo-detalhe.html": {
@@ -110,7 +110,7 @@
       "description": "Artigo do blog da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/artigo-detalhe.html",
       "type": "article",
-      "image": "/images/og-blog.jpg",
+      "image": "/images/logo.png",
       "keywords": "artigo, blog, reflexão"
     },
     "homilias.html": {
@@ -118,7 +118,7 @@
       "description": "Homilias e pregações da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/homilias.html",
       "type": "website",
-      "image": "/images/og-homilias.jpg",
+      "image": "/images/logo.png",
       "keywords": "homilias, pregações, padre, paróquia"
     },
     "homilia-detalhe.html": {
@@ -126,7 +126,7 @@
       "description": "Homilia da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/homilia-detalhe.html",
       "type": "article",
-      "image": "/images/og-homilias.jpg",
+      "image": "/images/logo.png",
       "keywords": "homilia, evangelho, paróquia"
     },
     "campanhas.html": {
@@ -134,7 +134,7 @@
       "description": "Campanhas e ações solidárias da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/campanhas.html",
       "type": "website",
-      "image": "/images/og-campanhas.jpg",
+      "image": "/images/logo.png",
       "keywords": "campanhas católicas, ações solidárias, doações"
     },
     "campanha-detalhe.html": {
@@ -142,7 +142,7 @@
       "description": "Conheça e apoie esta campanha da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/campanha-detalhe.html",
       "type": "article",
-      "image": "/images/og-campanhas.jpg",
+      "image": "/images/logo.png",
       "keywords": "campanha, doação, solidariedade"
     },
     "galeria.html": {
@@ -150,7 +150,7 @@
       "description": "Galeria de fotos dos eventos e celebrações da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/galeria.html",
       "type": "website",
-      "image": "/images/og-galeria.jpg",
+      "image": "/images/logo.png",
       "keywords": "galeria, fotos, eventos, paróquia"
     },
     "objetos-sagrados.html": {
@@ -158,7 +158,7 @@
       "description": "Objetos sagrados, relíquias e itens litúrgicos da Paróquia Nossa Senhora dos Remédios em Jericó/PB.",
       "url": "/objetos-sagrados.html",
       "type": "website",
-      "image": "/images/og-objetos.jpg",
+      "image": "/images/logo.png",
       "keywords": "objetos sagrados, relíquias, itens litúrgicos"
     },
     "contato.html": {
@@ -166,7 +166,7 @@
       "description": "Entre em contato com a Paróquia Nossa Senhora dos Remédios em Jericó/PB. Endereço, telefone, e-mail e formulário de contato.",
       "url": "/contato.html",
       "type": "website",
-      "image": "/images/og-contato.jpg",
+      "image": "/images/logo.png",
       "keywords": "contato, paróquia, endereço, telefone, e-mail"
     },
     "404.html": {
@@ -174,7 +174,7 @@
       "description": "A página que você procura não foi encontrada. Volte ao início ou consulte o menu.",
       "url": "/404.html",
       "type": "website",
-      "image": "/images/og-default.jpg",
+      "image": "/images/logo.png",
       "keywords": "404, não encontrado",
       "noindex": true
     }

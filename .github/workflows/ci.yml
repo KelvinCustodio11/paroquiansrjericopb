@@ -127,7 +127,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
           server-dir: ${{ secrets.FTP_HTTPDOCS_DIR }}
-          security: loose
+          security: strict
           timeout: 60000
           exclude: |
             **/.git*
@@ -156,7 +156,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./cms/
           server-dir: ${{ secrets.FTP_CMS_DIR }}
-          security: loose
+          security: strict
           timeout: 60000
           exclude: |
             **/.git*

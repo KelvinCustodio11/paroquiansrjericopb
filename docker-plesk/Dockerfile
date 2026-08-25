@@ -88,5 +88,8 @@ RUN chmod +x /usr/local/bin/docker-entrypoint-plesk.sh
 # ── Porta extra para o CMS (81) ───────────────────────────────────────────────
 EXPOSE 80 81
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD curl --fail http://localhost/ || exit 1
+
 ENTRYPOINT ["docker-entrypoint-plesk.sh"]
 CMD ["apache2-foreground"]
