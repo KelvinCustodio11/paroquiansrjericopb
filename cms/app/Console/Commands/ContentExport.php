@@ -36,6 +36,18 @@ class ContentExport extends Command
 
     protected $description = 'Exporta dados do CMS para data/*.json (e opcionalmente regera HTMLs estaticos).';
 
+    private function writeFileAtomically(string $path, string $contents): void
+    {
+        $directory = dirname($path);
+        $temporary = tempnam($directory, '.publish-');
+        if ($temporary === false || file_put_contents($temporary, $contents) === false || ! rename($temporary, $path)) {
+            if ($temporary !== false) {
+                @unlink($temporary);
+            }
+            throw new \RuntimeException("Não foi possível gravar {$path}. Verifique as permissões do diretório.");
+        }
+    }
+
     public function handle(): int
     {
         // config('site.root') lê SITE_ROOT do .env via config/site.php.
@@ -56,7 +68,7 @@ class ContentExport extends Command
             ->all();
 
         $payload = ['eventos' => $eventos];
-        File::put(
+        $this->writeFileAtomically(
             $dataDir.'/eventos.json',
             json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n"
         );
@@ -65,14 +77,14 @@ class ContentExport extends Command
         // Artigos
         $artigos = Artigo::where('publicado', true)->orderBy('data_publicacao', 'desc')->get()
             ->map(fn (Artigo $a) => $a->toJsonExport())->all();
-        File::put($dataDir.'/artigos.json',
+        $this->writeFileAtomically($dataDir.'/artigos.json',
             json_encode(['artigos' => $artigos], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK artigos.json ('.count($artigos).' registros)');
 
         // Homilias
         $homilias = Homilia::where('publicado', true)->orderBy('data', 'desc')->get()
             ->map(fn (Homilia $h) => $h->toJsonExport())->all();
-        File::put($dataDir.'/homilias.json',
+        $this->writeFileAtomically($dataDir.'/homilias.json',
             json_encode(['homilias' => $homilias], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK homilias.json ('.count($homilias).' registros)');
 
@@ -90,34 +102,34 @@ class ContentExport extends Command
                 'observacao'      => $h->observacao,
             ])->sortBy('dia_semana')->values()->all(),
         ])->all();
-        File::put($dataDir.'/horarios-missa.json',
+        $this->writeFileAtomically($dataDir.'/horarios-missa.json',
             json_encode(['igrejas' => $igrejas], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK horarios-missa.json ('.count($igrejas).' igreja(s))');
 
         // Agenda pastoral (compromissos)
         $compromissos = Compromisso::where('publico', true)->orderBy('data')->orderBy('hora')->get()
             ->map(fn (Compromisso $c) => $c->toJsonExport())->all();
-        File::put($dataDir.'/agenda-pastoral.json',
+        $this->writeFileAtomically($dataDir.'/agenda-pastoral.json',
             json_encode(['compromissos' => $compromissos], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK agenda-pastoral.json ('.count($compromissos).' registros)');
 
         // Ministérios
         $ministerios = Ministerio::where('ativo', true)->orderBy('nome')->get()
             ->map(fn (Ministerio $m) => $m->toJsonExport())->all();
-        File::put($dataDir.'/ministerios.json',
+        $this->writeFileAtomically($dataDir.'/ministerios.json',
             json_encode(['ministerios' => $ministerios], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK ministerios.json ('.count($ministerios).' registros)');
 
         // Ministerios por categoria (pastoral: catequese, estudo-biblico, grupo-oracao)
         $pastoral = array_filter($ministerios, fn ($m) => in_array($m['categoria'] ?? '', ['catequese', 'estudo-biblico', 'grupo-oracao', 'outro']));
-        File::put($dataDir.'/pastoral.json',
+        $this->writeFileAtomically($dataDir.'/pastoral.json',
             json_encode(['itens' => array_values($pastoral)], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK pastoral.json ('.count($pastoral).' registros)');
 
         // Pároco ativo
         $paroco = Paroco::where('ativo', true)->first();
         if ($paroco) {
-            File::put($dataDir.'/paroco.json',
+            $this->writeFileAtomically($dataDir.'/paroco.json',
                 json_encode($paroco->toJsonExport(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
             $this->info('OK paroco.json');
         } else {
@@ -126,7 +138,7 @@ class ContentExport extends Command
 
         // Configurações do site
         $config = Configuracao::current();
-        File::put($dataDir.'/configuracoes.json',
+        $this->writeFileAtomically($dataDir.'/configuracoes.json',
             json_encode($config->toJsonExport(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK configuracoes.json');
 
@@ -170,7 +182,7 @@ class ContentExport extends Command
             ],
         ];
 
-        File::put($dataDir.'/radios.json',
+        $this->writeFileAtomically($dataDir.'/radios.json',
             json_encode($radioPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK radios.json ('.count($radios).' rádio(s), '.count($regrasBusca).' regra(s) externa(s))');
 
@@ -181,7 +193,7 @@ class ContentExport extends Command
             ->get()
             ->map(fn (GaleriaAlbum $a) => $a->toJsonExport())
             ->all();
-        File::put($dataDir.'/galeria.json',
+        $this->writeFileAtomically($dataDir.'/galeria.json',
             json_encode(['albuns' => $albuns], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK galeria.json ('.count($albuns).' álbum(ns))');
 
@@ -193,21 +205,21 @@ class ContentExport extends Command
             ->get()
             ->map(fn (MenuItem $m) => $m->toJsonExport())
             ->values()->all();
-        File::put($dataDir.'/menu.json',
+        $this->writeFileAtomically($dataDir.'/menu.json',
             json_encode(['items' => $menuRaiz], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK menu.json ('.count($menuRaiz).' item(ns) raiz)');
 
         // Testemunhos aprovados
         $testemunhos = Testemunho::aprovados()->latest('aprovado_em')->get()
             ->map(fn (Testemunho $t) => $t->toJsonExport())->values()->all();
-        File::put($dataDir.'/testemunhos.json',
+        $this->writeFileAtomically($dataDir.'/testemunhos.json',
             json_encode(['testemunhos' => $testemunhos], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK testemunhos.json ('.count($testemunhos).' aprovado(s))');
 
         // História da paróquia (singleton HistoriaPagina)
         $historiaPagina = HistoriaPagina::current();
         $historiaData = $historiaPagina->toJsonExport();
-        File::put($dataDir.'/historia.json',
+        $this->writeFileAtomically($dataDir.'/historia.json',
             json_encode($historiaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK historia.json (HistoriaPagina id='.$historiaPagina->id.')');
 
