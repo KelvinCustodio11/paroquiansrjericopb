@@ -72,7 +72,7 @@ chmod 664 "$CMS/database/database.sqlite" 2>/dev/null || true
 # está gravável; ajuste os dois níveis para evitar falha no file_put_contents().
 for dir in data eventos artigos homilias images/uploads partials css; do
     if [ -d "$HTTPDOCS/$dir" ]; then
-        chmod -R u+rwX,g+rwX,o+rX "$HTTPDOCS/$dir" 2>/dev/null || true
+        chmod -R a+rwX "$HTTPDOCS/$dir" 2>/dev/null || true
     fi
 done
 echo "  OK"
