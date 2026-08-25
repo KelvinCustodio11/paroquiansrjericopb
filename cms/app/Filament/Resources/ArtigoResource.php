@@ -181,7 +181,7 @@ class ArtigoResource extends Resource
                     ->label('Visualizar')
                     ->icon('heroicon-o-eye')
                     ->color('gray')
-                    ->url(fn ($record): string => 'http://localhost:3000/artigos/' . $record->slug . '.html')
+                    ->url(fn ($record): string => rtrim((string) config('app.url'), '/') . '/artigos/' . $record->slug . '.html')
                     ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -207,4 +207,3 @@ class ArtigoResource extends Resource
         ];
     }
 }
-

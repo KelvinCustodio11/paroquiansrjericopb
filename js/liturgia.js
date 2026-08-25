@@ -192,7 +192,7 @@
     'Rs': 'Reis', '1Rs': 'Primeiro Reis', '2Rs': 'Segundo Reis',
     'Cr': 'Crônicas', '1Cr': 'Primeiro Crônicas', '2Cr': 'Segundo Crônicas',
     'Sm': 'Samuel', '1Sm': 'Primeiro Samuel', '2Sm': 'Segundo Samuel',
-    'Mc': 'Macabeus', '1Mc': 'Primeiro Macabeus', '2Mc': 'Segundo Macabeus',
+    '1Mc': 'Primeiro Macabeus', '2Mc': 'Segundo Macabeus',
   };
 
   /**
@@ -1047,6 +1047,7 @@
           return r.json();
         })
         .then(function (data) {
+          if (!validateData(data)) throw new Error('invalid_data');
           saveToCache(data);
           renderWidget(data, container);
         })

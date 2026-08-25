@@ -70,7 +70,14 @@ function processFile(file) {
     if (!/<!--\s*@include(?:-start)?\s+/.test(original)) {
         return { file, changed: false, skipped: 'sem marcadores' };
     }
-    const updated = expandIncludes(original);
+    let updated = expandIncludes(original);
+    // O player já pertence ao partial comum; remove inclusões extras antigas.
+    let playerSeen = false;
+    updated = updated.replace(/^[ \t]*<script src="(?:\.\.\/)?js\/radio-player\.js"><\/script>[ \t]*\n?/gm, match => {
+        if (playerSeen) return '';
+        playerSeen = true;
+        return match;
+    });
     if (updated !== original) {
         fs.writeFileSync(file, updated, 'utf8');
         return { file, changed: true };

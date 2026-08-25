@@ -11,6 +11,8 @@ use App\Models\Homilia;
 use App\Models\HorarioMissa;
 use App\Models\Ministerio;
 use App\Models\Paroco;
+use App\Models\Configuracao;
+use App\Models\RadioBuscaExterna;
 use App\Observers\ContentRebuildObserver;
 use Illuminate\Support\ServiceProvider;
 
@@ -40,5 +42,7 @@ class AppServiceProvider extends ServiceProvider
         Compromisso::observe($observer);
         GaleriaAlbum::observe($observer);
         GaleriaFoto::observe($observer);
+        Configuracao::observe($observer);
+        RadioBuscaExterna::observe($observer);
     }
 }

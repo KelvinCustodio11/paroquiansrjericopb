@@ -99,7 +99,7 @@ class HomiliaResource extends Resource
                 ->label('Visualizar')
                 ->icon('heroicon-o-eye')
                 ->color('gray')
-                ->url(fn ($record): string => 'http://localhost:3000/homilias/' . $record->slug . '.html')
+                ->url(fn ($record): string => rtrim((string) config('app.url'), '/') . '/homilias/' . $record->slug . '.html')
                 ->openUrlInNewTab(),
             Tables\Actions\EditAction::make(),
             Tables\Actions\DeleteAction::make(),

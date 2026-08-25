@@ -36,7 +36,7 @@ const MISTERIOS = {
       'A Instituição da Eucaristia na Última Ceia',
     ],
   },
-  sorridentes: {
+  dolorosos: {
     nome: 'Mistérios Dolorosos',
     subtitulo: 'Terça-feira e Sexta-feira',
     cor: '#c0392b',
@@ -93,10 +93,10 @@ function getMisterioParaDia(diaSemana) {
   const mapa = {
     0: 'gloriosos',   // Domingo
     1: 'gozosos',     // Segunda
-    2: 'sorridentes', // Terça (dolorosos)
+     2: 'dolorosos', // Terça
     3: 'gloriosos',   // Quarta
     4: 'luminosos',   // Quinta
-    5: 'sorridentes', // Sexta (dolorosos)
+     5: 'dolorosos', // Sexta
     6: 'gozosos',     // Sábado
   };
   return mapa[diaSemana] ?? 'gloriosos';

@@ -17,13 +17,13 @@ class Login extends \Filament\Pages\Auth\Login
                     ->required()
                     ->autocomplete()
                     ->autofocus()
-                    ->default('admin@paroquia.local'),
+                    ->default(env('CMS_LOGIN_EMAIL', '')),
                 TextInput::make('password')
                     ->label(__('filament-panels::pages/auth/login.form.password.label'))
                     ->password()
                     ->revealable(filament()->arePasswordsRevealable())
                     ->required()
-                    ->default('admin123'),
+                    ->default(env('CMS_LOGIN_PASSWORD', '')),
                 \Filament\Forms\Components\Checkbox::make('remember')
                     ->label(__('filament-panels::pages/auth/login.form.remember.label')),
             ])

@@ -399,7 +399,7 @@ class EventoResource extends Resource
                     ->label('Visualizar')
                     ->icon('heroicon-o-eye')
                     ->color('gray')
-                    ->url(fn (Evento $record): string => 'http://localhost:3000/eventos/' . $record->slug . '.html')
+                    ->url(fn (Evento $record): string => rtrim((string) config('app.url'), '/') . '/eventos/' . $record->slug . '.html')
                     ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

@@ -19,11 +19,16 @@ class Evento extends Model
         'data_inicio',
         'data_fim',
         'hora_inicio',
+        'hora_fim',
         'local',
+        'local_maps',
         'categoria',
         'status',
         'resumo',
+        'descricao_curta',
+        'descricao_completa',
         'conteudo',
+        'titulo_destaque',
         'imagem_capa',
         // Campos de layout rico
         'stats_bar',
@@ -83,11 +88,16 @@ class Evento extends Model
             'data_inicio'                => $this->data_inicio?->format('Y-m-d'),
             'data_fim'                   => $this->data_fim?->format('Y-m-d'),
             'hora_inicio'                => $this->hora_inicio,
+            'hora_fim'                   => $this->hora_fim,
             'local'                      => $this->local,
+            'local_maps'                 => $this->local_maps,
             'categoria'                  => $this->categoria,
             'status'                     => $this->status,
             'resumo'                     => $this->resumo,
+            'descricao_curta'            => $this->descricao_curta,
+            'descricao_completa'         => $this->descricao_completa,
             'conteudo'                   => $this->conteudo,
+            'titulo_destaque'            => $this->titulo_destaque,
             'imagem_capa'                => $this->imagem_capa,
             'stats_bar'                  => $this->stats_bar,
             'topicos_destaque'           => $this->topicos_destaque,
@@ -103,6 +113,6 @@ class Evento extends Model
             'inscricao'                  => $this->inscricao,
             'publicado'                  => $this->publicado,
             'destaque'                   => $this->destaque,
-        ], static fn ($v) => $v !== null);
+        ], static fn ($v) => $v !== null && $v !== '');
     }
 }

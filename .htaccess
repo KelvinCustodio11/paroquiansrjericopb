@@ -7,8 +7,8 @@
 RewriteEngine On
 
 # --- Forçar HTTPS (descomente em produção quando SSL estiver ativo) ---
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # --- Forçar www OU non-www (escolher um; deixado comentado) ---
 # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
@@ -23,6 +23,7 @@ RewriteRule ^templates/?.*$           - [F,L]
 RewriteRule ^schemas/?.*$             - [F,L]
 RewriteRule ^scripts/?.*$             - [F,L]
 RewriteRule ^cms/?.*$                 - [F,L]
+RewriteRule ^diag2\.php$              - [F,L]
 # data/ NAO e bloqueado: componentes dinamicos (horarios-missa, agenda-pastoral)
 # fazem fetch('data/*.json') em runtime. Acesso publico controlado abaixo.
 

@@ -50,7 +50,7 @@ class EditEvento extends EditRecord
                                     <span style='font-weight:600'>Pré-visualização — dados do formulário (sem salvar)</span>
                                     <button onclick=\"document.querySelectorAll('.paroquia-preview-overlay').forEach(el=>el.remove())\" style='background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:14px;cursor:pointer;border-radius:6px;padding:4px 14px'>✕ Fechar</button>
                                 </div>
-                                <iframe src='http://localhost:3000/preview.html?t=\${Date.now()}' style='flex:1;border:none;width:100%'></iframe>
+                                 <iframe src='${config('app.url')}/preview.html?t=\${Date.now()}' style='flex:1;border:none;width:100%'></iframe>
                             </div>
                         `;
                         o.addEventListener('click', e => { if (e.target === o) o.remove(); });

@@ -65,7 +65,26 @@ function formatDateBR(iso) {
     const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
     if (!m) return iso;
     const [_, y, mo, d] = m;
-    return `${parseInt(d,10)} de ${MESES[parseInt(mo,10)-1]} de ${y}`;
+    const month = parseInt(mo, 10);
+    return month >= 1 && month <= 12 ? `${parseInt(d,10)} de ${MESES[month-1]} de ${y}` : iso;
+}
+
+function resolveStorageAsset(value, destination) {
+    if (!value) return '';
+    const normalized = String(value).replace(/^\/+/, '');
+    if (!normalized.startsWith('storage/')) return normalized;
+    const relative = normalized.slice('storage/'.length);
+    const source = path.join(ROOT, 'cms', 'storage', 'app', 'public', relative);
+    const filename = path.basename(relative);
+    const targetDir = path.join(ROOT, 'images', 'uploads', destination);
+    const target = path.join(targetDir, filename);
+    if (fs.existsSync(source)) {
+        fs.mkdirSync(targetDir, { recursive: true });
+        if (!fs.existsSync(target) || fs.readFileSync(source).compare(fs.readFileSync(target)) !== 0) {
+            fs.copyFileSync(source, target);
+        }
+    }
+    return `images/uploads/${destination}/${filename}`;
 }
 
 // =============================================================
@@ -130,7 +149,7 @@ function renderSection(tpl, ctx) {
 function enrichEvento(item) {
     // Normaliza imagem_capa: aceita string ou objeto {url, alt}
     const imgCapa = (typeof item.imagem_capa === 'string')
-        ? { url: item.imagem_capa ? '/' + item.imagem_capa.replace(/^\/+/, '') : '', alt: item.titulo || '' }
+        ? { url: item.imagem_capa ? '/' + resolveStorageAsset(item.imagem_capa, 'events') : '', alt: item.titulo || '' }
         : (item.imagem_capa || { url: '', alt: '' });
 
     // Normaliza local: aceita string simples ou objeto {nome, endereco, cidade, estado}
@@ -163,7 +182,7 @@ function enrichEvento(item) {
     if (item.galeria && item.galeria.imagens && item.galeria.imagens.length > 0) {
         galeria = Object.assign({}, item.galeria, {
             imagens: item.galeria.imagens.map(img => ({
-                url: img.url ? '/' + img.url.replace(/^\/+/, '') : '',
+                url: img.url ? '/' + resolveStorageAsset(img.url, 'galeria') : '',
                 alt: img.alt || '',
             })),
         });
@@ -213,7 +232,7 @@ function enrichEvento(item) {
 function enrichArtigo(item) {
     // Normaliza imagem_capa: aceita string ou objeto {url, alt}
     const imgCapa = (typeof item.imagem_capa === 'string')
-        ? { url: item.imagem_capa ? '/' + item.imagem_capa.replace(/^\/+/, '') : '', alt: item.titulo || '' }
+        ? { url: item.imagem_capa ? '/' + resolveStorageAsset(item.imagem_capa, 'artigos') : '', alt: item.titulo || '' }
         : (item.imagem_capa || { url: '', alt: '' });
 
     return Object.assign({}, item, {
@@ -227,7 +246,7 @@ function enrichArtigo(item) {
 function enrichHomilia(item) {
     // Normaliza imagem_capa: aceita string ou objeto {url}
     const imgCapaUrl = (typeof item.imagem_capa === 'string')
-        ? (item.imagem_capa ? '/' + item.imagem_capa.replace(/^\/+/, '') : '')
+        ? (item.imagem_capa ? '/' + resolveStorageAsset(item.imagem_capa, 'homilias') : '')
         : (item.imagem_capa && item.imagem_capa.url ? item.imagem_capa.url : '');
 
     return Object.assign({}, item, {
@@ -941,7 +960,10 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
                 console.log(`- pulando single-page ${plan.template} (data ou template ausente)`);
                 continue;
             }
-            const data    = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+            const data    = JSON.parse(fs.readFileSync(dataPath, 'utf8')) || {};
+            for (const field of ['about_imagem1', 'about_imagem2', 'missao_imagem', 'paroco_imagem', 'paroco_assinatura']) {
+                if (typeof data[field] === 'string' && data[field]) data[field] = resolveStorageAsset(data[field], 'historia');
+            }
             const tpl     = fs.readFileSync(tplPath, 'utf8');
             const enriched = plan.enrich(data);
             let rendered  = render(tpl, enriched);

@@ -42,6 +42,7 @@
 	}
 
 	/* Hero Slider Layout JS */
+	if ($('.hero-slider-layout .swiper').length) {
 	const hero_slider_layout = new Swiper('.hero-slider-layout .swiper', {
 		slidesPerView : 1,
 		speed: 1000,
@@ -55,6 +56,7 @@
 			clickable: true,
 		},
 	});
+	}
 
 	/* Core Value Image Carousel JS */
 	if ($('.core-value-slider').length) {
@@ -126,7 +128,9 @@
 	}
 
 	/* Audio JS */
-	const player = new Plyr('#player');
+	if ($('#player').length && typeof Plyr !== 'undefined') {
+		new Plyr('#player');
+	}
 
 	/* Init Counter */
 	if ($('.counter').length) {
@@ -272,7 +276,7 @@
 
 	/* Contact form validation */
 	var $contactform = $("#contactForm");
-	$contactform.validator({focus: false}).on("submit", function (event) {
+	if ($contactform.length) $contactform.validator({focus: false}).on("submit", function (event) {
 		if (!event.isDefaultPrevented()) {
 			event.preventDefault();
 			submitForm();
@@ -290,7 +294,7 @@
 		$.ajax({
 			type: "POST",
 			url: "form-process.php",
-			data: "fname=" + fname + "&lname=" + lname + "&email=" + email + "&phone=" + phone + "&message=" + message,
+			data: { fname: fname, lname: lname, email: email, phone: phone, message: message },
 			success : function(text){
 				if (text == "success"){
 					formSuccess();
@@ -298,6 +302,8 @@
 					submitMSG(false,text);
 				}
 			}
+		}).fail(function () {
+			submitMSG(false, "Não foi possível enviar a mensagem. Tente novamente.");
 		});
 	}
 
@@ -331,4 +337,3 @@
 	}
 			
 })(jQuery);
-

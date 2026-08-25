@@ -75,7 +75,7 @@ class ContentBuildPhp extends Command
                 continue;
             }
 
-            $data  = json_decode(file_get_contents($dataPath), true);
+            $data  = json_decode(file_get_contents($dataPath), true) ?? [];
             $tpl   = file_get_contents($tplPath);
             $items = $data[$p['collection']] ?? [];
 
@@ -438,7 +438,7 @@ class ContentBuildPhp extends Command
             return;
         }
 
-        $todos    = json_decode(file_get_contents($eventosDataPath), true)['eventos'] ?? [];
+        $todos    = (json_decode(file_get_contents($eventosDataPath), true) ?? [])['eventos'] ?? [];
         $visiveis = array_values(array_filter($todos, fn ($e) => ($e['publicado'] ?? true) !== false));
 
         $this->line("\n  - Injetando seções dinâmicas (" . count($visiveis) . " evento(s))...");
@@ -514,7 +514,10 @@ class ContentBuildPhp extends Command
         if (! $img) {
             return 'images/event-image.jpg';
         }
-        return $this->resolveStorageAsset((string) $img, 'events');
+        if (is_array($img)) {
+            $img = $img['url'] ?? '';
+        }
+        return $img ? $this->resolveStorageAsset((string) $img, 'events') : 'images/event-image.jpg';
     }
 
     private function ourEventHtml(array $ev, bool $reverseLayout): string
@@ -763,7 +766,7 @@ HTML;
             return;
         }
 
-        $cfg = json_decode(file_get_contents($configPath), true);
+        $cfg = json_decode(file_get_contents($configPath), true) ?? [];
         $this->line("\n  - Aplicando configurações do site...");
 
         // 1. css/theme-cms.css
@@ -973,6 +976,11 @@ HTML;
 
             $data     = json_decode(file_get_contents($dataPath), true) ?? [];
             $tpl      = file_get_contents($tplPath);
+            foreach (['about_imagem1', 'about_imagem2', 'missao_imagem', 'paroco_imagem', 'paroco_assinatura'] as $field) {
+                if (! empty($data[$field]) && is_string($data[$field])) {
+                    $data[$field] = $this->resolveStorageAsset($data[$field], 'historia');
+                }
+            }
             $rendered = $this->render($tpl, $data);
             $rendered = $this->expandPartials($rendered);
             // single-pages ficam na raiz — sem rewritePaths
@@ -1132,6 +1140,9 @@ HTML;
         $d  = (int) $m[3];
         $mo = (int) $m[2];
         $y  = $m[1];
+        if ($mo < 1 || $mo > 12) {
+            return $iso;
+        }
         return "{$d} de " . self::MESES[$mo] . " de {$y}";
     }
 }
