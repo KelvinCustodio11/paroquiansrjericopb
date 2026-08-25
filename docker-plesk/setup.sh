@@ -67,8 +67,14 @@ echo "► Ajustando permissões..."
 chown -R www-data:www-data "$CMS/storage" "$CMS/bootstrap/cache" "$CMS/database"
 chmod -R 775 "$CMS/storage" "$CMS/bootstrap/cache" "$CMS/database"
 chmod 664 "$CMS/database/database.sqlite" 2>/dev/null || true
-# Pastas do site estático que o CMS precisa gravar
-chmod -R 777 "$HTTPDOCS/data" "$HTTPDOCS/eventos" "$HTTPDOCS/artigos" "$HTTPDOCS/homilias" 2>/dev/null || true
+# Pastas e arquivos do site estático que o CMS precisa gravar.
+# O bind mount pode trazer arquivos 644/root do host, mesmo quando o diretório
+# está gravável; ajuste os dois níveis para evitar falha no file_put_contents().
+for dir in data eventos artigos homilias images/uploads partials css; do
+    if [ -d "$HTTPDOCS/$dir" ]; then
+        chmod -R u+rwX,g+rwX,o+rX "$HTTPDOCS/$dir" 2>/dev/null || true
+    fi
+done
 echo "  OK"
 echo ""
 

@@ -22,12 +22,14 @@ echo "[entrypoint] Transferindo posse para www-data nas pastas de conteúdo..."
 for dir in data artigos eventos homilias images/uploads partials css; do
     if [ -d "$HTTPDOCS/$dir" ]; then
         chown -R www-data:www-data "$HTTPDOCS/$dir" 2>/dev/null || true
+        chmod -R u+rwX,g+rwX,o+rX "$HTTPDOCS/$dir" 2>/dev/null || true
     fi
 done
 
 # HTMLs raiz que o CMS pode reescrever
 find "$HTTPDOCS" -maxdepth 1 -name "*.html" \
-    -exec chown www-data:www-data {} \; 2>/dev/null || true
+    -exec chown www-data:www-data {} \; \
+    -exec chmod u+rwX,g+rwX,o+rX {} \; 2>/dev/null || true
 
 # Pastas do Laravel que precisam de escrita (logs, cache, sessions, views)
 for dir in storage bootstrap/cache database; do
