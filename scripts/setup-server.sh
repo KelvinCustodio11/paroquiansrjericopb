@@ -13,9 +13,15 @@ set -euo pipefail
 # Detecta PHP 8.2 do Plesk (único disponível no chroot)
 PHP="/opt/plesk/php/8.2/bin/php"
 CMS_DIR="$HOME/cms"
+ENV_SITE_ROOT=''
+if [ -f "$CMS_DIR/.env" ]; then
+    ENV_SITE_ROOT="$(awk -F= '/^SITE_ROOT=/{sub(/^SITE_ROOT=/, ""); gsub(/^"|"$/, ""); print; exit}' "$CMS_DIR/.env")"
+fi
+SITE_ROOT="${SITE_ROOT:-${STATIC_DISK_ROOT:-${ENV_SITE_ROOT:-$HOME/httpdocs}}}"
 
 echo "==> Usando PHP: $($PHP -r 'echo PHP_VERSION;')"
 echo "==> CMS dir: $CMS_DIR"
+echo "==> Site dir: $SITE_ROOT"
 cd "$CMS_DIR"
 
 # ── 1. Composer ──────────────────────────────────────────────────────────────
@@ -73,6 +79,30 @@ mkdir -p "$CMS_DIR/storage/framework/sessions" \
          "$CMS_DIR/storage/app/public"
 chmod -R 775 "$CMS_DIR/storage"
 chmod -R 775 "$CMS_DIR/bootstrap/cache"
+
+# O CMS exporta e regenera o site estático. No Plesk, o usuário do PHP precisa
+# ser dono (ou membro do grupo com escrita) destas pastas e arquivos.
+echo "==> Ajustando permissões do site estático..."
+if [ ! -d "$SITE_ROOT" ]; then
+    echo "ERRO: SITE_ROOT não existe: $SITE_ROOT" >&2
+    exit 1
+fi
+
+for dir in data eventos artigos homilias images/uploads partials css; do
+    if [ -d "$SITE_ROOT/$dir" ]; then
+        chmod -R u+rwX,g+rwX "$SITE_ROOT/$dir"
+    else
+        echo "AVISO: pasta ausente: $SITE_ROOT/$dir"
+    fi
+done
+
+find "$SITE_ROOT" -maxdepth 1 -name '*.html' -exec chmod u+rw,g+rw {} \;
+
+if [ ! -w "$SITE_ROOT/data" ] || [ ! -w "$SITE_ROOT/data/eventos.json" ]; then
+    echo "ERRO: o usuário atual não pode gravar em $SITE_ROOT/data/eventos.json" >&2
+    echo "       Ajuste o proprietário/grupo no Plesk e execute este script novamente." >&2
+    exit 1
+fi
 
 # ── 7. Otimização ─────────────────────────────────────────────────────────────
 echo ""
