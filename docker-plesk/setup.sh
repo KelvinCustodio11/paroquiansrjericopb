@@ -45,7 +45,7 @@ fi
 echo ""
 
 # ── 4. Gerar APP_KEY se ainda não foi gerado --------------------------------
-if grep -q '^APP_KEY=$' "$CMS/.env"; then
+if [ -z "${APP_KEY:-}" ] && grep -q '^APP_KEY=$' "$CMS/.env"; then
     echo "► Gerando APP_KEY..."
     cd "$CMS" && "$PHP" artisan key:generate --ansi
     echo ""

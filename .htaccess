@@ -8,6 +8,7 @@ RewriteEngine On
 
 # --- Forçar HTTPS ---
 RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1|paroquia\.local)(:|$) [NC]
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # --- Forçar www OU non-www (escolher um; deixado comentado) ---
