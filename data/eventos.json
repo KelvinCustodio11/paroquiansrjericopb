@@ -8,10 +8,14 @@
             "data_fim": "2026-05-10",
             "hora_inicio": "08:00",
             "local": "Salão Paroquial — Jericó/PB",
+            "local_maps": "https://maps.google.com/?q=Jericó,PB",
             "categoria": "pastoral",
             "status": "agendado",
             "resumo": "Resumo",
+            "descricao_curta": "Reunião anual dos agentes de comunicação da Pastoral da Comunicação da Forania de Jericó.",
+            "descricao_completa": "<p>A <strong>Assembleia Forânea da PASCOM 2026</strong> reúne os agentes de comunicação das paróquias que compõem a Forania de Jericó para um dia de formação, partilha e planejamento pastoral.</p><p>O tema deste ano é <em>&ldquo;Comunicar o Evangelho na Era Digital&rdquo;</em>, com reflexões sobre o uso das redes sociais, produção de conteúdo cristão e evangelização por meios digitais. O encontro contará com apresentações, grupos de trabalho e a celebração eucarística de encerramento.</p>",
             "conteudo": "<h2>Sobre a Assembleia Forânea 2026</h2><p>A Pastoral da Comunicação (PASCOM) da Forania de Católé do Rocha convoca todos os seus membros para a Assembleia Forânea 2026. É um momento fundamental de partilha, formação e renovação do compromisso com a evangelização através dos meios de comunicação.</p><h3>Tema de 2026</h3><p><em>\"Preservar Vozes e Rostos Humanos\"</em> — Num mundo cada vez mais dominado por conteúdos automatizados e inteligência artificial, a <strong>PASCOM </strong>reafirma seu compromisso com uma comunicação que preserve a dignidade de cada ser humano. A evangelização exige autenticidade, presença e amor.</p><h3>O que esperamos desta assembleia</h3><p>Este encontro é uma oportunidade única de integração e discernimento. Ao longo do dia, vamos:</p><p><br></p>",
+            "titulo_destaque": "da PASCOM 2026",
             "imagem_capa": "images/uploads/events/assembleia-pascom-2026-capa.png",
             "stats_bar": [
                 {
@@ -194,9 +198,13 @@
             "data_fim": "2025-05-31",
             "hora_inicio": "19:00",
             "local": "Igreja Matriz — Jericó/PB",
+            "local_maps": "https://maps.google.com/?q=Jericó,PB",
             "categoria": "liturgico",
             "status": "encerrado",
-            "imagem_capa": "images/uploads/events/mes-de-maio-2026-capa.jpeg",
+            "descricao_curta": "Durante todo o mês de maio, a Paróquia Nossa Senhora dos Remédios realiza celebrações diárias em honra a Maria.",
+            "descricao_completa": "<p>O <strong>Mês de Maio com Maria</strong> é a mais tradicional devoção mariana da Paróquia Nossa Senhora dos Remédios de Jericó/PB. Durante 31 dias, a comunidade se reúne diariamente para rezar o terço, cantar hinos e celebrar a Eucaristia em homenagem à nossa padroeira.</p><p>Este ano, o tema escolhido foi <em>&ldquo;Maria, Mulher da Escuta&rdquo;</em>, inspirado no Evangelho de Lucas: <em>&ldquo;Maria guardava todas estas coisas, meditando-as em seu coração&rdquo;</em> (Lc 2,19). A programação incluiu rosários temáticos, adoração ao Santíssimo, procissões e a grande coroação de Nossa Senhora no último dia.</p>",
+            "titulo_destaque": "2025",
+            "imagem_capa": "images/uploads/events/mes-de-maio-2025-capa.jpeg",
             "stats_bar": [
                 {
                     "valor": "31",

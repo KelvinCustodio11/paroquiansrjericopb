@@ -151,6 +151,12 @@ class ContentBuildPhp extends Command
         // ── Seções dinâmicas ────────────────────────────────────────────────
         $this->injectDynamicSections();
 
+        // ── Pároco ───────────────────────────────────────────────────────────
+        $this->buildParoco();
+
+        // ── Ministérios ──────────────────────────────────────────────────────
+        $this->buildMinisterios();
+
         // ── Single-page templates (historia.html, etc.) ──────────────────────
         $this->buildSinglePageTemplates();
 
@@ -955,6 +961,192 @@ HTML;
         return "images/uploads/{$destSubDir}/{$filename}";
     }
 
+    // ─── Pároco section ─────────────────────────────────────────────────────
+
+    private function buildParoco(): void
+    {
+        $this->line("\n  - Construindo seção pároco...");
+
+        $dataPath = "{$this->data}/paroco.json";
+        $tplPath  = "{$this->root}/paroco.html";
+        $outPath  = "{$this->root}/paroco.html";
+
+        if (! file_exists($dataPath)) {
+            $this->line('  · paroco.json ausente, pulando paroco.html');
+            return;
+        }
+
+        $p = json_decode(file_get_contents($dataPath), true) ?? [];
+
+        $saudacao  = $this->escapeHtml($p['saudacao'] ?? 'Pe.');
+        $nome      = $this->escapeHtml($p['nome'] ?? 'Pároco');
+        $foto      = ! empty($p['foto']) ? $this->escapeHtml(ltrim($p['foto'], '/')) : 'images/team-1.jpg';
+        $bio       = $this->escapeHtml($p['biografia'] ?? '');
+        $email     = $this->escapeHtml($p['contato']['email'] ?? '');
+        $telefone  = $this->escapeHtml($p['contato']['telefone'] ?? '');
+        $facebook  = $this->escapeHtml($p['redes_sociais']['facebook'] ?? '');
+        $instagram = $this->escapeHtml($p['redes_sociais']['instagram'] ?? '');
+
+        $socialItems = [];
+        if ($facebook) {
+            $socialItems[] = '<li><a href="'.$facebook.'" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook" tabindex="-1"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a></li>';
+        }
+        if ($instagram) {
+            $socialItems[] = '<li><a href="'.$instagram.'" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram" tabindex="-1"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></li>';
+        }
+        if ($telefone) {
+            $clean = preg_replace('/\D/', '', $telefone);
+            $socialItems[] = '<li><a href="tel:'.$clean.'" class="social-icon" aria-label="Telefone" tabindex="-1"><i class="fa-solid fa-phone" aria-hidden="true"></i></a></li>';
+        }
+        if ($email) {
+            $socialItems[] = '<li><a href="mailto:'.$email.'" class="social-icon" aria-label="Email" tabindex="-1"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a></li>';
+        }
+        if (empty($socialItems)) {
+            $socialItems[] = '<li><a href="#" class="social-icon" aria-label="WhatsApp" tabindex="-1"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a></li>';
+        }
+
+        $socialHtml = implode("\n                                    ", $socialItems);
+        $bioHtml    = $bio ? "\n                            <p>{$bio}</p>" : '';
+
+        $datesHtml = '';
+        $parts = [];
+        if (! empty($p['data_ordenacao'])) {
+            $parts[] = 'Ordenado em '.mb_substr($p['data_ordenacao'], 0, 4);
+        }
+        if (! empty($p['data_inicio_paroquia'])) {
+            $parts[] = 'Paróquia desde '.mb_substr($p['data_inicio_paroquia'], 0, 4);
+        }
+        if ($parts) {
+            $datesHtml = ' — '.$this->escapeHtml(implode(' · ', $parts));
+        }
+
+        $parocoHtml = <<<HTML
+<!-- Pároco -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="team-member-item wow fadeInUp">
+                        <div class="team-image">
+                            <figure class="image-anime"><img loading="lazy" decoding="async" src="{$foto}" onerror="this.src='images/team-1.jpg'" alt="{$saudacao} {$nome}"></figure>
+                            <div class="team-social-icon">
+                                <ul>
+                                    {$socialHtml}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="team-content">
+                            <h3>{$saudacao} {$nome}</h3>
+                            <p>Pároco da Paróquia{$datesHtml}</p>{$bioHtml}
+                        </div>
+                    </div>
+                </div>
+HTML;
+
+        if (file_exists($tplPath)) {
+            $tpl = file_get_contents($tplPath);
+        } else {
+            // fallback: load from ROOT if templates not accessible inside container
+            $tpl = file_exists($outPath) ? file_get_contents($outPath) : '';
+        }
+
+        if ($tpl) {
+            $start    = '<!-- @section-start paroco:card -->';
+            $end      = '<!-- @section-end paroco:card -->';
+            $rendered = preg_replace(
+                '/'.preg_quote($start, '/').'[\s\S]*?'.preg_quote($end, '/').'/',
+                $start . "\n" . $parocoHtml . "\n" . $end,
+                $tpl
+            );
+            $banner   = "<!-- GENERATED FROM data/paroco.json — DO NOT EDIT MANUALLY. Run: php artisan content:build-php -->\n";
+            $out      = $banner . $rendered;
+            $before   = file_exists($outPath) ? file_get_contents($outPath) : null;
+            if ($before !== $out) {
+                $this->safePutContents($outPath, $out);
+                $this->line('  ✓ paroco.html');
+            } else {
+                $this->line('  · paroco.html (sem alterações)');
+            }
+        } else {
+            $this->warn('  ✗ Não foi possível encontrar template paroco.html');
+        }
+    }
+
+    // ─── Ministérios listing ────────────────────────────────────────────────
+
+    private function buildMinisterios(): void
+    {
+        $this->line("\n  - Construindo listagem de ministérios...");
+
+        $dataPath = "{$this->data}/ministerios.json";
+        $tplPath  = "{$this->root}/ministerios.html";
+        $outPath  = "{$this->root}/ministerios.html";
+
+        if (! file_exists($dataPath) || ! file_exists($tplPath)) {
+            $this->line('  · ministerios.json ou ministerios.html ausente, pulando');
+            return;
+        }
+
+        $lista  = json_decode(file_get_contents($dataPath), true)['ministerios'] ?? [];
+        $ativos = array_values(array_filter($lista, fn ($m) => ($m['ativo'] ?? true) !== false));
+
+        $fallbacks = ['images/ministries-img-1.jpg', 'images/ministries-img-2.jpg', 'images/ministries-img-3.jpg'];
+
+        if ($ativos) {
+            $cards = [];
+            $delays = ['', '0.25s', '0.5s', '0.75s', '1s', '1.25s', '1.5s', '1.75s'];
+            foreach ($ativos as $i => $m) {
+                $nomeMin = $this->escapeHtml($m['nome'] ?? '');
+                $imgMin  = ! empty($m['imagem'])
+                    ? $this->escapeHtml(ltrim($m['imagem'], '/'))
+                    : $fallbacks[$i % count($fallbacks)];
+                $delay   = $delays[$i % count($delays)] ? ' data-wow-delay="'.$delays[$i % count($delays)].'"' : '';
+                $sub     = isset($m['encontros'])
+                    ? $this->escapeHtml(implode(' — ', array_filter([$m['encontros']['dia_semana'] ?? '', $m['encontros']['horario'] ?? ''])))
+                    : '';
+                $subHtml = $sub ? "\n                            <p>{$sub}</p>" : '';
+
+                $cards[] = <<<HTML
+                <div class="col-md-4">
+                    <div class="ministries-item wow fadeInUp"{$delay}>
+                        <div class="ministries-image" data-cursor-text="Ver">
+                            <a href="#">
+                                <figure>
+                                    <img loading="lazy" decoding="async" src="{$imgMin}" onerror="this.src='{$fallbacks[$i % count($fallbacks)]}'" alt="{$nomeMin}">
+                                </figure>
+                            </a>
+                        </div>
+                        <div class="ministries-content">
+                            <h3>{$nomeMin}</h3>{$subHtml}
+                        </div>
+                        <div class="ministries-btn">
+                            <a href="#" class="readmore-btn"><img loading="lazy" decoding="async" src="images/arrow-white.svg" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+HTML;
+            }
+            $ministeriosCards = implode("\n", $cards);
+        } else {
+            $ministeriosCards = '<div class="col-lg-12"><p class="text-center py-4">Nenhum ministério cadastrado no momento.</p></div>';
+        }
+
+        $tpl      = file_get_contents($tplPath);
+        $start    = '<!-- @section-start ministerios:grade -->';
+        $end      = '<!-- @section-end ministerios:grade -->';
+        $rendered = preg_replace(
+            '/'.preg_quote($start, '/').'[\s\S]*?'.preg_quote($end, '/').'/',
+            $start . "\n" . $ministeriosCards . "\n" . $end,
+            $tpl
+        );
+        $banner   = "<!-- GENERATED FROM data/ministerios.json — DO NOT EDIT MANUALLY. Run: php artisan content:build-php -->\n";
+        $out      = $banner . $rendered;
+        $before   = file_exists($outPath) ? file_get_contents($outPath) : null;
+        if ($before !== $out) {
+            $this->safePutContents($outPath, $out);
+            $this->line('  ✓ ministerios.html');
+        } else {
+            $this->line('  · ministerios.html (sem alterações)');
+        }
+    }
+
     // ─── Single-page templates ────────────────────────────────────────────────
 
     /**
@@ -1095,6 +1287,11 @@ HTML;
         );
 
         return $html;
+    }
+
+    private function escapeHtml(?string $text): string
+    {
+        return htmlspecialchars($text ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     private function buildIncludeBlock(string $rel): string

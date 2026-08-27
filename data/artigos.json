@@ -13,7 +13,10 @@
             "conteudo": "<p>Harum ea dolores quia numquam inventore. Possimus ex cum quasi atque. Harum voluptas occaecati minima cumque.</p>",
             "destaque": false,
             "publicado": true,
-            "imagem_capa": "images/uploads/demo/sermons-img-1-1.jpg"
+            "imagem_capa": {
+                "url": "images/blog/artigo-default.jpg",
+                "alt": "Porro cumque ab."
+            }
         },
         {
             "slug": "artigo-antigo",
@@ -28,7 +31,10 @@
             "conteudo": "<p>Veniam nobis a omnis. Reiciendis molestias est et a ipsam consequatur est. Et at ducimus quidem.</p>",
             "destaque": false,
             "publicado": true,
-            "imagem_capa": "images/uploads/demo/sermons-img-2-1.jpg"
+            "imagem_capa": {
+                "url": "images/blog/artigo-default.jpg",
+                "alt": "Provident ea deserunt non voluptatem."
+            }
         },
         {
             "slug": "artigo-de-teste",
@@ -43,7 +49,10 @@
             "conteudo": "<p>Quam corporis ipsum animi omnis culpa praesentium. Aut deleniti recusandae sunt tempora. Suscipit consectetur dolore praesentium id commodi in corporis.</p>",
             "destaque": false,
             "publicado": true,
-            "imagem_capa": "images/uploads/demo/sermons-img-3-1.jpg"
+            "imagem_capa": {
+                "url": "images/blog/artigo-default.jpg",
+                "alt": "Eum sit qui praesentium ut quis."
+            }
         },
         {
             "slug": "artigo-campos-test",
@@ -55,10 +64,13 @@
             "categoria": "evangelho",
             "tags": [],
             "resumo": "Sed impedit doloribus reiciendis qui explicabo reprehenderit sunt ad numquam voluptas voluptatibus similique tenetur sit aut.",
-            "conteudo": "<p>Quia et quod tenetur perferendis quae alias possimus. Dolorem vitae quo unde asperiores atque.</p>",
+            "conteudo": "<p>Quia et quod tenetur perferendis quae alias possimus. Dolorem vitae quo unde asperiores.</p>",
             "destaque": false,
             "publicado": true,
-            "imagem_capa": "images/uploads/altar.jpeg"
+            "imagem_capa": {
+                "url": "images/blog/artigo-default.jpg",
+                "alt": "Asperiores accusantium et nisi quia et."
+            }
         },
         {
             "slug": "boas-vindas-novo-site",
@@ -78,7 +90,12 @@
             "conteudo": "<p>É com grande alegria que apresentamos o novo portal da nossa Paróquia Nossa Senhora dos Remédios em Jericó/PB.</p><p>Aqui você encontra a agenda litúrgica diária, eventos, horários de missas, informações sobre nossos ministérios e contato direto com a equipe pastoral.</p><p>Esperamos que este espaço fortaleça nossa comunhão como comunidade de fé.</p>",
             "destaque": true,
             "publicado": true,
-            "imagem_capa": "images/uploads/demo/about-us-img-1.jpg"
+            "imagem_capa": {
+                "url": "/images/uploads/demo/blog-1.jpg",
+                "alt": "Fachada da Paróquia Nossa Senhora dos Remédios em Jericó/PB",
+                "largura": 1200,
+                "altura": 800
+            }
         }
     ]
 }

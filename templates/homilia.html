@@ -81,6 +81,19 @@
 						</div>
 						{{/audio_url}}
 
+						<!-- Vídeo (opcional) -->
+						{{#video_embed}}
+						<div class="sermons-video-player wow fadeInUp" data-wow-delay="0.1s">
+							<div class="video-responsive">
+								<iframe src="{{video_embed}}" frameborder="0"
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+									allowfullscreen loading="lazy"
+									title="Vídeo da Homilia">
+								</iframe>
+							</div>
+						</div>
+						{{/video_embed}}
+
 						<!-- Imagem de Capa (opcional) -->
 						{{#imagem_capa_url}}
 						<div class="sermons-featured-image">

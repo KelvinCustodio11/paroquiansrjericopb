@@ -1,3 +1,106 @@
 {
-    "igrejas": []
+    "igrejas": [
+        {
+            "slug": "matriz",
+            "nome": "Igreja Matriz Nossa Senhora dos Remédios",
+            "endereco": "Praça da Matriz, s/n - Centro",
+            "bairro": "Centro",
+            "tipo": "matriz",
+            "horarios": [
+                {
+                    "dia_semana": "domingo",
+                    "hora": "08:00",
+                    "tipo_celebracao": "missa",
+                    "observacao": null
+                },
+                {
+                    "dia_semana": "quarta",
+                    "hora": "19:00",
+                    "tipo_celebracao": "missa",
+                    "observacao": "Missa com novena"
+                },
+                {
+                    "dia_semana": "sabado",
+                    "hora": "20:00",
+                    "tipo_celebracao": "missa",
+                    "observacao": null
+                },
+                {
+                    "dia_semana": "sexta",
+                    "hora": "15:00",
+                    "tipo_celebracao": "adoracao",
+                    "observacao": "Hora Santa"
+                }
+            ]
+        },
+        {
+            "slug": "sao-sebastiao",
+            "nome": "Sao Sebastiao",
+            "endereco": "Caixa daqua",
+            "bairro": "Jericozinho",
+            "tipo": "capela",
+            "horarios": [
+                {
+                    "dia_semana": "sabado",
+                    "hora": "19:00",
+                    "tipo_celebracao": "missa",
+                    "observacao": "123"
+                },
+                {
+                    "dia_semana": "segunda",
+                    "hora": "18:30",
+                    "tipo_celebracao": "terco",
+                    "observacao": "321"
+                }
+            ]
+        },
+        {
+            "slug": "paroquia-nsr-jerico-WrFI",
+            "nome": "Paróquia Nossa Senhora dos Remédios",
+            "endereco": "Praça Matriz, s/n",
+            "bairro": "Centro",
+            "tipo": "matriz",
+            "horarios": []
+        },
+        {
+            "slug": "paroquia-nsr-jerico-mv6Z",
+            "nome": "Paróquia Nossa Senhora dos Remédios",
+            "endereco": "Praça Matriz, s/n",
+            "bairro": "Centro",
+            "tipo": "matriz",
+            "horarios": []
+        },
+        {
+            "slug": "paroquia-nsr-jerico-xfBv",
+            "nome": "Paróquia Nossa Senhora dos Remédios",
+            "endereco": "Praça Matriz, s/n",
+            "bairro": "Centro",
+            "tipo": "matriz",
+            "horarios": []
+        },
+        {
+            "slug": "paroquia-nsr-jerico-gzxm",
+            "nome": "Paróquia Nossa Senhora dos Remédios",
+            "endereco": "Praça Matriz, s/n",
+            "bairro": "Centro",
+            "tipo": "matriz",
+            "horarios": []
+        },
+        {
+            "slug": "paroquia-nsr-jerico-05PU",
+            "nome": "Paróquia Nossa Senhora dos Remédios",
+            "endereco": "Praça Matriz, s/n",
+            "bairro": "Centro",
+            "tipo": "matriz",
+            "horarios": []
+        },
+        {
+            "slug": "paroquia-nsr-jerico-3Wup",
+            "nome": "Paróquia Nossa Senhora dos Remédios",
+            "endereco": "Praça Matriz, s/n",
+            "bairro": "Centro",
+            "tipo": "matriz",
+            "horarios": []
+        }
+    ]
 }

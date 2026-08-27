@@ -292,11 +292,28 @@ function enrichHomilia(item) {
         ? (item.imagem_capa ? '/' + resolveStorageAsset(item.imagem_capa, 'homilias') : '')
         : (item.imagem_capa && item.imagem_capa.url ? item.imagem_capa.url : '');
 
+    // Normaliza video_url: aceita URL direta ou objeto {url, tipo}
+    let videoUrl = item.video_url || '';
+    let videoEmbed = '';
+    if (videoUrl) {
+        // Detecta YouTube
+        const ytMatch = videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+        if (ytMatch) {
+            videoEmbed = `https://www.youtube.com/embed/${ytMatch[1]}`;
+        } else if (videoUrl.includes('vimeo.com')) {
+            const vmMatch = videoUrl.match(/vimeo\.com\/(\d+)/);
+            if (vmMatch) videoEmbed = `https://player.vimeo.com/video/${vmMatch[1]}`;
+        } else {
+            videoEmbed = videoUrl;
+        }
+    }
+
     return Object.assign({}, item, {
         imagem_capa_url:             imgCapaUrl,
         data_formatada:              formatDateBR(item.data),
         leitura_evangelho_referencia: item.leitura_evangelho && item.leitura_evangelho.referencia,
         transcricao_or_resumo:       item.transcricao || `<p>${escapeHtml(item.resumo)}</p>`,
+        video_embed:                 videoEmbed || null,
     });
 }
 
@@ -916,6 +933,25 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
         const saudacao = escapeHtml(p.saudacao || 'Pe.');
         const nome     = escapeHtml(p.nome || 'Pároco');
         const foto     = p.foto ? escapeHtml(p.foto.replace(/^\//, '')) : 'images/team-1.jpg';
+        const bio      = escapeHtml(p.biografia || '');
+        const email    = escapeHtml(p.contato?.email || '');
+        const telefone = escapeHtml(p.contato?.telefone || '');
+        const facebook = escapeHtml(p.redes_sociais?.facebook || '');
+        const instagram = escapeHtml(p.redes_sociais?.instagram || '');
+
+        const socialItems = [];
+        if (facebook)  socialItems.push(`<li><a href="${facebook}" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook" tabindex="-1"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a></li>`);
+        if (instagram) socialItems.push(`<li><a href="${instagram}" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram" tabindex="-1"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></li>`);
+        if (telefone)  socialItems.push(`<li><a href="tel:${telefone.replace(/\D/g, '')}" class="social-icon" aria-label="Telefone" tabindex="-1"><i class="fa-solid fa-phone" aria-hidden="true"></i></a></li>`);
+        if (email)     socialItems.push(`<li><a href="mailto:${email}" class="social-icon" aria-label="Email" tabindex="-1"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a></li>`);
+        if (!socialItems.length) socialItems.push(`<li><a href="#" class="social-icon" aria-label="WhatsApp" tabindex="-1"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a></li>`);
+
+        const bioHtml = bio ? `\n                            <p>${bio}</p>` : '';
+        const datesHtml = [];
+        if (p.data_ordenacao) datesHtml.push(`Ordenado em ${escapeHtml(p.data_ordenacao.substring(0, 4))}`);
+        if (p.data_inicio_paroquia) datesHtml.push(`Paróquia desde ${escapeHtml(p.data_inicio_paroquia.substring(0, 4))}`);
+        const datesStr = datesHtml.length ? ` — ${escapeHtml(datesHtml.join(' · '))}` : '';
+
         const parocoHtml = `<!-- Pároco -->
                 <div class="col-lg-3 col-md-6">
                     <div class="team-member-item wow fadeInUp">
@@ -923,13 +959,13 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
                             <figure class="image-anime"><img loading="lazy" decoding="async" src="${foto}" onerror="this.src='images/team-1.jpg'" alt="${saudacao} ${nome}"></figure>
                             <div class="team-social-icon">
                                 <ul>
-                                    <li><a href="#" class="social-icon" aria-label="WhatsApp" tabindex="-1"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a></li>
+                                    ${socialItems.join('\n                                    ')}
                                 </ul>
                             </div>
                         </div>
                         <div class="team-content">
                             <h3>${saudacao} ${nome}</h3>
-                            <p>Pároco da Paróquia</p>
+                            <p>Pároco da Paróquia${datesStr}</p>${bioHtml}
                         </div>
                     </div>
                 </div>`;
@@ -948,24 +984,28 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
         let ministeriosCards;
         if (ativos.length) {
             ministeriosCards = ativos.map((m, i) => {
-                const nomeMin  = escapeHtml(m.nome || '');
-                const imgMin   = m.imagem ? escapeHtml(m.imagem.replace(/^\//, '')) : fallbacks[i % fallbacks.length];
-                const delay = delays[i] ? ` data-wow-delay="${delays[i]}"` : '';
-                const sub   = m.encontros
+                const nomeMin   = escapeHtml(m.nome || '');
+                const imgMin    = m.imagem ? escapeHtml(m.imagem.replace(/^\//, '')) : fallbacks[i % fallbacks.length];
+                const delay     = delays[i] ? ` data-wow-delay="${delays[i]}"` : '';
+                const slug      = m.slug || '';
+                const href      = slug ? `ministerios/${escapeHtml(slug)}.html` : '#';
+                const categoria = m.categoria ? escapeHtml(m.categoria) : '';
+                const catHtml   = categoria ? `\n                            <span class="ministry-category">${categoria}</span>` : '';
+                const sub       = m.encontros
                     ? escapeHtml([m.encontros.dia_semana, m.encontros.horario].filter(Boolean).join(' — '))
                     : '';
                 const subHtml = sub ? `\n                            <p>${sub}</p>` : '';
                 return `                <div class="col-md-4">
                     <div class="ministries-item wow fadeInUp"${delay}>
                         <div class="ministries-image" data-cursor-text="Ver">
-                            <a href="#">
+                            <a href="${href}">
                                 <figure>
                                     <img loading="lazy" decoding="async" src="${imgMin}" onerror="this.src='${fallbacks[i % fallbacks.length]}'" alt="${nomeMin}">
                                 </figure>
                             </a>
                         </div>
                         <div class="ministries-content">
-                            <h3>${nomeMin}</h3>${subHtml}
+                            <h3>${nomeMin}</h3>${catHtml}${subHtml}
                         </div>
                         <div class="ministries-btn">
                             <a href="#" class="readmore-btn"><img loading="lazy" decoding="async" src="images/arrow-white.svg" alt=""></a>
@@ -977,6 +1017,89 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
             ministeriosCards = `                <div class="col-lg-12"><p class="text-center py-4">Nenhum ministério cadastrado no momento.</p></div>`;
         }
         injectSection(path.join(ROOT, 'ministerios.html'), 'ministerios:grade', ministeriosCards);
+
+        // ── Páginas de detalhe dos ministérios ─────────────────────
+        const minDir = path.join(ROOT, 'ministerios');
+        if (!fs.existsSync(minDir)) fs.mkdirSync(minDir, { recursive: true });
+        const tplPath = path.join(ROOT, 'ministerio-detalhe.html');
+        if (fs.existsSync(tplPath)) {
+            const tpl = fs.readFileSync(tplPath, 'utf8');
+            for (const m of ativos) {
+                const slug  = m.slug || '';
+                if (!slug) continue;
+                const nome  = escapeHtml(m.nome || '');
+                const icone = m.icone ? escapeHtml(m.icone) : 'fa-solid fa-cross';
+                const cat   = m.categoria ? escapeHtml(m.categoria) : '';
+                const desc  = escapeHtml(m.descricao || '');
+                const local = escapeHtml(m.encontros_local || '');
+
+                const coordenador = m.coordenador_nome ? escapeHtml(m.coordenador_nome) : '';
+                const coordTel    = m.coordenador_telefone ? escapeHtml(m.coordenador_telefone) : '';
+                const coordEmail  = m.coordenador_email ? escapeHtml(m.coordenador_email) : '';
+
+                const scheduleItems = (m.encontros?.horarios || []).map(h => escapeHtml(h)).join('');
+                const programItems  = (m.encontros?.programacao || []).map(p => escapeHtml(p)).join('');
+
+                // Conteúdo principal
+                const conteudoHtml = `<div class="ministry-entry">
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">${nome}</h2>
+                            ${cat ? `<p class="wow fadeInUp" data-wow-delay="0.1s"><span class="ministry-category">${cat}</span></p>` : ''}
+                            ${desc ? `<p class="wow fadeInUp" data-wow-delay="0.2s">${desc}</p>` : ''}
+                        </div>`;
+
+                // Sidebar
+                const coordHtml = coordenador ? `
+                        <!-- Coordenador Box Start -->
+                        <div class="ministry-single-box">
+                            <div class="ministry-single-info">
+                                <div class="icon-box"><i class="fa-solid fa-user"></i></div>
+                                <div class="ministry-single-info-content"><h3>coordenador</h3></div>
+                            </div>
+                            <div class="ministry-single-info-list">
+                                <ul>
+                                    <li><i class="fa-solid fa-user" aria-hidden="true"></i> ${coordenador}</li>
+                                    ${coordTel ? `<li><i class="fa-solid fa-phone" aria-hidden="true"></i> ${coordTel}</li>` : ''}
+                                    ${coordEmail ? `<li><i class="fa-solid fa-envelope" aria-hidden="true"></i> ${coordEmail}</li>` : ''}
+                                </ul>
+                            </div>
+                        </div>` : '';
+
+                const localHtml = local ? `
+                        <!-- Local Box Start -->
+                        <div class="ministry-single-box">
+                            <div class="ministry-single-info">
+                                <div class="icon-box"><i class="fa-solid fa-location-dot"></i></div>
+                                <div class="ministry-single-info-content"><h3>local</h3></div>
+                            </div>
+                            <div class="ministry-single-info-list">
+                                <ul><li>${local}</li></ul>
+                            </div>
+                        </div>` : '';
+
+                let sidebarHtml = tpl.split('<!-- @section-start ministerio:sidebar -->')[1] || '';
+                sidebarHtml = sidebarHtml.split('<!-- @section-end ministerio:sidebar -->')[0];
+                if (coordenador) sidebarHtml = sidebarHtml.replace(/<!-- Coordenador Box Start -->[\s\S]*?<!-- Coordenador Box End -->/, coordHtml.trim());
+                if (local) sidebarHtml = sidebarHtml.replace(/<!-- Ministry Single Box Start -->\s*<div class="ministry-single-info">\s*<div class="icon-box">\s*<i class="fa-solid fa-location-dot"><\/i>/, `<!-- Local Box Start --><div class="ministry-single-info"><div class="icon-box"><i class="fa-solid fa-location-dot"></i></div>`);
+
+                let page = tpl;
+                page = page.replace(/<!-- @section-start ministerio:conteudo -->[\s\S]*?<!-- @section-end ministerio:conteudo -->/, `<!-- @section-start ministerio:conteudo -->\n${conteudoHtml}\n<!-- @section-end ministerio:conteudo -->`);
+                page = page.replace(/<!-- @section-start ministerio:sidebar -->[\s\S]*?<!-- @section-end ministerio:sidebar -->/, `<!-- @section-start ministerio:sidebar -->\n<div class="ministry-single-sidebar wow fadeInUp" data-wow-delay="0.25s">\n${sidebarHtml.trim()}\n</div>\n<!-- @section-end ministerio:sidebar -->`);
+
+                const outPath = path.join(minDir, `${slug}.html`);
+                const banner  = `<!-- GENERATED FROM data/ministerios.json — DO NOT EDIT MANUALLY. Run: node scripts/build-content.js -->\n`;
+                safePutContents(outPath, banner + page);
+            }
+            // Remover páginas órfãos
+            const validSlugs = new Set(ativos.map(m => m.slug).filter(Boolean));
+            for (const f of fs.readdirSync(minDir)) {
+                if (f.endsWith('.html') && !validSlugs.has(f.replace('.html', ''))) {
+                    fs.unlinkSync(path.join(minDir, f));
+                }
+            }
+            console.log(`  ✓ ${ativos.filter(m=>m.slug).length} páginas de detalhe geradas em ministerios/`);
+        } else {
+            console.log('  ! ministerio-detalhe.html não encontrado como template');
+        }
     } else {
         console.log('  . ministerios.json ausente, pulando ministerios.html');
     }

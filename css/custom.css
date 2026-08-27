@@ -1953,6 +1953,26 @@ header.main-header .header-sticky.active{
 	margin: 0;
 }
 
+/* Event Map Link */
+.event-map-link .map-link{
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--accent-color);
+	font-weight: 500;
+	text-decoration: none;
+	transition: color 0.3s ease;
+}
+
+.event-map-link .map-link:hover{
+	color: var(--primary-color);
+	text-decoration: underline;
+}
+
+.event-map-link .map-link i{
+	font-size: 0.8em;
+}
+
 .event-footer{
 	margin-bottom: 40px;
 }
@@ -3577,6 +3597,74 @@ header.main-header .header-sticky.active{
 
 .plyr__menu__container [role=menu]{
 	background-color: var(--primary-color);
+}
+
+/* Video Player Responsive */
+.sermons-video-player{
+	margin-bottom: 30px;
+}
+
+.video-responsive{
+	position: relative;
+	padding-bottom: 56.25%;
+	height: 0;
+	overflow: hidden;
+	border-radius: 10px;
+}
+
+.video-responsive iframe{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+/* Author Bio Box (Artigos) */
+.post-author-box{
+	background-color: var(--body-bg);
+	padding: 20px 25px;
+	border-radius: 10px;
+	margin: 30px 0;
+	border-left: 4px solid var(--accent-color);
+}
+
+.author-avatar img{
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.post-author-box h4{
+	margin-bottom: 2px;
+	font-size: 16px;
+}
+
+.author-role{
+	color: var(--text-color);
+	opacity: 0.8;
+	font-size: 14px;
+	margin-bottom: 0;
+}
+
+/* Ministry Category Badge */
+.ministry-category{
+	display: inline-block;
+	background-color: var(--accent-color);
+	color: var(--white-color);
+	padding: 2px 12px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 500;
+	margin-bottom: 5px;
+}
+
+/* Autor papel inline */
+.autor-papel{
+	font-size: 0.85em;
+	opacity: 0.7;
 }
 
 .sermons-featured-image{

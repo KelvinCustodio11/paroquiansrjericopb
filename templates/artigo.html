@@ -66,7 +66,7 @@
 						</nav>
 						<div class="post-meta-box wow fadeInUp" data-wow-delay="0.15s">
 							<ul>
-								{{#autor.nome}}<li><i class="fa-regular fa-user" aria-hidden="true"></i> {{autor.nome}}</li>{{/autor.nome}}
+								{{#autor.nome}}<li><i class="fa-regular fa-user" aria-hidden="true"></i> {{autor.nome}}{{#autor.papel}} <span class="autor-papel">({{autor.papel}})</span>{{/autor.papel}}</li>{{/autor.nome}}
 								{{#data_publicacao_formatada}}<li><i class="fa-regular fa-clock" aria-hidden="true"></i> {{data_publicacao_formatada}}</li>{{/data_publicacao_formatada}}
 								{{#categoria}}<li><i class="fa-solid fa-tag" aria-hidden="true"></i> {{categoria}}</li>{{/categoria}}
 							</ul>
@@ -96,6 +96,23 @@
 						<div class="post-entry">
 							{{{conteudo}}}
 						</div>
+
+						<!-- Autor do Artigo -->
+						{{#autor.foto}}
+						<div class="post-author-box wow fadeInUp" data-wow-delay="0.3s">
+							<div class="row align-items-center">
+								<div class="col-auto">
+									<div class="author-avatar">
+										<img src="..{{autor.foto}}" alt="{{autor.nome}}" loading="lazy">
+									</div>
+								</div>
+								<div class="col">
+									<h4>{{autor.nome}}</h4>
+									{{#autor.papel}}<p class="author-role">{{autor.papel}}</p>{{/autor.papel}}
+								</div>
+							</div>
+						</div>
+						{{/autor.foto}}
 
 						<!-- Tags e Compartilhamento -->
 						<div class="post-tag-links">
