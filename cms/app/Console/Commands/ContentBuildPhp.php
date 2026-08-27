@@ -58,6 +58,9 @@ class ContentBuildPhp extends Command
         $this->tpl      = $siteRoot . '/templates';
         $this->partials = $siteRoot . '/partials';
 
+        // ── Reparo proativo de permissões ──────────────────────────────────────
+        $this->repairPermissions($siteRoot);
+
         $plan = [
             ['dataFile' => 'eventos.json',  'collection' => 'eventos',  'template' => 'evento.html',  'outDir' => 'eventos'],
             ['dataFile' => 'artigos.json',  'collection' => 'artigos',  'template' => 'artigo.html',  'outDir' => 'artigos'],
@@ -82,6 +85,9 @@ class ContentBuildPhp extends Command
             $outDirPath = "{$this->root}/{$p['outDir']}";
             if (! is_dir($outDirPath)) {
                 mkdir($outDirPath, 0755, true);
+                if (function_exists('posix_getuid') && posix_getuid() === 0) {
+                    @chown($outDirPath, $this->getPhpUser());
+                }
             }
 
             $count      = 0;
@@ -110,7 +116,14 @@ class ContentBuildPhp extends Command
 
                 $before = file_exists($outFile) ? file_get_contents($outFile) : null;
                 if ($before !== $out) {
-                    file_put_contents($outFile, $out);
+                    if (file_exists($outFile) && ! is_writable($outFile)) {
+                        $this->error("  ✗ PERMISSÃO NEGADA: {$outFile} não é gravável.");
+                        $this->error("    Execute: sudo chown {$this->getPhpUser()}:{$this->getPhpUser()} {$outFile}");
+                        return self::FAILURE;
+                    }
+                    if (! $this->safePutContents($outFile, $out)) {
+                        return self::FAILURE;
+                    }
                     $this->line("  ✓ {$p['outDir']}/{$item['slug']}.html");
                 } else {
                     $this->line("  · {$p['outDir']}/{$item['slug']}.html (sem alterações)");
@@ -783,7 +796,7 @@ HTML;
             mkdir($themeCssDir, 0755, true);
         }
         if (! file_exists($themeCssPath) || file_get_contents($themeCssPath) !== $cssContent) {
-            file_put_contents($themeCssPath, $cssContent);
+            $this->safePutContents($themeCssPath, $cssContent);
             $this->line("  ✓ css/theme-cms.css");
         }
 
@@ -991,7 +1004,7 @@ HTML;
 
             $before = file_exists($outPath) ? file_get_contents($outPath) : null;
             if ($before !== $out) {
-                file_put_contents($outPath, $out);
+                $this->safePutContents($outPath, $out);
                 $this->line("  ✓ {$p['outFile']} (single-page)");
             } else {
                 $this->line("  · {$p['outFile']} (single-page, sem alterações)");
@@ -1033,9 +1046,11 @@ HTML;
             $updated = $this->expandIncludes($original);
 
             if ($updated !== $original) {
-                file_put_contents($file, $updated);
+                $ok = $this->safePutContents($file, $updated);
                 $rel = str_replace($this->root . '/', '', $file);
-                $this->line("  ✓ {$rel}");
+                if ($ok) {
+                    $this->line("  ✓ {$rel}");
+                }
                 $changed++;
             }
         }
@@ -1123,11 +1138,129 @@ HTML;
             return;
         }
 
-        file_put_contents($filePath, $newHtml);
+        $this->safePutContents($filePath, $newHtml);
         $this->line("  ✓ " . basename($filePath) . ": {$sectionName}");
     }
 
     // ─── Utilitários ─────────────────────────────────────────────────────────
+
+    /**
+     * Wrapper seguro para file_put_contents: verifica permissão antes de gravar
+     * e tenta corrigir automaticamente se estiver rodando como root.
+     */
+    private function safePutContents(string $path, string $content): bool
+    {
+        if (file_exists($path) && ! is_writable($path)) {
+            if (function_exists('posix_getuid') && posix_getuid() === 0) {
+                @chown($path, $this->getPhpUser());
+                @chmod($path, 0664);
+            }
+            if (! is_writable($path)) {
+                @unlink($path);
+            }
+        }
+
+        $bytes = @file_put_contents($path, $content);
+
+        if ($bytes === false && file_exists($path) && filesize($path) >= strlen($content)) {
+            $bytes = strlen($content);
+        }
+
+        if ($bytes === false) {
+            $this->error("  ✗ FALHA ao gravar: {$path}");
+            $this->error("    Execute: sudo chown {$this->getPhpUser()}:{$this->getPhpUser()} {$path}");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Repara permissões de todos os arquivos e diretórios que o build vai escrever.
+     * Deve ser chamado no INÍCIO do build, antes de qualquer escrita.
+     * Corrige arquivos criados por root (Node.js build, CI, etc.) para o usuário do PHP.
+     */
+    private function repairPermissions(string $siteRoot): void
+    {
+        if (! function_exists('posix_getuid')) {
+            return;
+        }
+
+        $myUid = posix_getuid();
+        $this->line("\n  - Verificando permissões...");
+
+        $targetUser = $this->getPhpUser();
+        $pw = posix_getpwnam($targetUser);
+        $targetUid = $pw ? (int) $pw['uid'] : -1;
+        $isRoot = ($myUid === 0);
+        $fixed = 0;
+
+        $repairFile = function (string $file) use ($targetUser, $targetUid, $isRoot, &$fixed) {
+            if (! file_exists($file)) {
+                return;
+            }
+            $owner = fileowner($file);
+            if ($owner === $targetUid) {
+                return;
+            }
+
+            if ($isRoot) {
+                chown($file, $targetUser);
+                chgrp($file, $targetUser);
+                chmod($file, 0664);
+            } else {
+                @unlink($file);
+            }
+            $fixed++;
+        };
+
+        // Diretório raiz do site (httpdocs)
+        if ($isRoot && fileowner($siteRoot) !== $targetUid) {
+            chown($siteRoot, $targetUser);
+            chgrp($siteRoot, $targetUser);
+            chmod($siteRoot, 0775);
+        }
+
+        // Diretórios de saída gerados pelo build
+        foreach (['eventos', 'artigos', 'homilias'] as $dir) {
+            $dirPath = "{$siteRoot}/{$dir}";
+            if (! is_dir($dirPath)) {
+                continue;
+            }
+            if ($isRoot && fileowner($dirPath) !== $targetUid) {
+                chown($dirPath, $targetUser);
+                chgrp($dirPath, $targetUser);
+                chmod($dirPath, 0775);
+            }
+            foreach (glob("{$dirPath}/*.html") as $file) {
+                $repairFile($file);
+            }
+        }
+
+        // Arquivos HTML na raiz que o build modifica (index.html, eventos.html, etc.)
+        foreach (glob("{$siteRoot}/*.html") as $file) {
+            $repairFile($file);
+        }
+
+        // Partials
+        $partialsDir = "{$siteRoot}/partials";
+        if (is_dir($partialsDir)) {
+            foreach (glob("{$partialsDir}/*.html") as $file) {
+                $repairFile($file);
+            }
+        }
+
+        // CSS (theme-cms.css)
+        $cssFile = "{$siteRoot}/css/theme-cms.css";
+        if (file_exists($cssFile)) {
+            $repairFile($cssFile);
+        }
+
+        if ($fixed > 0) {
+            $this->line("  ⚠ {$fixed} arquivo(s) removido(s)/corrigido(s) → {$targetUser}");
+        } else {
+            $this->line("  ✓ Permissões OK");
+        }
+    }
 
     private function formatDateBR(string $iso): string
     {
@@ -1144,5 +1277,38 @@ HTML;
             return $iso;
         }
         return "{$d} de " . self::MESES[$mo] . " de {$y}";
+    }
+
+    private function getPhpUser(): string
+    {
+        // Se já rodando como www-data ou outro usuário não-root, retorna esse usuário
+        if (function_exists('posix_getuid') && posix_getuid() !== 0) {
+            $info = posix_getpwuid(posix_getuid());
+            return $info['name'] ?? 'www-data';
+        }
+
+        // Rodando como root — detecta o usuário do PHP-FPM/web server
+        if (function_exists('posix_getpwnam')) {
+            // Tenta detectar via dono de um arquivo de controle do PHP (session, cache)
+            $probePaths = [
+                $this->root ?? '/var/www',
+                sys_get_temp_dir(),
+            ];
+            foreach ($probePaths as $dir) {
+                if (is_dir($dir)) {
+                    $info = posix_getpwuid(fileowner($dir));
+                    if ($info && $info['name'] !== 'root' && $info['uid'] > 0) {
+                        return $info['name'];
+                    }
+                }
+            }
+
+            // Fallback: www-data existe no sistema?
+            if (posix_getpwnam('www-data')) {
+                return 'www-data';
+            }
+        }
+
+        return 'www-data';
     }
 }

@@ -31,6 +31,49 @@ const DATA = path.join(ROOT, 'data');
 const TPL  = path.join(ROOT, 'templates');
 const PARTIALS = path.join(ROOT, 'partials');
 
+/**
+ * Ajusta ownership do arquivo criado para ser acessível ao processo PHP.
+ * Se rodando como root, detecta o usuário www-data (ou o dono do diretório httpdocs).
+ * Se não root, herda do diretório pai.
+ */
+let _webUser = null;
+function getWebUser() {
+    if (_webUser !== null) return _webUser;
+    try {
+        if (process.getuid && process.getuid() === 0) {
+            // Rodando como root — detecta o usuário www-data ou o dono de httpdocs
+            const passwd = fs.readFileSync('/etc/passwd', 'utf8');
+            const match = passwd.split('\n').find(l => l.startsWith('www-data:'));
+            if (match) {
+                const parts = match.split(':');
+                _webUser = { uid: parseInt(parts[2], 10), gid: parseInt(parts[3], 10) };
+            } else {
+                // Fallback: usa o dono do diretório httpdocs se existir
+                try {
+                    const s = fs.statSync(path.join(ROOT, '..'));
+                    _webUser = { uid: s.uid, gid: s.gid };
+                } catch {
+                    _webUser = { uid: 33, gid: 33 }; // www-data padrão Debian
+                }
+            }
+        } else {
+            // Não é root — herda do diretório pai
+            const dirStat = fs.statSync(path.dirname(ROOT));
+            _webUser = { uid: dirStat.uid, gid: dirStat.gid };
+        }
+    } catch {
+        _webUser = { uid: 33, gid: 33 };
+    }
+    return _webUser;
+}
+
+function syncOwnership(filePath) {
+    try {
+        const owner = getWebUser();
+        fs.chownSync(filePath, owner.uid, owner.gid);
+    } catch {}
+}
+
 const PLAN = [
     { dataFile: 'eventos.json',  collection: 'eventos',  template: 'evento.html',  outDir: 'eventos',  enrich: enrichEvento },
     { dataFile: 'artigos.json',  collection: 'artigos',  template: 'artigo.html',  outDir: 'artigos',  enrich: enrichArtigo },
@@ -353,6 +396,7 @@ for (const plan of PLAN) {
         const before = fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8') : null;
         if (before !== out) {
             fs.writeFileSync(outFile, out, 'utf8');
+            syncOwnership(outFile);
             console.log(`  ✓ ${plan.outDir}/${item.slug}.html`);
         } else {
             console.log(`  · ${plan.outDir}/${item.slug}.html (sem alteracoes)`);
@@ -438,6 +482,7 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
             return;
         }
         fs.writeFileSync(filePath, newHtml, 'utf8');
+        syncOwnership(filePath);
         console.log(`  ✓ ${path.basename(filePath)}: ${sectionName}`);
     }
 
@@ -723,6 +768,7 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
         const themeCssPath = path.join(ROOT, 'css', 'theme-cms.css');
         if (!fs.existsSync(themeCssPath) || fs.readFileSync(themeCssPath, 'utf8') !== cssContent) {
             fs.writeFileSync(themeCssPath, cssContent, 'utf8');
+            syncOwnership(themeCssPath);
             console.log(`  ✓ css/theme-cms.css (acento:${corAcento} escuro:${corEscuro} claro:${corClaro} texto:${corTexto})`);
         } else {
             console.log(`  . css/theme-cms.css (sem alteracoes)`);
@@ -975,6 +1021,7 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
             const before  = fs.existsSync(outPath) ? fs.readFileSync(outPath, 'utf8') : null;
             if (before !== out) {
                 fs.writeFileSync(outPath, out, 'utf8');
+                syncOwnership(outPath);
                 console.log(`  ✓ ${plan.outFile} (single-page)`);
             } else {
                 console.log(`  · ${plan.outFile} (single-page, sem alteracoes)`);
@@ -1009,6 +1056,7 @@ if (PREVIEW_MODE) {
             // preview.html fica na raiz do site — mesmos paths do template, sem rewrite
             const outFile = path.join(ROOT, 'preview.html');
             fs.writeFileSync(outFile, '<!-- PAROQUIA PREVIEW — NAO COMMITAR -->\n' + rendered, 'utf8');
+            syncOwnership(outFile);
             console.log('OK');
             process.exit(0);
         } catch (e) {

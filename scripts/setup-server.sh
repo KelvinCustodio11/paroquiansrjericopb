@@ -88,14 +88,26 @@ if [ ! -d "$SITE_ROOT" ]; then
     exit 1
 fi
 
+PHP_USER=$($PHP -r 'echo posix_getpwuid(posix_getuid())["name"] ?? "www-data";' 2>/dev/null || echo "www-data")
+echo "     Usuário PHP detectado: $PHP_USER"
+
+# Corrige ownership do diretório raiz do site
+chown "$PHP_USER:$PHP_USER" "$SITE_ROOT" 2>/dev/null || true
+chmod 0775 "$SITE_ROOT" 2>/dev/null || true
+
 for dir in data eventos artigos homilias images/uploads partials css; do
     if [ -d "$SITE_ROOT/$dir" ]; then
-        chmod -R u+rwX,g+rwX "$SITE_ROOT/$dir"
+        chown -R "$PHP_USER:$PHP_USER" "$SITE_ROOT/$dir"
+        chmod -R u+rwX,g+rwX,o+rX "$SITE_ROOT/$dir"
     else
         echo "AVISO: pasta ausente: $SITE_ROOT/$dir"
     fi
 done
 
+chmod 0660 "$SITE_ROOT"/data/*.json 2>/dev/null || true
+chown "$PHP_USER:$PHP_USER" "$SITE_ROOT"/data/*.json 2>/dev/null || true
+
+find "$SITE_ROOT" -maxdepth 1 -name '*.html' -exec chown "$PHP_USER:$PHP_USER" {} \;
 find "$SITE_ROOT" -maxdepth 1 -name '*.html' -exec chmod u+rw,g+rw {} \;
 
 if [ ! -w "$SITE_ROOT/data" ] || [ ! -w "$SITE_ROOT/data/eventos.json" ]; then
