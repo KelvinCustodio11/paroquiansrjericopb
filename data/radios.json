@@ -4,6 +4,8 @@
             "nome": "Rádio Itacambari FM — Jericó/PB",
             "url": "https://stm10.srvvox.com.br:7218/stream",
             "descricao": "Rádio da nossa cidade",
+            "hora_inicio": "07:55",
+            "hora_fim": "09:55",
             "destaque": true,
             "categoria": "catolica"
         },

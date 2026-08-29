@@ -1407,7 +1407,7 @@ HTML;
                 chgrp($file, $targetUser);
                 chmod($file, 0664);
             } else {
-                @unlink($file);
+                @chmod($file, 0664);
             }
             $fixed++;
         };
@@ -1420,7 +1420,7 @@ HTML;
         }
 
         // Diretórios de saída gerados pelo build
-        foreach (['eventos', 'artigos', 'homilias'] as $dir) {
+        foreach (['eventos', 'artigos', 'homilias', 'ministerios'] as $dir) {
             $dirPath = "{$siteRoot}/{$dir}";
             if (! is_dir($dirPath)) {
                 continue;
