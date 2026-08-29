@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\ValidationException;
 
 class Artigo extends Model
 {
@@ -27,10 +28,25 @@ class Artigo extends Model
         'publicado'        => 'boolean',
     ];
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(function (Artigo $artigo): void {
+            $artigo->slug = str($artigo->slug)->lower()->toString();
+
+            if ($artigo->conteudo && mb_strlen($artigo->conteudo) < 100) {
+                throw ValidationException::withMessages([
+                    'conteudo' => 'O conteudo deve ter no minimo 100 caracteres.',
+                ]);
+            }
+        });
+    }
+
     public function toJsonExport(): array
     {
         $data = [
-            'slug'             => $this->slug,
+            'slug'             => str($this->slug)->lower()->toString(),
             'titulo'           => $this->titulo,
             'data_publicacao'  => $this->data_publicacao?->format('Y-m-d'),
             'data_atualizacao' => $this->data_atualizacao?->format('Y-m-d'),

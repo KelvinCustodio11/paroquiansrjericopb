@@ -22,10 +22,19 @@ class Ministerio extends Model
 
     protected $casts = ['ativo' => 'boolean'];
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(function (Ministerio $ministerio): void {
+            $ministerio->slug = str($ministerio->slug)->lower()->toString();
+        });
+    }
+
     public function toJsonExport(): array
     {
         $data = [
-            'slug'      => $this->slug,
+            'slug'      => str($this->slug)->lower()->toString(),
             'nome'      => $this->nome,
             'categoria' => $this->categoria ?? 'ministerio',
             'descricao' => $this->descricao,

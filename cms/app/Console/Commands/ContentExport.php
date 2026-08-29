@@ -223,15 +223,18 @@ class ContentExport extends Command
             json_encode($historiaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK historia.json (HistoriaPagina id='.$historiaPagina->id.')');
 
-        if ($this->option('validate')) {
+        exec('which node 2>/dev/null', $whichOut, $whichCode);
+        if ($whichCode === 0) {
             $this->info('Validando com schemas...');
             exec('cd '.escapeshellarg($repoRoot).' && node scripts/validate-data.js 2>&1', $out, $code);
             foreach ($out as $line) { $this->line($line); }
             if ($code !== 0) {
-                $this->error('Validacao falhou — abortando build.');
+                $this->error('Validacao falhou — abortando exportacao.');
 
                 return self::FAILURE;
             }
+        } else {
+            $this->warn('Node.js nao encontrado — validacao de schemas pulada. Rode manualmente: node scripts/validate-data.js');
         }
 
         if ($this->option('build')) {
