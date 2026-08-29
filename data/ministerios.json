@@ -1,7 +1,7 @@
 {
     "ministerios": [
         {
-            "slug": "corrupti-repudiandae-autem-ePCq",
+            "slug": "corrupti-repudiandae-autem-epcq",
             "nome": "Catequese Teste",
             "categoria": "catequese",
             "descricao": "Soluta eos et sint voluptatum qui aut modi.",
@@ -9,7 +9,7 @@
             "ativo": true
         },
         {
-            "slug": "sunt-delectus-pariatur-B9Ia",
+            "slug": "sunt-delectus-pariatur-b9ia",
             "nome": "Catequese Teste",
             "categoria": "catequese",
             "descricao": "Atque consectetur eum officia sed occaecati eius dolorem ipsa magni.",
@@ -17,7 +17,7 @@
             "ativo": true
         },
         {
-            "slug": "fugiat-autem-quia-DzDu",
+            "slug": "fugiat-autem-quia-dzdu",
             "nome": "Catequese Teste",
             "categoria": "catequese",
             "descricao": "Quod consequatur et est ut eos voluptas eius.",
@@ -33,7 +33,7 @@
             "ativo": true
         },
         {
-            "slug": "et-animi-et-VQa7",
+            "slug": "et-animi-et-vqa7",
             "nome": "Ministerio de Louvor",
             "categoria": "ministerio",
             "descricao": "Qui saepe quas non dolorum non dolorem.",
@@ -41,7 +41,7 @@
             "ativo": true
         },
         {
-            "slug": "nihil-amet-expedita-0aD6",
+            "slug": "nihil-amet-expedita-0ad6",
             "nome": "Ministerio de Louvor",
             "categoria": "ministerio",
             "descricao": "Est numquam recusandae quia consequatur ipsam atque.",
@@ -49,7 +49,7 @@
             "ativo": true
         },
         {
-            "slug": "aut-et-perspiciatis-M8X2",
+            "slug": "aut-et-perspiciatis-m8x2",
             "nome": "Ministério Teste",
             "categoria": "ministerio",
             "descricao": "Accusamus magnam deleniti tempore qui at ea.",
@@ -57,7 +57,7 @@
             "ativo": true
         },
         {
-            "slug": "autem-quo-alias-HbCo",
+            "slug": "autem-quo-alias-hbco",
             "nome": "Ministério Teste",
             "categoria": "ministerio",
             "descricao": "Quaerat quasi sed nam tempora autem sunt sapiente cum eaque eum.",
@@ -65,7 +65,7 @@
             "ativo": true
         },
         {
-            "slug": "numquam-et-doloribus-CqJb",
+            "slug": "numquam-et-doloribus-cqjb",
             "nome": "Ministério Teste",
             "categoria": "ministerio",
             "descricao": "Doloremque adipisci maxime quam explicabo omnis esse.",
