@@ -884,7 +884,7 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
         // Logo do cabeçalho
         let headerLogoHtml;
         if (cfg.logo_header_img) {
-            const src = escapeHtml(cfg.logo_header_img.replace(/^\//, ''));
+            const src = escapeHtml(resolveStorageAsset(cfg.logo_header_img, 'logos'));
             headerLogoHtml = `<img src="${src}" alt="Logo Paróquia Nossa Senhora dos Remédios" style="max-height:55px;" loading="lazy">`;
         } else {
             headerLogoHtml = buildInlineSvg(
@@ -897,7 +897,7 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
         // Logo do rodapé
         let footerLogoHtml;
         if (cfg.logo_footer_img) {
-            const src = escapeHtml(cfg.logo_footer_img.replace(/^\//, ''));
+            const src = escapeHtml(resolveStorageAsset(cfg.logo_footer_img, 'logos'));
             footerLogoHtml = `<img src="${src}" alt="Paróquia Nossa Senhora dos Remédios" style="height:auto;max-height:80px;width:auto;" loading="lazy">`;
         } else {
             footerLogoHtml = buildInlineSvg(
@@ -910,7 +910,7 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
         // Logo do preloader (SVG é todo branco; substitui branco pela cor escolhida)
         let loaderLogoHtml;
         if (cfg.logo_loader_img) {
-            const src = escapeHtml(cfg.logo_loader_img.replace(/^\//, ''));
+            const src = escapeHtml(resolveStorageAsset(cfg.logo_loader_img, 'logos'));
             loaderLogoHtml = `<img src="${src}" alt="">`;
         } else {
             loaderLogoHtml = buildInlineSvg(
