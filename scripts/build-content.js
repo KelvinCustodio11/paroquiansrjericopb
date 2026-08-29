@@ -1087,7 +1087,7 @@ console.log(`Total: ${totalGerado} pagina(s) gerada(s).`);
 
                 const outPath = path.join(minDir, `${slug}.html`);
                 const banner  = `<!-- GENERATED FROM data/ministerios.json — DO NOT EDIT MANUALLY. Run: node scripts/build-content.js -->\n`;
-                safePutContents(outPath, banner + page);
+                fs.writeFileSync(outPath, banner + page, 'utf8');
             }
             // Remover páginas órfãos
             const validSlugs = new Set(ativos.map(m => m.slug).filter(Boolean));

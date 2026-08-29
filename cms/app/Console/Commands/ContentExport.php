@@ -79,8 +79,8 @@ class ContentExport extends Command
             ->map(fn (Artigo $a) => $a->toJsonExport())->all();
 
         foreach ($artigos as $i => $artigo) {
-            if (isset($artigo['conteudo']) && mb_strlen(strip_tags($artigo['conteudo'])) < 100) {
-                $this->error("Artigo[{$i}] ({$artigo['slug']}) conteudo invalido:|minimo 100 chars, encontrado ".mb_strlen(strip_tags($artigo['conteudo'])).".");
+            if (isset($artigo['conteudo']) && mb_strlen($artigo['conteudo']) < 100) {
+                $this->error("Artigo[{$i}] ({$artigo['slug']}) conteudo invalido:|minimo 100 chars, encontrado ".mb_strlen($artigo['conteudo']).".");
 
                 return self::FAILURE;
             }
