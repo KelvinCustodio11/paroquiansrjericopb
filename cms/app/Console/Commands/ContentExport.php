@@ -77,6 +77,15 @@ class ContentExport extends Command
         // Artigos
         $artigos = Artigo::where('publicado', true)->orderBy('data_publicacao', 'desc')->get()
             ->map(fn (Artigo $a) => $a->toJsonExport())->all();
+
+        foreach ($artigos as $i => $artigo) {
+            if (isset($artigo['conteudo']) && mb_strlen(strip_tags($artigo['conteudo'])) < 100) {
+                $this->error("Artigo[{$i}] ({$artigo['slug']}) conteudo invalido:|minimo 100 chars, encontrado ".mb_strlen(strip_tags($artigo['conteudo'])).".");
+
+                return self::FAILURE;
+            }
+        }
+
         $this->writeFileAtomically($dataDir.'/artigos.json',
             json_encode(['artigos' => $artigos], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
         $this->info('OK artigos.json ('.count($artigos).' registros)');
