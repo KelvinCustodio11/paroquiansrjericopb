@@ -1353,7 +1353,9 @@ HTML;
                 @chmod($path, 0664);
             }
             if (! is_writable($path)) {
-                @unlink($path);
+                $this->error("  ✗ PERMISSÃO NEGADA: {$path} não é gravável.");
+                $this->error("    Execute: sudo chown {$this->getPhpUser()}:{$this->getPhpUser()} {$path}");
+                return false;
             }
         }
 
